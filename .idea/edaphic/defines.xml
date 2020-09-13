@@ -1,6 +1,185 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SVCompilerDirectivesDefines">
+    <option name="defines">
+      <map>
+        <entry key="/GCD.v">
+          <value>
+            <map>
+              <entry key="RANDOM">
+                <value>
+                  <list>
+                    <Body>
+                      <option name="offset" value="875" />
+                      <option name="replacementList" value="$random" />
+                      <option name="source" value="/GCD.v" />
+                    </Body>
+                  </list>
+                </value>
+              </entry>
+              <entry key="RANDOMIZE">
+                <value>
+                  <list>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_GARBAGE_ASSIGN" />
+                            <option name="offset" value="676" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/GCD.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="676" />
+                      <option name="source" value="/GCD.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_INVALID_ASSIGN" />
+                            <option name="offset" value="733" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/GCD.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="733" />
+                      <option name="source" value="/GCD.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_REG_INIT" />
+                            <option name="offset" value="784" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/GCD.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="784" />
+                      <option name="source" value="/GCD.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_MEM_INIT" />
+                            <option name="offset" value="835" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/GCD.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="835" />
+                      <option name="source" value="/GCD.v" />
+                    </Body>
+                  </list>
+                </value>
+              </entry>
+            </map>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="dependencies">
+      <map>
+        <entry key="FIRRTL_AFTER_INITIAL">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="FIRRTL_BEFORE_INITIAL">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="INIT_RANDOM">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="PRINTF_COND">
+          <value>
+            <set>
+              <option value="/HelloWorld.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="RANDOM">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="RANDOMIZE">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="RANDOMIZE_DELAY">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="RANDOMIZE_GARBAGE_ASSIGN">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="RANDOMIZE_INVALID_ASSIGN">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="RANDOMIZE_MEM_INIT">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="RANDOMIZE_REG_INIT">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="SYNTHESIS">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+              <option value="/HelloWorld.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="VERILATOR">
+          <value>
+            <set>
+              <option value="/GCD.v" />
+            </set>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="status" value="NORMAL" />
     <option name="version" value="547" />
   </component>
