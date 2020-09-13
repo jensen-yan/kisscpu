@@ -33,7 +33,8 @@ void Vour::_initial__TOP__1(Vour__Syms* __restrict vlSymsp) {
     Vour* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
     VL_WRITEF("Hello World\n");
-    VL_FINISH_MT("our.v", 2, "");
+    VL_FINISH_MT("our.v", 4, "");
+    vlTOPp->cnt = 1U;
 }
 
 void Vour::_eval_initial(Vour__Syms* __restrict vlSymsp) {
@@ -57,4 +58,6 @@ void Vour::_eval_settle(Vour__Syms* __restrict vlSymsp) {
 
 void Vour::_ctor_var_reset() {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vour::_ctor_var_reset\n"); );
+    // Body
+    cnt = VL_RAND_RESET_I(1);
 }

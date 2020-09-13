@@ -19,6 +19,11 @@ class Vour__Syms;
 VL_MODULE(Vour) {
   public:
     
+    // PORTS
+    // The application code writes and reads these signals to
+    // propagate new values into/out from the Verilated model.
+    VL_OUT8(cnt,0,0);
+    
     // INTERNAL VARIABLES
     // Internals; generally not touched by application code
     Vour__Syms* __VlSymsp;  // Symbol table

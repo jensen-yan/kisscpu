@@ -1,0 +1,7 @@
+verilator_learn/test_our/obj_dir/
+verilator_learn/test_our_sc/obj_dir/
+.idea
+.vscode
+
+*.o
+*.xml
