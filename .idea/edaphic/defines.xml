@@ -111,6 +111,7 @@
           <value>
             <set>
               <option value="/HelloWorld.v" />
+              <option value="$PROJECT_DIR$/HelloWorld.v" />
             </set>
           </value>
         </entry>
@@ -168,6 +169,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="/HelloWorld.v" />
+              <option value="$PROJECT_DIR$/HelloWorld.v" />
             </set>
           </value>
         </entry>
