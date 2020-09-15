@@ -11,6 +11,6 @@ verilog:
 
 # 先make verilog, 再 make verilator, 再make run
 
-verilator:
+run-verilator:
 	verilator build/generated-src/simTop.v --build verilator/main.cpp --cc --exe
 

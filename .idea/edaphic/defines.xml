@@ -161,6 +161,164 @@
             </map>
           </value>
         </entry>
+        <entry key="/regfile.v">
+          <value>
+            <map>
+              <entry key="RANDOM">
+                <value>
+                  <list>
+                    <Body>
+                      <option name="offset" value="2036" />
+                      <option name="replacementList" value="$random" />
+                      <option name="source" value="/regfile.v" />
+                    </Body>
+                  </list>
+                </value>
+              </entry>
+              <entry key="RANDOMIZE">
+                <value>
+                  <list>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_GARBAGE_ASSIGN" />
+                            <option name="offset" value="1837" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/regfile.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="1837" />
+                      <option name="source" value="/regfile.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_INVALID_ASSIGN" />
+                            <option name="offset" value="1894" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/regfile.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="1894" />
+                      <option name="source" value="/regfile.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_REG_INIT" />
+                            <option name="offset" value="1945" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/regfile.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="1945" />
+                      <option name="source" value="/regfile.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_MEM_INIT" />
+                            <option name="offset" value="1996" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/regfile.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="1996" />
+                      <option name="source" value="/regfile.v" />
+                    </Body>
+                  </list>
+                </value>
+              </entry>
+            </map>
+          </value>
+        </entry>
+        <entry key="/simTop.v">
+          <value>
+            <map>
+              <entry key="RANDOM">
+                <value>
+                  <list>
+                    <Body>
+                      <option name="offset" value="12025" />
+                      <option name="replacementList" value="$random" />
+                      <option name="source" value="/simTop.v" />
+                    </Body>
+                  </list>
+                </value>
+              </entry>
+              <entry key="RANDOMIZE">
+                <value>
+                  <list>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_GARBAGE_ASSIGN" />
+                            <option name="offset" value="11826" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="11826" />
+                      <option name="source" value="/simTop.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_INVALID_ASSIGN" />
+                            <option name="offset" value="11883" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="11883" />
+                      <option name="source" value="/simTop.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_REG_INIT" />
+                            <option name="offset" value="11934" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="11934" />
+                      <option name="source" value="/simTop.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_MEM_INIT" />
+                            <option name="offset" value="11985" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="11985" />
+                      <option name="source" value="/simTop.v" />
+                    </Body>
+                  </list>
+                </value>
+              </entry>
+            </map>
+          </value>
+        </entry>
       </map>
     </option>
     <option name="dependencies">
@@ -170,6 +328,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
@@ -179,6 +338,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
@@ -188,6 +348,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
@@ -209,6 +370,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
@@ -218,6 +380,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
@@ -227,6 +390,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
@@ -236,6 +400,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
@@ -245,6 +410,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
@@ -254,6 +420,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
@@ -263,6 +430,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
@@ -284,6 +452,7 @@
               <option value="$PROJECT_DIR$/HelloWorld.v" />
               <option value="$PROJECT_DIR$/Top.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
@@ -293,6 +462,7 @@
             <set>
               <option value="/GCD.v" />
               <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/regfile.v" />
               <option value="/simTop.v" />
             </set>
           </value>
