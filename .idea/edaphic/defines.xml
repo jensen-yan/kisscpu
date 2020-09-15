@@ -172,6 +172,11 @@
                       <option name="replacementList" value="$random" />
                       <option name="source" value="/regfile.v" />
                     </Body>
+                    <Body>
+                      <option name="offset" value="1708" />
+                      <option name="replacementList" value="$random" />
+                      <option name="source" value="/regfile.v" />
+                    </Body>
                   </list>
                 </value>
               </entry>
@@ -232,6 +237,62 @@
                         </list>
                       </option>
                       <option name="offset" value="1996" />
+                      <option name="source" value="/regfile.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_GARBAGE_ASSIGN" />
+                            <option name="offset" value="1509" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/regfile.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="1509" />
+                      <option name="source" value="/regfile.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_INVALID_ASSIGN" />
+                            <option name="offset" value="1566" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/regfile.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="1566" />
+                      <option name="source" value="/regfile.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_REG_INIT" />
+                            <option name="offset" value="1617" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/regfile.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="1617" />
+                      <option name="source" value="/regfile.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_MEM_INIT" />
+                            <option name="offset" value="1668" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/regfile.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="1668" />
                       <option name="source" value="/regfile.v" />
                     </Body>
                   </list>
