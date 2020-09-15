@@ -82,6 +82,85 @@
             </map>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/simTop.v">
+          <value>
+            <map>
+              <entry key="RANDOM">
+                <value>
+                  <list>
+                    <Body>
+                      <option name="offset" value="11703" />
+                      <option name="replacementList" value="$random" />
+                      <option name="source" value="$PROJECT_DIR$/simTop.v" />
+                    </Body>
+                  </list>
+                </value>
+              </entry>
+              <entry key="RANDOMIZE">
+                <value>
+                  <list>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_GARBAGE_ASSIGN" />
+                            <option name="offset" value="11504" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="$PROJECT_DIR$/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="11504" />
+                      <option name="source" value="$PROJECT_DIR$/simTop.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_INVALID_ASSIGN" />
+                            <option name="offset" value="11561" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="$PROJECT_DIR$/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="11561" />
+                      <option name="source" value="$PROJECT_DIR$/simTop.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_REG_INIT" />
+                            <option name="offset" value="11612" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="$PROJECT_DIR$/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="11612" />
+                      <option name="source" value="$PROJECT_DIR$/simTop.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_MEM_INIT" />
+                            <option name="offset" value="11663" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="$PROJECT_DIR$/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="11663" />
+                      <option name="source" value="$PROJECT_DIR$/simTop.v" />
+                    </Body>
+                  </list>
+                </value>
+              </entry>
+            </map>
+          </value>
+        </entry>
       </map>
     </option>
     <option name="dependencies">
@@ -90,6 +169,8 @@
           <value>
             <set>
               <option value="/GCD.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>
@@ -97,6 +178,8 @@
           <value>
             <set>
               <option value="/GCD.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>
@@ -104,6 +187,8 @@
           <value>
             <set>
               <option value="/GCD.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>
@@ -111,7 +196,11 @@
           <value>
             <set>
               <option value="/HelloWorld.v" />
+              <option value="/Top.v" />
               <option value="$PROJECT_DIR$/HelloWorld.v" />
+              <option value="$PROJECT_DIR$/Top.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>
@@ -119,6 +208,8 @@
           <value>
             <set>
               <option value="/GCD.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>
@@ -126,6 +217,8 @@
           <value>
             <set>
               <option value="/GCD.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>
@@ -133,6 +226,8 @@
           <value>
             <set>
               <option value="/GCD.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>
@@ -140,6 +235,8 @@
           <value>
             <set>
               <option value="/GCD.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>
@@ -147,6 +244,8 @@
           <value>
             <set>
               <option value="/GCD.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>
@@ -154,6 +253,8 @@
           <value>
             <set>
               <option value="/GCD.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>
@@ -161,6 +262,16 @@
           <value>
             <set>
               <option value="/GCD.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
+            </set>
+          </value>
+        </entry>
+        <entry key="STOP_COND">
+          <value>
+            <set>
+              <option value="/Top.v" />
+              <option value="$PROJECT_DIR$/Top.v" />
             </set>
           </value>
         </entry>
@@ -169,7 +280,11 @@
             <set>
               <option value="/GCD.v" />
               <option value="/HelloWorld.v" />
+              <option value="/Top.v" />
               <option value="$PROJECT_DIR$/HelloWorld.v" />
+              <option value="$PROJECT_DIR$/Top.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>
@@ -177,6 +292,8 @@
           <value>
             <set>
               <option value="/GCD.v" />
+              <option value="$PROJECT_DIR$/simTop.v" />
+              <option value="/simTop.v" />
             </set>
           </value>
         </entry>

@@ -343,3 +343,4 @@ verilator_learn/test_our_sc/obj_dir/
 verilator_learn/test_our/obj_dir/
 .idea/
 .vscode/
+obj_dir/
