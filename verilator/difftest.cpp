@@ -50,7 +50,16 @@ void init_difftest(reg_t *reg, char* imgPath){
     ref_difftest_memcpy_from_dut(ADDRSTART, ram->getImgStart(), ram->getImgSize());
     printf("img size = %d\n",ram->getImgSize());
 
+    // test memread, write
+    paddr_t inst = ram->InstRead(ADDRSTART+8, true);
+    printf("inst = 0x%016lx \n", inst);
+    paddr_t data = 0x000000000002a025;
+    ram->DataWrite(ADDRSTART, data, true, 0);
+    paddr_t data2 = ram->DataRead(ADDRSTART, true);
+    printf("data = 0x%016lx \n", data2);
+
     // test
+    /*
     reg_t ref_r[DIFFTEST_NR_REG];
     ref_difftest_getregs(&ref_r);       // test getregs
     for (size_t i = 0; i < DIFFTEST_NR_REG; i++)
@@ -67,7 +76,7 @@ void init_difftest(reg_t *reg, char* imgPath){
     ref_difftest_exec(1);               // test exec
     ref_isa_reg_display(); 
     ref_difftest_exec(1);               // test exec
-    ref_isa_reg_display(); 
+    ref_isa_reg_display(); */
 }
 
 int main(){

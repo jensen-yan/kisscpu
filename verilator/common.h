@@ -38,4 +38,6 @@ enum {
 #define ADDRSTART 0x80000000
 #define RAMSIZE (128 * 1024 * 1024)
 
+typedef uint32_t mask_t;
+
 #endif
