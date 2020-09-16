@@ -2,12 +2,13 @@
 #define __COMMON_H__
 
 #include "constants.h"
-
 #define DEBUG
 // TODO:
 #define __RV64__
 // #define __RV32__
 
+typedef unsigned int uint32_t;
+typedef unsigned long int uint64_t;
 
 
 #ifdef __RV32__
@@ -32,4 +33,9 @@ enum {
   DIFFTEST_NR_REG
 };
 // 64位下 DIFFTEST_NR_REG = 39, 32位 = 33
+
+
+#define ADDRSTART 0x80000000
+#define RAMSIZE (128 * 1024 * 1024)
+
 #endif

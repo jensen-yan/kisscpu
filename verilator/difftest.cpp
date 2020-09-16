@@ -4,6 +4,7 @@
 #include <dlfcn.h>
 #include <assert.h>
 using namespace std;
+#include "ram.h"
 
 const char* dllPath = "./nemu_so/riscv64-nemu-interpreter-so";
 // 等待获取的6个函数指针
@@ -14,7 +15,7 @@ void (*ref_difftest_exec)(uint64_t n) = NULL;
 void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
 void (*ref_isa_reg_display)(void) = NULL;
 
-void init_difftest(reg_t *reg){
+void init_difftest(reg_t *reg, char* imgPath){
     void *handle;
     handle = dlopen(dllPath, RTLD_LAZY | RTLD_DEEPBIND);
     assert(handle);
@@ -42,6 +43,13 @@ void init_difftest(reg_t *reg){
 
     ref_difftest_init();
     ref_isa_reg_display();
+    
+
+    // 添加img
+    ram_c* ram = new ram_c(imgPath);
+    ref_difftest_memcpy_from_dut(ADDRSTART, ram->getImgStart(), ram->getImgSize());
+    printf("img size = %d\n",ram->getImgSize());
+
     // test
     reg_t ref_r[DIFFTEST_NR_REG];
     ref_difftest_getregs(&ref_r);       // test getregs
@@ -52,13 +60,19 @@ void init_difftest(reg_t *reg){
     ref_r[4] = 0x0000000000000444;
     ref_difftest_setregs(ref_r);        // test setregs
     ref_isa_reg_display();
-    ref_difftest_exec(10);               // test exec
+    ref_difftest_exec(1);               // test exec
     ref_isa_reg_display();  
+    ref_difftest_exec(1);               // test exec
+    ref_isa_reg_display(); 
+    ref_difftest_exec(1);               // test exec
+    ref_isa_reg_display(); 
+    ref_difftest_exec(1);               // test exec
+    ref_isa_reg_display(); 
 }
 
 int main(){
     printf("start\n");
-    init_difftest(0);
+    init_difftest(0, NULL);
     printf("end\n");
     return 0;
 }
