@@ -42,7 +42,18 @@ void init_difftest(reg_t *reg){
 
     ref_difftest_init();
     ref_isa_reg_display();
-
+    // test
+    reg_t ref_r[DIFFTEST_NR_REG];
+    ref_difftest_getregs(&ref_r);       // test getregs
+    for (size_t i = 0; i < DIFFTEST_NR_REG; i++)
+    {
+        printf("reg[%d] = 0x%016lx \n", i, ref_r[i]);
+    }
+    ref_r[4] = 0x0000000000000444;
+    ref_difftest_setregs(ref_r);        // test setregs
+    ref_isa_reg_display();
+    ref_difftest_exec(10);               // test exec
+    ref_isa_reg_display();  
 }
 
 int main(){
