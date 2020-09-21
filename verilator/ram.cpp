@@ -7,7 +7,7 @@ ram_c::ram_c(char* imgPath)
 {
     ramSize = RAMSIZE / sizeof(paddr_t);
     memset(ram, 0, ramSize);
-    memset(dram, 0, ramSize);
+    // memset(dram, 0, ramSize);
 #ifdef DEBUG
     imgSize = 4;
     ram[0] = 0x800002b7;  // lui t0,0x80000
@@ -51,6 +51,7 @@ int ram_c::getImgSize()
 
 
 paddr_t ram_c::InstRead(paddr_t addr, bool en){
+    printf("addr = 0x%016lx \n", addr);
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + ramSize &&
         "read addr out of range");
@@ -58,18 +59,19 @@ paddr_t ram_c::InstRead(paddr_t addr, bool en){
 }
 
 paddr_t ram_c::DataRead(paddr_t addr, bool en){
+    printf("data addr = 0x%016lx \n", addr);
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + ramSize &&
         "read data addr out of range");
-    return en ? dram[(addr - ADDRSTART) / sizeof(paddr_t)] : 0; // 读data_ram
+    return en ? ram[(addr - ADDRSTART) / sizeof(paddr_t)] : 0; // 读data_ram
 }
 
 // TODO: 加上mask信号
-void    ram_c::DataWrite(paddr_t addr, paddr_t data, bool en, mask_t mask){
+void    ram_c::DataWrite(paddr_t addr, paddr_t data, bool en){
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + ramSize &&
         "write data addr out of range");
     if (en) {
-    dram[(addr - ADDRSTART) / sizeof(paddr_t)] = data;
+    ram[(addr - ADDRSTART) / sizeof(paddr_t)] = data;
   }
 }

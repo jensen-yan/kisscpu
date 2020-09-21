@@ -2,10 +2,10 @@
 #define __DIFFTESTIO_H__
 
 #include "common.h"
+#include "ram.h"
 
-struct diffTestIO_t
-{
-    reg_t regfile[NUM_REG];
-};
+
+void init_difftest(reg_t *reg, char* imgPath, ram_c* ram);
+
 
 #endif

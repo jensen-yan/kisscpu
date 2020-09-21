@@ -5,17 +5,18 @@
 #include <assert.h>
 using namespace std;
 #include "ram.h"
+#include "difftest.h"
 
-const char* dllPath = "./nemu_so/riscv64-nemu-interpreter-so";
+const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/verilator/nemu_so/riscv64-nemu-interpreter-so";
 // 等待获取的6个函数指针
-void (*ref_difftest_memcpy_from_dut)(paddr_t dest, void *src, size_t n) = NULL;
-void (*ref_difftest_getregs)(void *c) = NULL;
-void (*ref_difftest_setregs)(const void *c) = NULL;
-void (*ref_difftest_exec)(uint64_t n) = NULL;
-void (*ref_difftest_raise_intr)(uint64_t NO) = NULL;
-void (*ref_isa_reg_display)(void) = NULL;
+void (*ref_difftest_memcpy_from_dut)(paddr_t dest, void *src, size_t n);
+void (*ref_difftest_getregs)(void *c);
+void (*ref_difftest_setregs)(const void *c);
+void (*ref_difftest_exec)(uint64_t n);
+void (*ref_difftest_raise_intr)(uint64_t NO);
+void (*ref_isa_reg_display)(void);
 
-void init_difftest(reg_t *reg, char* imgPath){
+void init_difftest(reg_t *reg, char* imgPath, ram_c* ram){
     void *handle;
     handle = dlopen(dllPath, RTLD_LAZY | RTLD_DEEPBIND);
     assert(handle);
@@ -43,13 +44,13 @@ void init_difftest(reg_t *reg, char* imgPath){
 
     ref_difftest_init();
     ref_isa_reg_display();
-    
 
     // 添加img
-    ram_c* ram = new ram_c(imgPath);
     ref_difftest_memcpy_from_dut(ADDRSTART, ram->getImgStart(), ram->getImgSize());
     printf("img size = %d\n",ram->getImgSize());
+    
 
+    /*
     // test memread, write
     paddr_t inst = ram->InstRead(ADDRSTART+8, true);
     printf("inst = 0x%016lx \n", inst);
@@ -59,7 +60,6 @@ void init_difftest(reg_t *reg, char* imgPath){
     printf("data = 0x%016lx \n", data2);
 
     // test
-    /*
     reg_t ref_r[DIFFTEST_NR_REG];
     ref_difftest_getregs(&ref_r);       // test getregs
     for (size_t i = 0; i < DIFFTEST_NR_REG; i++)
@@ -76,12 +76,13 @@ void init_difftest(reg_t *reg, char* imgPath){
     ref_difftest_exec(1);               // test exec
     ref_isa_reg_display(); 
     ref_difftest_exec(1);               // test exec
-    ref_isa_reg_display(); */
+    ref_isa_reg_display();
+    */
 }
-
+/*
 int main(){
     printf("start\n");
     init_difftest(0, NULL);
     printf("end\n");
     return 0;
-}
+}*/
