@@ -30,6 +30,9 @@ class alu extends Module{
     (op === ALU_SLL) -> (src1 << shamt)(XLEN-1, 0).asUInt(),
     (op === ALU_SRA) -> (src1.asSInt() >> shamt).asUInt(),
     (op === ALU_SRL) -> (src1 >> shamt).asUInt(),
+    (op === ALU_COPY1)-> src1
   ))
+
+  printf("alu debug: func = %d, src1=[%x] src2=[%x] result=[%x]\n", op, src1, src2, io.result);
 
 }

@@ -5,7 +5,7 @@
 #include "ram.h"
 
 
-void init_difftest(reg_t *reg, char* imgPath, ram_c* ram);
+void init_difftest(reg_t *reg, char* imgPath, CRam* ram);
 
 
 #endif

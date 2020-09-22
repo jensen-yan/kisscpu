@@ -33,46 +33,21 @@ class dpath extends Module
   // Instruction Fetch
   val pc_next          = Wire(UInt(XLEN.W))
   val pc_plus4         = Wire(UInt(XLEN.W))
-  val br_target        = Wire(UInt(XLEN.W))
-  val jmp_target       = Wire(UInt(XLEN.W))
-  val jump_reg_target  = Wire(UInt(XLEN.W))
-//  val exception_target = Wire(UInt(XLEN.W))
 
-  // PC Register
-  // 根据ctl模块传过来的pc_sel 来更改pc
-  pc_next := MuxCase(pc_plus4, Array(
-    (io.ctl.pc_sel === PC_4)   -> pc_plus4,
-    (io.ctl.pc_sel === PC_BR)  -> br_target,
-    (io.ctl.pc_sel === PC_J )  -> jmp_target,
-    (io.ctl.pc_sel === PC_JR)  -> jump_reg_target
-//    (io.ctl.pc_sel === PC_EXC) -> exception_target
-  ))
 
+  // TODO: 初始-8?
   val pc_reg = RegInit(UInt(XLEN.W), START_ADDR)   // pc是一个reg
+  pc_reg := pc_next
+  // TODO: 64位  + 8
+  pc_plus4 := (pc_reg + 8.asUInt(XLEN.W))
+  pc_next := pc_plus4
 
-  when (!io.ctl.stall)   // 只要不阻塞, 就更新pc
-  {
-    pc_reg := pc_next
-  }
-
-  pc_plus4 := (pc_reg + 4.asUInt(XLEN.W))
-
-
-  // pc_reg传给imem
-//  io.imem.req.bits.addr := pc_reg
-//  io.imem.req.valid := true.B
-//  val inst = Mux(io.imem.resp.valid, io.imem.resp.bits.data, BUBBLE)
   // 获取此时的inst指令
   // TODO: inst Read
   io.instReadIO.addr := pc_reg
   io.instReadIO.en := true.B
   val inst = Wire(UInt(XLEN.W))
   inst := io.instReadIO.data
-  // DEBUG:
-  printf(p"inst = $inst \n")
-  printf(p"inst addr = $pc_reg \n")
-  printf("inst addr = 0x%x \n", pc_reg);
-  printf("inst2 = 0x%x \n", inst);
 
   // Decode, 获取3个寄存器号码
   val rs1_addr = inst(RS1_MSB, RS1_LSB)
@@ -80,8 +55,8 @@ class dpath extends Module
   val wb_addr  = inst(RD_MSB,  RD_LSB)
 
   val wb_data = Wire(UInt(XLEN.W))
-//  val wb_wen = io.ctl.rf_wen && !io.ctl.exception
   val wb_wen = io.ctl.rf_wen
+
   // Register File
   val regfile2 = Mem(32, UInt(XLEN.W))
 
@@ -89,19 +64,9 @@ class dpath extends Module
   {
     regfile2(wb_addr) := wb_data
   }
-
-//  BoringUtils.addSource(regfile2, "diffTestRegfile")
-  BoringUtils.addSource(VecInit((0 to NUM_REG-1).map(i => regfile2(i.U))), "diffTestRegfile")
-  //// DebugModule
-  // 会把regfile(addr) 的值传给debug, 并可以写入regfile
-//  io.ddpath.rdata := regfile(io.ddpath.addr)
-//  when(io.ddpath.validreq){
-//    regfile(io.ddpath.addr) := io.ddpath.wdata
-//  }
-  ///
-
   val rs1_data = Mux((rs1_addr =/= 0.U), regfile2(rs1_addr), 0.asUInt(XLEN.W))
   val rs2_data = Mux((rs2_addr =/= 0.U), regfile2(rs2_addr), 0.asUInt(XLEN.W))
+  BoringUtils.addSource(VecInit((0 to NUM_REG-1).map(i => regfile2(i.U))), "diffTestRegfile")
 
 
   // immediates
@@ -116,15 +81,24 @@ class dpath extends Module
   val imm_i_sext = Cat(Fill(20,imm_i(11)), imm_i)
   val imm_s_sext = Cat(Fill(20,imm_s(11)), imm_s)
   val imm_b_sext = Cat(Fill(19,imm_b(11)), imm_b, 0.U)
-  val imm_u_sext = Cat(imm_u, Fill(12,0.U))
+//  val imm_u_sext = Cat(imm_u, Fill(12,0.U))
   val imm_j_sext = Cat(Fill(11,imm_j(19)), imm_j, 0.U)
 
+  // 改成64位的
+  val imm_u_sext = Cat(Fill(32, imm_u(19)), imm_u, Fill(12,0.U))
 
+/*
   val alu_op1 = MuxCase(0.U, Array(
     (io.ctl.op1_sel === OP1_RS1) -> rs1_data,
     (io.ctl.op1_sel === OP1_IMU) -> imm_u_sext,
     (io.ctl.op1_sel === OP1_IMZ) -> imm_z
   )).asUInt()
+
+ */
+
+
+  val alu_op1 = imm_u_sext
+  printf("imm_u  = [%x] sel=[%d] op1=[%x]\n", imm_u_sext, io.ctl.op1_sel, alu_op1)
 
   val alu_op2 = MuxCase(0.U, Array(
     (io.ctl.op2_sel === OP2_RS2) -> rs2_data,
@@ -137,7 +111,13 @@ class dpath extends Module
 
   // ALU
   val alu_out   = Wire(UInt(XLEN.W))
-
+  val alu = Module(new alu)
+  alu.io.alu_op := io.ctl.alu_fun
+  alu.io.src1   := alu_op1
+  alu.io.src2   := alu_op2
+  alu_out       := alu.io.result
+  printf("alu2 debug: func = %d, src1=[%x] src2=[%x] result=[%x]\n", io.ctl.alu_fun, alu_op1, alu_op2, alu_out);
+/*
   val alu_shamt = alu_op2(4,0).asUInt()
 
   alu_out := MuxCase(0.U, Array(
@@ -154,42 +134,13 @@ class dpath extends Module
     (io.ctl.alu_fun === ALU_COPY1)-> alu_op1
   ))
 
-  // debug
+ */
 
-  // Branch/Jump Target Calculation
-  br_target       := pc_reg + imm_b_sext
-  jmp_target      := pc_reg + imm_j_sext
-  jump_reg_target := (rs1_data.asUInt() + imm_i_sext.asUInt())
-
-  /*
-  // Control Status Registers
-  val csr = Module(new CSRFile())
-  csr.io := DontCare
-  csr.io.decode.csr := inst(CSR_ADDR_MSB,CSR_ADDR_LSB)
-  csr.io.rw.cmd   := io.ctl.csr_cmd
-  csr.io.rw.wdata := alu_out
-
-  csr.io.retire    := !(io.ctl.stall || io.ctl.exception)
-  csr.io.exception := io.ctl.exception
-  csr.io.pc        := pc_reg
-  exception_target := csr.io.evec
-
-  io.dat.csr_eret := csr.io.eret
-
-  // Add your own uarch counters here!
-  csr.io.counters.foreach(_.inc := false.B)
-
-*/
   // TODO: 读取地址是啥?
   // WB Mux 确定写入regfile的值
-  wb_data := MuxCase(alu_out, Array(
-    (io.ctl.wb_sel === WB_ALU) -> alu_out,
-   (io.ctl.wb_sel === WB_MEM) -> io.dataReadIO.data,
-    (io.ctl.wb_sel === WB_PC4) -> pc_plus4
-//    (io.ctl.wb_sel === WB_CSR) -> csr.io.rw.rdata
-  ))
- io.dataReadIO.en := true.B
- io.dataReadIO.addr := alu_out
+  wb_data := alu_out
+// io.dataReadIO.en := true.B
+// io.dataReadIO.addr := alu_out
 
 
 
@@ -200,24 +151,14 @@ class dpath extends Module
   io.dat.br_lt  := (rs1_data.asSInt() < rs2_data.asSInt())
   io.dat.br_ltu := (rs1_data.asUInt() < rs2_data.asUInt())
 
-/*
-  // datapath to data memory outputs
-  io.dmem.req.bits.addr  := alu_out
-  io.dmem.req.bits.data := rs2_data.asUInt()
-
- */
   io.dataWriteIO.en := true.B
   io.dataWriteIO.addr := alu_out
   io.dataWriteIO.data := rs2_data.asUInt()
 
 
   // Printout
-  // 可以直接输出各种信息!
-  // pass output through the spike-dasm binary (found in riscv-tools) to turn
-  // the DASM(%x) into a disassembly string.
-  printf("pc=[%x] W[r%d=%x][%d] Op1=[r%d][%x] Op2=[r%d][%x] inst=[%x]\n",
-//    csr.io.time(31,0),
-//    csr.io.retire,
+  printf("pc=[%x] W[r%d=%x][%d] Op1=[r%d][%x] Op2=[r%d][%x] inst=[%x] " +
+    "op1=[%x] op2=[%x] fun = [%d] out=[%x] addr=[%x] wb_data=[%x] rf[5] = [%x]\n",
     pc_reg,
     wb_addr,
     wb_data,
@@ -226,39 +167,14 @@ class dpath extends Module
     alu_op1,
     rs2_addr,
     alu_op2,
-    inst)
-  /*
-    Mux(io.ctl.stall, Str("S"), Str(" ")),
-    MuxLookup(io.ctl.pc_sel, Str("?"), Seq(
-      PC_BR -> Str("B"),
-      PC_J -> Str("J"),
-      PC_JR -> Str("R"),
-      PC_EXC -> Str("E"),
-      PC_4 -> Str(" "))),
-    Mux(csr.io.exception, Str("X"), Str(" ")),
-    inst)
-
-   */
-
-/*
-  if (PRINT_COMMIT_LOG)
-  {
-    when (!io.ctl.stall)
-    {
-      // use "sed" to parse out "@@@" from the other printf code above.
-      val rd = inst(RD_MSB,RD_LSB)
-      when (io.ctl.rf_wen && rd =/= 0.U)
-      {
-        printf("@@@ 0x%x (0x%x) x%d 0x%x\n", pc_reg, inst, rd, Cat(Fill(32,wb_data(31)),wb_data))
-      }
-        .otherwise
-        {
-          printf("@@@ 0x%x (0x%x)\n", pc_reg, inst)
-        }
-    }
-  }
-
-   */
+    inst,
+    alu_op1,
+    alu_op2,
+    io.ctl.alu_fun,
+    alu_out,
+    wb_addr,
+    wb_data,
+    regfile2(5))
 
   BoringUtils.addSource(pc_reg, "diffTestPC")
 }

@@ -3,16 +3,17 @@
 #include <string.h>
 #include <assert.h>
 
-ram_c::ram_c(char* imgPath)
+CRam::CRam(char* imgPath)
 {
-    ramSize = RAMSIZE / sizeof(paddr_t);
-    memset(ram, 0, ramSize);
-    // memset(dram, 0, ramSize);
+    m_ramSize = RAMSIZE / sizeof(paddr_t);
+    memset(m_ram, 0, m_ramSize);
+    // memset(dram, 0, m_ramSize);
 #ifdef DEBUG
-    imgSize = 4;
-    ram[0] = 0x800002b7;  // lui t0,0x80000
-    ram[1] = 0x0002a023;  // sw  zero,0(t0)
-    ram[2] = 0x0002a503;  // lw  a0,0(t0)
+    m_imgSize = 4;
+    m_ram[0] = 0x800002b7;  // lui t0,0x80000
+    m_ram[1] = 0x800002b7;  // lui t0,0x80000
+    m_ram[2] = 0x0002a023;  // sw  zero,0(t0)
+    m_ram[3] = 0x0002a503;  // lw  a0,0(t0)
     
 
 #else
@@ -21,10 +22,10 @@ ram_c::ram_c(char* imgPath)
     assert(fp && "Cannot open file");
 
     fseek(fp, 0, SEEK_END);
-    imgSize = ftell(fp);
+    m_imgSize = ftell(fp);
 
     fseek(fp, 0, SEEK_SET);
-    int ret = fread(ram, imgSize, 1, fp);
+    int ret = fread(m_ram, m_imgSize, 1, fp);
     assert(ret && "read img failed");
     fclose(fp);
 
@@ -34,44 +35,44 @@ ram_c::ram_c(char* imgPath)
 
 }
 
-ram_c::~ram_c()
+CRam::~CRam()
 {
 }
 
-void* ram_c::getImgStart()
+void* CRam::getImgStart()
 {
-    return &ram[0];
+    return &m_ram[0];
 }
     
-int ram_c::getImgSize()
+int CRam::getImgSize()
 {
-    return imgSize;
+    return m_imgSize;
 }
 
 
 
-paddr_t ram_c::InstRead(paddr_t addr, bool en){
-    printf("addr = 0x%016lx \n", addr);
+paddr_t CRam::InstRead(paddr_t addr, bool en){
+    // printf("addr = 0x%016lx \n", addr);
     assert(ADDRSTART <= addr &&
-        addr <= ADDRSTART + ramSize &&
+        addr <= ADDRSTART + m_ramSize &&
         "read addr out of range");
-    return en ? ram[(addr - ADDRSTART) / sizeof(paddr_t)] : 0;
+    return en ? m_ram[(addr - ADDRSTART) / sizeof(paddr_t)] : 0;
 }
 
-paddr_t ram_c::DataRead(paddr_t addr, bool en){
+paddr_t CRam::DataRead(paddr_t addr, bool en){
     printf("data addr = 0x%016lx \n", addr);
     assert(ADDRSTART <= addr &&
-        addr <= ADDRSTART + ramSize &&
+        addr <= ADDRSTART + m_ramSize &&
         "read data addr out of range");
-    return en ? ram[(addr - ADDRSTART) / sizeof(paddr_t)] : 0; // 读data_ram
+    return en ? m_ram[(addr - ADDRSTART) / sizeof(paddr_t)] : 0; // 读data_ram
 }
 
 // TODO: 加上mask信号
-void    ram_c::DataWrite(paddr_t addr, paddr_t data, bool en){
+void    CRam::DataWrite(paddr_t addr, paddr_t data, bool en){
     assert(ADDRSTART <= addr &&
-        addr <= ADDRSTART + ramSize &&
+        addr <= ADDRSTART + m_ramSize &&
         "write data addr out of range");
     if (en) {
-    ram[(addr - ADDRSTART) / sizeof(paddr_t)] = data;
+    m_ram[(addr - ADDRSTART) / sizeof(paddr_t)] = data;
   }
 }

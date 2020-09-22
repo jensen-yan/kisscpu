@@ -1,3 +1,9 @@
+
+# src文件
+scalaFile = $(shell find ./src/main/scala -name '*.scala')
+VerilatorCppFile = $(shell find ./verilator -name '*.cpp')
+
+
 init:
 	export PATH=$HOME/.local/verilator/bin:$PATH
 
@@ -5,8 +11,8 @@ run:
 	obj_dir/VsimTop
 
 clean:
-	sbt "clean"
 	rm -r build
+	rm -r obj_dir
 
 verilog:
 	sbt "run sim.elaborate"
@@ -14,11 +20,11 @@ verilog:
 
 # 先make verilog, 再 make verilator, 再make run
 
-run-verilator:
+run-verilator: $(VerilatorCppFile)
 	verilator simTop.v --build \
-	verilator/main.cpp verilator/ram.cpp verilator/difftest.cpp \
+	$(VerilatorCppFile) \
 	--cc --exe -LDFLAGS "-ldl" \
-	-CFLAGS "-g"
+	-CFLAGS "-g" --trace
 
 all:
 	make init

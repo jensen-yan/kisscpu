@@ -24,7 +24,6 @@ class regfile extends Module{
   io.rdata2 := Mux(io.raddr2 === 0.U, 0.U(XLEN.W), rf(io.raddr2))
   // 写
   when(io.we.toBool() && io.waddr =/= 0.U){
-//  when(io.we.toBool()){
     rf(io.wdata) := io.wdata
   }
 // rf(5) := 12.U    // 给5号寄存器来个值

@@ -8,13 +8,6 @@
   },
   {
     "class":"firrtl.transforms.CombinationalPath",
-    "sink":"~simTop|simTop>io_topIO_dataReadIO_addr",
-    "sources":[
-      "~simTop|simTop>io_topIO_instReadIO_data"
-    ]
-  },
-  {
-    "class":"firrtl.transforms.CombinationalPath",
     "sink":"~simTop|simTop>io_topIO_dataWriteIO_data",
     "sources":[
       "~simTop|simTop>io_topIO_instReadIO_data"
@@ -26,131 +19,131 @@
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_0"
+    "target":"~simTop|dpath>_T_41_0"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_1"
+    "target":"~simTop|dpath>_T_41_1"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_2"
+    "target":"~simTop|dpath>_T_41_2"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_3"
+    "target":"~simTop|dpath>_T_41_3"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_4"
+    "target":"~simTop|dpath>_T_41_4"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_5"
+    "target":"~simTop|dpath>_T_41_5"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_6"
+    "target":"~simTop|dpath>_T_41_6"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_7"
+    "target":"~simTop|dpath>_T_41_7"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_8"
+    "target":"~simTop|dpath>_T_41_8"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_9"
+    "target":"~simTop|dpath>_T_41_9"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_10"
+    "target":"~simTop|dpath>_T_41_10"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_11"
+    "target":"~simTop|dpath>_T_41_11"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_12"
+    "target":"~simTop|dpath>_T_41_12"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_13"
+    "target":"~simTop|dpath>_T_41_13"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_14"
+    "target":"~simTop|dpath>_T_41_14"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_15"
+    "target":"~simTop|dpath>_T_41_15"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_16"
+    "target":"~simTop|dpath>_T_41_16"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_17"
+    "target":"~simTop|dpath>_T_41_17"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_18"
+    "target":"~simTop|dpath>_T_41_18"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_19"
+    "target":"~simTop|dpath>_T_41_19"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_20"
+    "target":"~simTop|dpath>_T_41_20"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_21"
+    "target":"~simTop|dpath>_T_41_21"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_22"
+    "target":"~simTop|dpath>_T_41_22"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_23"
+    "target":"~simTop|dpath>_T_41_23"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_24"
+    "target":"~simTop|dpath>_T_41_24"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_25"
+    "target":"~simTop|dpath>_T_41_25"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_26"
+    "target":"~simTop|dpath>_T_41_26"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_27"
+    "target":"~simTop|dpath>_T_41_27"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_28"
+    "target":"~simTop|dpath>_T_41_28"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_29"
+    "target":"~simTop|dpath>_T_41_29"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_30"
+    "target":"~simTop|dpath>_T_41_30"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_54_31"
+    "target":"~simTop|dpath>_T_41_31"
   },
   {
     "class":"firrtl.options.TargetDirAnnotation",

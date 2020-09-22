@@ -3,18 +3,17 @@
 
 #include "common.h"
 
-class ram_c
+class CRam
 {
 private:
     // 巨大的RAM数组(存储指令), 每个元素64位
-    paddr_t ram[RAMSIZE / sizeof(paddr_t)];
-    // paddr_t dram[RAMSIZE / sizeof(paddr_t)];     // 数据ram
-    int ramSize;
-    int imgSize;
+    paddr_t m_ram[RAMSIZE / sizeof(paddr_t)];
+    int m_ramSize;
+    int m_imgSize;
 
 public:
-    ram_c(char* imgPath);
-    ~ram_c();
+    CRam(char* imgPath);
+    ~CRam();
     void *getImgStart();
     int getImgSize();
 

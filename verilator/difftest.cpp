@@ -16,7 +16,7 @@ void (*ref_difftest_exec)(uint64_t n);
 void (*ref_difftest_raise_intr)(uint64_t NO);
 void (*ref_isa_reg_display)(void);
 
-void init_difftest(reg_t *reg, char* imgPath, ram_c* ram){
+void init_difftest(reg_t *reg, char* imgPath, CRam* ram){
     void *handle;
     handle = dlopen(dllPath, RTLD_LAZY | RTLD_DEEPBIND);
     assert(handle);

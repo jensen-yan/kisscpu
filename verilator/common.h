@@ -34,6 +34,10 @@ enum {
 };
 // 64位下 DIFFTEST_NR_REG = 39, 32位 = 33
 
+// typedef reg_t ref_reg[DIFFTEST_NR_REG] emu_reg;
+// reg_t ref_reg[DIFFTEST_NR_REG];   // 用于验证的reg集合
+// reg_t emu_reg[DIFFTEST_NR_REG];   // 仿真得到的reg集合
+
 
 #define ADDRSTART 0x80000000
 #define RAMSIZE (128 * 1024 * 1024)
