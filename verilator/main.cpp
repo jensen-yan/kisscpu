@@ -10,8 +10,13 @@ int main(int argc, char** argv){
     CRam* ram = new CRam(NULL);
     init_difftest(0, NULL,ram);
     CEmulator* emulator = new CEmulator(ram);
-    // emulator->getDiffTestResult(&emu_reg);
-    emulator->step(5);
+    // difftest_step(emulator);
+
+    // difftest_step(emulator);
+    // difftest_step(emulator);
+    // reg_t reg[DIFFTEST_NR_REG];
+    // emulator->read_emu_regs(reg);
+    emulator->step(3);
 
 
     return 0;

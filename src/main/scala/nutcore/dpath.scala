@@ -36,7 +36,7 @@ class dpath extends Module
 
 
   // TODO: 初始-8?
-  val pc_reg = RegInit(UInt(XLEN.W), START_ADDR)   // pc是一个reg
+  val pc_reg = RegInit(UInt(XLEN.W), START_ADDR-8.U)   // pc是一个reg
   pc_reg := pc_next
   // TODO: 64位  + 8
   pc_plus4 := (pc_reg + 8.asUInt(XLEN.W))
@@ -116,25 +116,6 @@ class dpath extends Module
   alu.io.src1   := alu_op1
   alu.io.src2   := alu_op2
   alu_out       := alu.io.result
-  printf("alu2 debug: func = %d, src1=[%x] src2=[%x] result=[%x]\n", io.ctl.alu_fun, alu_op1, alu_op2, alu_out);
-/*
-  val alu_shamt = alu_op2(4,0).asUInt()
-
-  alu_out := MuxCase(0.U, Array(
-    (io.ctl.alu_fun === ALU_ADD)  -> (alu_op1 + alu_op2).asUInt(),
-    (io.ctl.alu_fun === ALU_SUB)  -> (alu_op1 - alu_op2).asUInt(),
-    (io.ctl.alu_fun === ALU_AND)  -> (alu_op1 & alu_op2).asUInt(),
-    (io.ctl.alu_fun === ALU_OR)   -> (alu_op1 | alu_op2).asUInt(),
-    (io.ctl.alu_fun === ALU_XOR)  -> (alu_op1 ^ alu_op2).asUInt(),
-    (io.ctl.alu_fun === ALU_SLT)  -> (alu_op1.asSInt() < alu_op2.asSInt()).asUInt(),
-    (io.ctl.alu_fun === ALU_SLTU) -> (alu_op1 < alu_op2).asUInt(),
-    (io.ctl.alu_fun === ALU_SLL)  -> ((alu_op1 << alu_shamt)(XLEN-1, 0)).asUInt(),
-    (io.ctl.alu_fun === ALU_SRA)  -> (alu_op1.asSInt() >> alu_shamt).asUInt(),
-    (io.ctl.alu_fun === ALU_SRL)  -> (alu_op1 >> alu_shamt).asUInt(),
-    (io.ctl.alu_fun === ALU_COPY1)-> alu_op1
-  ))
-
- */
 
   // TODO: 读取地址是啥?
   // WB Mux 确定写入regfile的值

@@ -1,3 +1,6 @@
+#ifndef __EMULATOR_H__
+#define __EMULATOR_H__
+
 #include "ram.h"
 #include "VsimTop.h"
 #include "difftestIO.h"
@@ -15,7 +18,7 @@ public:
     ~CEmulator();
     void step(int i);
     void reset_ncycles(int cycles);
-    // void getDiffTestResult(void* reg);
+    void read_emu_regs(reg_t* r);       // 读取DUT的所有reg到r中
 };
 
-
+#endif

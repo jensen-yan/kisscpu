@@ -1134,6 +1134,11 @@
                       <option name="replacementList" value="$random" />
                       <option name="source" value="/simTop.v" />
                     </Body>
+                    <Body>
+                      <option name="offset" value="20290" />
+                      <option name="replacementList" value="$random" />
+                      <option name="source" value="/simTop.v" />
+                    </Body>
                   </list>
                 </value>
               </entry>
@@ -1194,6 +1199,62 @@
                         </list>
                       </option>
                       <option name="offset" value="20169" />
+                      <option name="source" value="/simTop.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_GARBAGE_ASSIGN" />
+                            <option name="offset" value="20091" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="20091" />
+                      <option name="source" value="/simTop.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_INVALID_ASSIGN" />
+                            <option name="offset" value="20148" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="20148" />
+                      <option name="source" value="/simTop.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_REG_INIT" />
+                            <option name="offset" value="20199" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="20199" />
+                      <option name="source" value="/simTop.v" />
+                    </Body>
+                    <Body>
+                      <option name="inclusionDependencies">
+                        <list>
+                          <InclusionDependency>
+                            <option name="name" value="RANDOMIZE_MEM_INIT" />
+                            <option name="offset" value="20250" />
+                            <option name="rule" value="DEFINED" />
+                            <option name="source" value="/simTop.v" />
+                          </InclusionDependency>
+                        </list>
+                      </option>
+                      <option name="offset" value="20250" />
                       <option name="source" value="/simTop.v" />
                     </Body>
                   </list>

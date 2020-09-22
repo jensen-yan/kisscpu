@@ -68,41 +68,14 @@ void CEmulator::reset_ncycles(int m_cycles)
     m_simtop->reset = 0;
 }
 
-/*
-void CEmulator::getDiffTestResult(void* reg)
+
+void CEmulator::read_emu_regs(reg_t* r)
 {
-  reg[ 0] = m_simtop->io_diffTestIO_regfile_0;
-  reg[ 1] = m_simtop->io_diffTestIO_regfile_1;
-  reg[ 2] = m_simtop->io_diffTestIO_regfile_2;
-  reg[ 3] = m_simtop->io_diffTestIO_regfile_3;
-  reg[ 4] = m_simtop->io_diffTestIO_regfile_4;
-  reg[ 5] = m_simtop->io_diffTestIO_regfile_5;
-  reg[ 6] = m_simtop->io_diffTestIO_regfile_6;
-  reg[ 7] = m_simtop->io_diffTestIO_regfile_7;
-  reg[ 8] = m_simtop->io_diffTestIO_regfile_8;
-  reg[ 9] = m_simtop->io_diffTestIO_regfile_9;
-  reg[10] = m_simtop->io_diffTestIO_regfile_10;
-  reg[11] = m_simtop->io_diffTestIO_regfile_11;
-  reg[12] = m_simtop->io_diffTestIO_regfile_12;
-  reg[13] = m_simtop->io_diffTestIO_regfile_13;
-  reg[14] = m_simtop->io_diffTestIO_regfile_14;
-  reg[15] = m_simtop->io_diffTestIO_regfile_15;
-  reg[16] = m_simtop->io_diffTestIO_regfile_16;
-  reg[17] = m_simtop->io_diffTestIO_regfile_17;
-  reg[18] = m_simtop->io_diffTestIO_regfile_18;
-  reg[19] = m_simtop->io_diffTestIO_regfile_19;
-  reg[20] = m_simtop->io_diffTestIO_regfile_20;
-  reg[21] = m_simtop->io_diffTestIO_regfile_21;
-  reg[22] = m_simtop->io_diffTestIO_regfile_22;
-  reg[23] = m_simtop->io_diffTestIO_regfile_23;
-  reg[24] = m_simtop->io_diffTestIO_regfile_24;
-  reg[25] = m_simtop->io_diffTestIO_regfile_25;
-  reg[26] = m_simtop->io_diffTestIO_regfile_26;
-  reg[27] = m_simtop->io_diffTestIO_regfile_27;
-  reg[28] = m_simtop->io_diffTestIO_regfile_28;
-  reg[29] = m_simtop->io_diffTestIO_regfile_29;
-  reg[30] = m_simtop->io_diffTestIO_regfile_30;
-  reg[31] = m_simtop->io_diffTestIO_regfile_31;
-  reg[38] = m_simtop->io_diffTestIO_PC;
+#define macro(x) r[x] = m_simtop->io_diffTestIO_regfile_##x
+    macro(0); macro(1); macro(2); macro(3); macro(4); macro(5); macro(6); macro(7);
+    macro(8); macro(9); macro(10); macro(11); macro(12); macro(13); macro(14); macro(15);
+    macro(16); macro(17); macro(18); macro(19); macro(20); macro(21); macro(22); macro(23);
+    macro(24); macro(25); macro(26); macro(27); macro(28); macro(29); macro(30); macro(31);
+    r[DIFFTEST_THIS_PC] = m_simtop->io_diffTestIO_PC;
+
 }
-*/
