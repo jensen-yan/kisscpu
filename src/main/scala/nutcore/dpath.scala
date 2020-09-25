@@ -147,11 +147,11 @@ class dpath extends Module
   val imm_z = Cat(Fill(27,0.U), dec_reg_inst(19,15))
 
   // sign-extend immediates
-  val imm_itype_sext  = Cat(Fill(20,imm_itype(11)), imm_itype)
-  val imm_stype_sext  = Cat(Fill(20,imm_stype(11)), imm_stype)
-  val imm_sbtype_sext = Cat(Fill(19,imm_sbtype(11)), imm_sbtype, 0.U)
-  val imm_utype_sext  = Cat(imm_utype, Fill(12,0.U))
-  val imm_ujtype_sext = Cat(Fill(11,imm_ujtype(19)), imm_ujtype, 0.U)
+  val imm_itype_sext  = Cat(Fill(52,imm_itype(11)), imm_itype)
+  val imm_stype_sext  = Cat(Fill(52,imm_stype(11)), imm_stype)
+  val imm_sbtype_sext = Cat(Fill(51,imm_sbtype(11)), imm_sbtype, 0.U)
+  val imm_utype_sext  = Cat(Fill(32,imm_utype(19)), imm_utype, Fill(12,0.U))  // TODO: 改其他的!
+  val imm_ujtype_sext = Cat(Fill(43,imm_ujtype(19)), imm_ujtype, 0.U)
 
   // TODO: 改成64位的
 //  val imm_u_sext = Cat(Fill(32, imm_u(19)), imm_u, Fill(12,0.U))
@@ -208,7 +208,7 @@ class dpath extends Module
   exe_reg_ctrl_br_type  := io.ctl.br_type
 
 
-
+//  printf("decode debug: pc=[%x], ")
 
 
   //******************************************************************************************************
@@ -219,7 +219,7 @@ class dpath extends Module
 
   // ALU
   val alu = Module(new alu)
-  alu.io.alu_op := io.ctl.alu_fun
+  alu.io.alu_op := exe_reg_ctrl_alu_fun     // 这里应该用decode缓存一次的func!
   alu.io.src1   := exe_alu_op1
   alu.io.src2   := exe_alu_op2
   exe_alu_out   := alu.io.result

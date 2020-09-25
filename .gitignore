@@ -346,3 +346,6 @@ verilator_learn/test_our/obj_dir/
 obj_dir/
 docs/html
 docs/latex
+simTop.v
+simTop.fir
+simTop.anno.json

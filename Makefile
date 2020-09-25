@@ -14,7 +14,7 @@ clean:
 	rm -r obj_dir
 
 verilog:
-	sbt "run sim.elaborate"
+	sbt "runMain sim.elaborate"
 # -td  输出到build/ 文件中
 
 # 先make verilog, 再 make verilator, 再make run
@@ -31,7 +31,7 @@ build:
 	make run-verilator
 
 all:
-	make init
+	make clean
 	make run-verilator
 	make run
 
