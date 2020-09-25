@@ -26,10 +26,8 @@ class regfile extends Module{
   when(io.we.toBool() && io.waddr =/= 0.U){
     rf(io.wdata) := io.wdata
   }
-// rf(5) := 12.U    // 给5号寄存器来个值
-// 给32个初始化成0
   // VecInit((0 until NUM_REG).map(i => rf(i.U)))
-//  BoringUtils.addSource(rf, "diffTestRegFile")
+  BoringUtils.addSource(VecInit((0 to NUM_REG-1).map(i => rf(i.U))), "diffTestRegfile")
 //  def read(addr: UInt) : UInt = Mux(addr === 0.U, 0.U, rf(addr))
 //  def write(addr: UInt, data : UInt) = {rf(addr) := data(63, 0)}
 }

@@ -344,3 +344,5 @@ verilator_learn/test_our/obj_dir/
 .idea/
 .vscode/
 obj_dir/
+docs/html
+docs/latex

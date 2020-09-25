@@ -1,149 +1,135 @@
 [
   {
-    "class":"firrtl.transforms.CombinationalPath",
-    "sink":"~simTop|simTop>io_topIO_dataWriteIO_addr",
-    "sources":[
-      "~simTop|simTop>io_topIO_instReadIO_data"
-    ]
-  },
-  {
-    "class":"firrtl.transforms.CombinationalPath",
-    "sink":"~simTop|simTop>io_topIO_dataWriteIO_data",
-    "sources":[
-      "~simTop|simTop>io_topIO_instReadIO_data"
-    ]
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~simTop|dpath>_T_73"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>pc_reg"
+    "target":"~simTop|regfile>_T_45_0"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_0"
+    "target":"~simTop|regfile>_T_45_1"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_1"
+    "target":"~simTop|regfile>_T_45_2"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_2"
+    "target":"~simTop|regfile>_T_45_3"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_3"
+    "target":"~simTop|regfile>_T_45_4"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_4"
+    "target":"~simTop|regfile>_T_45_5"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_5"
+    "target":"~simTop|regfile>_T_45_6"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_6"
+    "target":"~simTop|regfile>_T_45_7"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_7"
+    "target":"~simTop|regfile>_T_45_8"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_8"
+    "target":"~simTop|regfile>_T_45_9"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_9"
+    "target":"~simTop|regfile>_T_45_10"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_10"
+    "target":"~simTop|regfile>_T_45_11"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_11"
+    "target":"~simTop|regfile>_T_45_12"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_12"
+    "target":"~simTop|regfile>_T_45_13"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_13"
+    "target":"~simTop|regfile>_T_45_14"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_14"
+    "target":"~simTop|regfile>_T_45_15"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_15"
+    "target":"~simTop|regfile>_T_45_16"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_16"
+    "target":"~simTop|regfile>_T_45_17"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_17"
+    "target":"~simTop|regfile>_T_45_18"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_18"
+    "target":"~simTop|regfile>_T_45_19"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_19"
+    "target":"~simTop|regfile>_T_45_20"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_20"
+    "target":"~simTop|regfile>_T_45_21"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_21"
+    "target":"~simTop|regfile>_T_45_22"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_22"
+    "target":"~simTop|regfile>_T_45_23"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_23"
+    "target":"~simTop|regfile>_T_45_24"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_24"
+    "target":"~simTop|regfile>_T_45_25"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_25"
+    "target":"~simTop|regfile>_T_45_26"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_26"
+    "target":"~simTop|regfile>_T_45_27"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_27"
+    "target":"~simTop|regfile>_T_45_28"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_28"
+    "target":"~simTop|regfile>_T_45_29"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_29"
+    "target":"~simTop|regfile>_T_45_30"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_30"
-  },
-  {
-    "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_43_31"
+    "target":"~simTop|regfile>_T_45_31"
   },
   {
     "class":"firrtl.options.TargetDirAnnotation",

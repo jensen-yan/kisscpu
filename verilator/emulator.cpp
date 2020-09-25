@@ -31,14 +31,16 @@ void CEmulator::step(int i)
 {
     for(; i > 0; i--){
         cout << "clock = " << m_cycles << endl;
-        m_simtop->clock = m_simtop->clock ? 0: 1;
-        m_simtop->eval();
-        m_simtop->clock = m_simtop->clock ? 0: 1;
-        m_simtop->eval();
         m_cycles++;
+        m_simtop->clock = m_simtop->clock ? 0: 1;
+        m_simtop->eval();
+        m_tfp->dump(10*m_cycles-2);
 
-        assert(m_tfp);
-        m_tfp->dump(m_cycles);
+        m_simtop->clock = m_simtop->clock ? 0: 1;
+        m_simtop->eval();
+        m_tfp->dump(10*m_cycles);
+
+        
 
         m_simtop->io_topIO_instReadIO_data = 
             m_ram->InstRead(m_simtop->io_topIO_instReadIO_addr, m_simtop->io_topIO_instReadIO_en);
@@ -78,4 +80,9 @@ void CEmulator::read_emu_regs(reg_t* r)
     macro(24); macro(25); macro(26); macro(27); macro(28); macro(29); macro(30); macro(31);
     r[DIFFTEST_THIS_PC] = m_simtop->io_diffTestIO_PC;
 
+}
+
+double CEmulator::sc_time_stamp () {       // Called by $time in Verilog
+    return m_cycles;           // converts to double, to match
+    // what SystemC does
 }

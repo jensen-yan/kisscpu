@@ -6,6 +6,8 @@
 #include "emulator.h"
 
 
+
+
 void init_difftest(reg_t *reg, char* imgPath, CRam* ram);
 void difftest_step(CEmulator* emu);
 

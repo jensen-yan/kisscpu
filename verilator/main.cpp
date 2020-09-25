@@ -16,7 +16,7 @@ int main(int argc, char** argv){
     // difftest_step(emulator);
     // reg_t reg[DIFFTEST_NR_REG];
     // emulator->read_emu_regs(reg);
-    emulator->step(3);
+    emulator->step(10);
 
 
     return 0;

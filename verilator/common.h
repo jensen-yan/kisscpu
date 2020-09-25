@@ -1,3 +1,13 @@
+/**
+ * @file common.h
+ * @author your name (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2020-09-23
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
@@ -19,9 +29,13 @@ typedef uint64_t reg_t;
 typedef uint64_t paddr_t;  
 #endif
 
-// 0~31: GPRs
+/**
+ * @brief 枚举的不同变量
+ * 
+ */
+//! 0~31: GPRs
 enum {
-  DIFFTEST_THIS_PC = 32,
+  DIFFTEST_THIS_PC = 32,  ///< pc放在32号处
 #ifndef __RV32__
   DIFFTEST_MSTATUS,
   DIFFTEST_MCAUSE,

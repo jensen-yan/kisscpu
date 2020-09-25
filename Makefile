@@ -11,7 +11,6 @@ run:
 	obj_dir/VsimTop
 
 clean:
-	rm -r build
 	rm -r obj_dir
 
 verilog:
@@ -19,12 +18,17 @@ verilog:
 # -td  输出到build/ 文件中
 
 # 先make verilog, 再 make verilator, 再make run
+# obj_dir/verilated_vcd_c.cpp
 
 run-verilator: $(VerilatorCppFile)
-	verilator simTop.v --build \
-	$(VerilatorCppFile) \
+	verilator simTop.v \
+	$(VerilatorCppFile)  \
 	--cc --exe -LDFLAGS "-ldl" \
 	-CFLAGS "-g" --trace
+	make -C obj_dir -f VsimTop.mk
+
+build:
+	make run-verilator
 
 all:
 	make init
