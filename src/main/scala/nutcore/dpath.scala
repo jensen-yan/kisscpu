@@ -95,7 +95,7 @@ class dpath extends Module
 
   if_reg_pc := if_pc_next
 
-  val if_pc_plus4 = (if_reg_pc + 8.asUInt(XLEN.W))
+  val if_pc_plus4 = (if_reg_pc + 4.asUInt(XLEN.W))    // 还是改成了pc+4
 
 
   if_pc_next := Mux(io.ctl.exe_pc_sel === PC_4,      if_pc_plus4,
@@ -117,6 +117,8 @@ class dpath extends Module
   dec_reg_pc    := if_reg_pc
 
 
+  //DEBUG: TODO:
+  printf("IF: if_pc=[%x] if_inst=[%x] if_pc_next=[%x] pc_sel=[%d] e_bj_pc=[%x]\n",if_reg_pc, if_inst, if_pc_next,io.ctl.exe_pc_sel, exe_brjmp_target)
 
 
   //******************************************************************************************************
@@ -208,7 +210,7 @@ class dpath extends Module
   exe_reg_ctrl_br_type  := io.ctl.br_type
 
 
-//  printf("decode debug: pc=[%x], ")
+  printf("DEC: dec_pc=[%x], inst=[%x]\n", dec_reg_pc, dec_reg_inst)
 
 
   //******************************************************************************************************
@@ -249,7 +251,7 @@ class dpath extends Module
   mem_reg_ctrl_csr_cmd  := exe_reg_ctrl_csr_cmd
 
 
-
+  printf("EXE: pc=[%x] inst=[%x] \n",exe_reg_pc, exe_reg_inst)
 
   //******************************************************************************************************
   // Memory Stage
@@ -261,7 +263,7 @@ class dpath extends Module
 //    (mem_reg_ctrl_wb_sel === WB_MEM) -> io.dmem.resp.bits.data
   ))
 
-
+  printf("MEM: pc=[%x] inst=[%x] wb_sel=[%d] wbdata=[%x]\n", mem_reg_pc, mem_reg_inst, mem_reg_ctrl_wb_sel, mem_wbdata)
 
   //******************************************************************************************************
   // Writeback Stage
@@ -271,7 +273,7 @@ class dpath extends Module
   wb_reg_wbdata        := mem_wbdata
   wb_reg_ctrl_rf_wen   := mem_reg_ctrl_rf_wen
 
-
+  printf("WB : pc=[%x] inst=[%x]\n", RegNext(mem_reg_pc), RegNext(mem_reg_inst))
 
   //******************************************************************************************************
   // External Signals

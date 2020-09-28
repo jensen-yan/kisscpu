@@ -5,7 +5,7 @@
 
 CRam::CRam(char* imgPath)
 {
-    m_ramSize = RAMSIZE / sizeof(paddr_t);
+    m_ramSize = RAMSIZE / sizeof(iaddr_t);
     memset(m_ram, 0, m_ramSize);
     // memset(dram, 0, m_ramSize);
 #ifdef DEBUG
@@ -51,12 +51,12 @@ int CRam::getImgSize()
 
 
 
-paddr_t CRam::InstRead(paddr_t addr, bool en){
-    // printf("addr = 0x%016lx \n", addr);
+iaddr_t CRam::InstRead(iaddr_t addr, bool en){
+    printf("inst read addr = 0x%016lx \n", addr);
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + m_ramSize &&
         "read addr out of range");
-    return en ? m_ram[(addr - ADDRSTART) / sizeof(paddr_t)] : 0;
+    return en ? m_ram[(addr - ADDRSTART) / sizeof(iaddr_t)] : 0;
 }
 
 paddr_t CRam::DataRead(paddr_t addr, bool en){

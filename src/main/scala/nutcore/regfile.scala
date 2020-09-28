@@ -30,4 +30,5 @@ class regfile extends Module{
   BoringUtils.addSource(VecInit((0 to NUM_REG-1).map(i => rf(i.U))), "diffTestRegfile")
 //  def read(addr: UInt) : UInt = Mux(addr === 0.U, 0.U, rf(addr))
 //  def write(addr: UInt, data : UInt) = {rf(addr) := data(63, 0)}
+  printf("RF: ra=[%x] sp=[%x] waddr=[%x] wdata=[%x] we=%d\n", rf(1.U), rf(2.U), io.waddr, io.wdata, io.we)
 }

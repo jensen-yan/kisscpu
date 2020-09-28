@@ -9,7 +9,7 @@ class CRam
 {
 private:
     /** 巨大的RAM数组(存储指令), 每个元素64位 */
-    paddr_t m_ram[RAMSIZE / sizeof(paddr_t)];
+    iaddr_t m_ram[RAMSIZE / sizeof(iaddr_t)];
     int m_ramSize;  ///< ram的大小, 单位为64byte
     int m_imgSize;  ///< ram内存储img的大小
 
@@ -46,7 +46,7 @@ public:
      * @param en enable
      * @return paddr_t 返回具体指令
      */
-    paddr_t InstRead(paddr_t addr, bool en);
+    iaddr_t InstRead(iaddr_t addr, bool en);
     /**
      * @brief 数据读
      * 

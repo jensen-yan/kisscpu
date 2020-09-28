@@ -12,7 +12,7 @@
 #define __COMMON_H__
 
 #include "constants.h"
-#define DEBUG
+// #define DEBUG
 // TODO:
 #define __RV64__
 // #define __RV32__
@@ -28,6 +28,8 @@ typedef uint32_t paddr_t;
 typedef uint64_t reg_t;
 typedef uint64_t paddr_t;  
 #endif
+
+typedef uint32_t iaddr_t;   // 对指令地址取32位
 
 /**
  * @brief 枚举的不同变量

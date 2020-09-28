@@ -31,10 +31,13 @@ build:
 	make run-verilator
 
 all:
+	make verilog
 	make clean
 	make run-verilator
-	make run
+	make dummy
 
+dummy:
+	obj_dir/VsimTop /home/yanyue/nutshell_v2/kisscpu/nexus-am/tests/cputest/build/dummy-riscv64-nutshell.bin
 
 # 在verilator文件夹中
 # g++ -g -o difftest difftest.cpp ram.cpp -ldl
