@@ -1,7 +1,7 @@
 NAME = nemu
 
 ifneq ($(MAKECMDGOALS),clean) # ignore check for make clean
-ISA ?= x86
+ISA ?= riscv64
 ISAS = $(shell ls src/isa/)
 ifeq ($(filter $(ISAS), $(ISA)), ) # ISA must be valid
 $(error Invalid ISA. Supported: $(ISAS))
