@@ -1,7 +1,7 @@
 [
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_89"
+    "target":"~simTop|dpath>_T_114"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",

@@ -5,24 +5,27 @@
 using namespace std;
 #include "difftestIO.h"
 
-CEmulator::CEmulator(CRam* input_ram)
+CEmulator::CEmulator(CRam* input_ram, long* input_time)
 {
     m_ram = input_ram;
+    m_sc_time = input_time;
     // Verilated::commandArgs(argc, argv);
     m_simtop = new VsimTop("m_simtop");
 
-    // 波形
-    Verilated::traceEverOn(true);
-    m_tfp = new VerilatedVcdC;
-    m_simtop->trace(m_tfp, 99);  // Trace 99 levels of hierarchy
-    m_tfp->open("/home/yanyue/nutshell_v2/kisscpu/trace/simx.vcd");
-
+    if(vcdTrace){   // 波形
+        Verilated::traceEverOn(true);
+        m_tfp = new VerilatedVcdC;
+        m_simtop->trace(m_tfp, 99);  // Trace 99 levels of hierarchy
+        m_tfp->open("/home/yanyue/nutshell_v2/kisscpu/trace/simvcd.vcd");
+    }
+    
     reset_ncycles(10);
 }
 
 CEmulator::~CEmulator()
 {
     m_simtop->final();
+    m_tfp->close();
     delete m_simtop;
     delete m_tfp;
 }
@@ -32,42 +35,37 @@ void CEmulator::step(int i)
     for(; i > 0; i--){
         cout << "clock = " << m_cycles << endl;
         m_cycles++;
-        m_simtop->clock = m_simtop->clock ? 0: 1;
+        m_simtop->clock = 1;
         m_simtop->eval();
-        m_tfp->dump(10*m_cycles-2);
-
-        m_simtop->clock = m_simtop->clock ? 0: 1;
+        evalRam();      // 模拟下一拍才能拿到指令
         m_simtop->eval();
-        m_tfp->dump(10*m_cycles);
+        (*m_sc_time)++;
+        if(vcdTrace) {m_tfp->dump((double)*m_sc_time);}
 
+        m_simtop->clock = 0;
+        m_simtop->eval();
+        (*m_sc_time)++;
+        if(vcdTrace) {m_tfp->dump((double)*m_sc_time);}
         
-
-        m_simtop->io_topIO_instReadIO_data = 
-            m_ram->InstRead(m_simtop->io_topIO_instReadIO_addr, m_simtop->io_topIO_instReadIO_en);
-        // printf("read inst = 0x%lx \n", m_simtop->io_topIO_instReadIO_data);
-        /*
-        m_simtop->io_topIO_dataReadIO_data =
-            m_ram->DataRead(m_simtop->io_topIO_dataReadIO_addr, m_simtop->io_topIO_dataReadIO_en);
-        m_ram->DataWrite( m_simtop->io_topIO_dataWriteIO_addr,
-                        m_simtop->io_topIO_dataWriteIO_data,
-                        m_simtop->io_topIO_dataWriteIO_en);
-        */
-
         cout << endl;
     }
 }
 
 void CEmulator::reset_ncycles(int m_cycles)
 {
+    m_simtop->eval();
+    m_simtop->eval();
+    m_simtop->clock = 0;
+    m_simtop->reset = 1;
     for (int i = 0; i < m_cycles; i++)
     {
-        m_simtop->reset = 1;
-        m_simtop->clock = 0;
+        m_simtop->clock = m_simtop->clock ? 0 : 1;
         m_simtop->eval();
-        m_simtop->clock = 1;
-        m_simtop->eval();
+        (*m_sc_time)++;
+        if(vcdTrace) {m_tfp->dump((double)*m_sc_time);}
     }
     m_simtop->reset = 0;
+    m_simtop->clock = 0;
 }
 
 
@@ -85,4 +83,17 @@ void CEmulator::read_emu_regs(reg_t* r)
 double CEmulator::sc_time_stamp () {       // Called by $time in Verilog
     return m_cycles;           // converts to double, to match
     // what SystemC does
+}
+
+void CEmulator::evalRam(){
+    m_simtop->io_topIO_instReadIO_data = 
+            m_ram->InstRead(m_simtop->io_topIO_instReadIO_addr, m_simtop->io_topIO_instReadIO_en);
+    // printf("read inst = 0x%lx \n", m_simtop->io_topIO_instReadIO_data);
+    /*
+    m_simtop->io_topIO_dataReadIO_data =
+        m_ram->DataRead(m_simtop->io_topIO_dataReadIO_addr, m_simtop->io_topIO_dataReadIO_en);
+    m_ram->DataWrite( m_simtop->io_topIO_dataWriteIO_addr,
+                    m_simtop->io_topIO_dataWriteIO_data,
+                    m_simtop->io_topIO_dataWriteIO_en);
+    */
 }

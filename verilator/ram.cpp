@@ -8,15 +8,16 @@ CRam::CRam(char* imgPath)
     m_ramSize = RAMSIZE / sizeof(iaddr_t);
     memset(m_ram, 0, m_ramSize);
     // memset(dram, 0, m_ramSize);
+    /*
 #ifdef DEBUG
     m_imgSize = 4;
     m_ram[0] = 0x800002b7;  // lui t0,0x80000
     m_ram[1] = 0x800002b7;  // lui t0,0x80000
     m_ram[2] = 0x0002a023;  // sw  zero,0(t0)
     m_ram[3] = 0x0002a503;  // lw  a0,0(t0)
-    
 
 #else
+*/
     assert(imgPath && "No image file");
     FILE *fp = fopen(imgPath, "rb");
     assert(fp && "Cannot open file");
@@ -29,7 +30,7 @@ CRam::CRam(char* imgPath)
     assert(ret && "read img failed");
     fclose(fp);
 
-#endif
+// #endif
 
 
 
@@ -41,7 +42,7 @@ CRam::~CRam()
 
 void* CRam::getImgStart()
 {
-    return &m_ram[0];
+    return m_ram;
 }
     
 int CRam::getImgSize()

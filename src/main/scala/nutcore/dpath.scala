@@ -10,10 +10,9 @@ import common._
 class DatToCtlIo extends Bundle()
 {
   val dec_inst   = Output(UInt(XLEN.W))
-  val exe_br_eq   = Output(Bool())
-  val exe_br_lt   = Output(Bool())
-  val exe_br_ltu  = Output(Bool())
-  val exe_br_type = Output(UInt(4.W))
+  val dec_br_eq   = Output(Bool())
+  val dec_br_lt   = Output(Bool())
+  val dec_br_ltu  = Output(Bool())
 }
 
 class DpathIo extends Bundle()
@@ -34,15 +33,17 @@ class dpath extends Module
   // Pipeline State Registers
 
   // Instruction Fetch State
-  val if_reg_pc             = RegInit(UInt(XLEN.W) ,START_ADDR)
+  val fs_valid              = RegInit(false.B)
+  val if_reg_pc             = RegInit(UInt(XLEN.W) ,START_ADDR - 4.U)     // TODO: 先不变吧
 
   // Instruction Decode State
-  val dec_reg_valid         = RegInit(false.B)
+  val ds_valid              = RegInit(false.B)
   val dec_reg_inst          = RegInit(BUBBLE)
   val dec_reg_pc            = RegInit(0.asUInt(XLEN.W))
+  val ds_allowin            = Wire(Bool())
 
   // Execute State, 18个
-  val exe_reg_valid         = RegInit(false.B)
+  val es_valid              = RegInit(false.B)
   val exe_reg_inst          = RegInit(BUBBLE)
   val exe_reg_pc            = RegInit(0.asUInt(XLEN.W))
   val exe_reg_wbaddr        = Reg(UInt(5.W))
@@ -51,7 +52,6 @@ class dpath extends Module
   val exe_reg_op1_data      = Reg(UInt(XLEN.W))
   val exe_reg_op2_data      = Reg(UInt(XLEN.W))
   val exe_reg_rs2_data      = Reg(UInt(XLEN.W))
-  val exe_reg_ctrl_br_type  = RegInit(BR_N)
   val exe_reg_ctrl_op2_sel  = Reg(UInt())
   val exe_reg_ctrl_alu_fun  = Reg(UInt())
   val exe_reg_ctrl_wb_sel   = Reg(UInt())
@@ -60,9 +60,10 @@ class dpath extends Module
   val exe_reg_ctrl_mem_fcn  = RegInit(M_X)
   val exe_reg_ctrl_mem_typ  = RegInit(MT_X)
   val exe_reg_ctrl_csr_cmd  = RegInit(CSR.N)
+  val es_allowin            = Wire(Bool())
 
   // Memory State
-  val mem_reg_valid         = RegInit(false.B)
+  val ms_valid              = RegInit(false.B)
   val mem_reg_pc            = Reg(UInt(XLEN.W))
   val mem_reg_inst          = Reg(UInt(XLEN.W))
   val mem_reg_alu_out       = Reg(UInt(XLEN.W))
@@ -78,51 +79,77 @@ class dpath extends Module
   val mem_reg_ctrl_mem_typ  = RegInit(MT_X)
   val mem_reg_ctrl_wb_sel   = Reg(UInt())
   val mem_reg_ctrl_csr_cmd  = RegInit(CSR.N)
+  val ms_allowin            = Wire(Bool())
 
   // Writeback State
-  val wb_reg_valid          = RegInit(false.B)
+  val ws_valid              = RegInit(false.B)
   val wb_reg_wbaddr         = Reg(UInt())
   val wb_reg_wbdata         = Reg(UInt(XLEN.W))
   val wb_reg_ctrl_rf_wen    = RegInit(false.B)
+  val ws_allowin            = Wire(Bool())
 
 
-  //**********************************
+  //******************************************************************************************************
   // Instruction Fetch Stage
-  val if_pc_next          = Wire(UInt(XLEN.W))
-  val exe_brjmp_target    = Wire(UInt(XLEN.W))
-  val exe_jump_reg_target = Wire(UInt(XLEN.W))
+  val if_pc_next          = Wire(UInt(XLEN.W))        // next_pc
+  val dec_brjmp_target    = Wire(UInt(XLEN.W))
+  val dec_jump_reg_target = Wire(UInt(XLEN.W))
 //  val exception_target    = Wire(UInt(XLEN.W))
 
-  if_reg_pc := if_pc_next
+  val fs_ready_go         = Wire(Bool())
+  val fs_allowin          = Wire(Bool())
+  val to_fs_valid         = Wire(Bool())
 
-  val if_pc_plus4 = (if_reg_pc + 4.asUInt(XLEN.W))    // 还是改成了pc+4
-
-
-  if_pc_next := Mux(io.ctl.exe_pc_sel === PC_4,      if_pc_plus4,
-    Mux(io.ctl.exe_pc_sel === PC_BRJMP,  exe_brjmp_target,
-      Mux(io.ctl.exe_pc_sel === PC_JALR,   exe_jump_reg_target,
+  // pre-IF
+  to_fs_valid := true.B
+  val if_pc_plus4 = if_reg_pc + 4.asUInt(XLEN.W)    // 还是改成了pc+4 == seq_pc
+  if_pc_next := Mux(io.ctl.dec_pc_sel === PC_4,      if_pc_plus4,
+    Mux(io.ctl.dec_pc_sel === PC_BRJMP,  dec_brjmp_target,
+      Mux(io.ctl.dec_pc_sel === PC_JALR,   dec_jump_reg_target,
         /*Mux(io.ctl.exe_pc_sel === PC_EXC*/ BUBBLE)))    // TODO:
 
+  // IF stage
+  fs_ready_go := true.B
+  fs_allowin  := !fs_valid || fs_ready_go && ds_allowin
+  val fs_to_ds_valid = fs_valid && fs_ready_go
 
+  when(fs_allowin){
+    fs_valid := to_fs_valid
+  }
+  when(to_fs_valid && fs_allowin){
+    if_reg_pc := if_pc_next
+  }
   // 获取此时的inst指令
   // TODO: inst Read
-  io.instReadIO.addr := if_reg_pc
-  io.instReadIO.en := true.B
+  io.instReadIO.addr := if_pc_next
+  io.instReadIO.en := to_fs_valid && fs_allowin   // 握手成功且可以流水才读指令
   val if_inst = Wire(UInt(XLEN.W))
-  if_inst := io.instReadIO.data
-
-  // 传递流水线中的reg
-  dec_reg_valid := true.B
-  dec_reg_inst  := if_inst
-  dec_reg_pc    := if_reg_pc
+  val if_reg_inst = Reg(UInt(XLEN.W))       // 强行缓存一拍获取的指令
+  if_reg_inst := io.instReadIO.data
+//  if_inst := if_reg_inst
+  if_inst := Mux(io.ctl.dec_pc_sel === PC_4, if_reg_inst, BUBBLE)     // 如果是跳转指令, 强行改成nop
 
 
   //DEBUG: TODO:
-  printf("IF: if_pc=[%x] if_inst=[%x] if_pc_next=[%x] pc_sel=[%d] e_bj_pc=[%x]\n",if_reg_pc, if_inst, if_pc_next,io.ctl.exe_pc_sel, exe_brjmp_target)
+  printf("IF : valid = %d pc=[%x] inst=[%x] if_pc_next=[%x] pc_sel=[%d] e_bj_pc=[%x]\n",fs_valid,  if_reg_pc, if_inst, if_pc_next,io.ctl.dec_pc_sel, dec_brjmp_target)
 
 
   //******************************************************************************************************
   // Decode Stage
+  val ds_ready_go = true.B
+  ds_allowin      := !ds_valid ||  ds_ready_go && es_allowin
+  val ds_to_es_valid  = ds_valid && ds_ready_go
+  when(ds_allowin){
+    ds_valid := fs_to_ds_valid
+  }
+  when(fs_to_ds_valid && ds_allowin){
+    // 传递流水线中的reg
+    dec_reg_inst  := if_inst
+    dec_reg_pc    := if_reg_pc
+  }
+
+
+
   val dec_rs1_addr = dec_reg_inst(19, 15)
   val dec_rs2_addr = dec_reg_inst(24, 20)
   val dec_wbaddr   = dec_reg_inst(11, 7)
@@ -155,9 +182,6 @@ class dpath extends Module
   val imm_utype_sext  = Cat(Fill(32,imm_utype(19)), imm_utype, Fill(12,0.U))  // TODO: 改其他的!
   val imm_ujtype_sext = Cat(Fill(43,imm_ujtype(19)), imm_ujtype, 0.U)
 
-  // TODO: 改成64位的
-//  val imm_u_sext = Cat(Fill(32, imm_u(19)), imm_u, Fill(12,0.U))
-
 
   // Operand 2 Mux
   val dec_alu_op2 = MuxCase(0.U, Array(
@@ -174,9 +198,9 @@ class dpath extends Module
   val exe_alu_out  = Wire(UInt(XLEN.W))
   val mem_wbdata   = Wire(UInt(XLEN.W))
 
-  val dec_op1_data = Wire(UInt(XLEN.W))
+  val dec_op1_data = Wire(UInt(XLEN.W))   // op1 ,op2 是传递给alu使用的
   val dec_op2_data = Wire(UInt(XLEN.W))
-  val dec_rs2_data = Wire(UInt(XLEN.W))
+  val dec_rs2_data = Wire(UInt(XLEN.W))   // rs2 是regfile读出的值
 
 
   // TODO: 可以改成前递的方式
@@ -188,33 +212,46 @@ class dpath extends Module
   dec_rs2_data := rf_rs2_data
   dec_op2_data := dec_alu_op2
 
-  // 传递流水线reg
-  exe_reg_pc            := dec_reg_pc
-  exe_reg_rs1_addr      := dec_rs1_addr
-  exe_reg_rs2_addr      := dec_rs2_addr
-  exe_reg_op1_data      := dec_op1_data
-  exe_reg_op2_data      := dec_op2_data
-  exe_reg_rs2_data      := dec_rs2_data
-  exe_reg_ctrl_op2_sel  := io.ctl.op2_sel
-  exe_reg_ctrl_alu_fun  := io.ctl.alu_fun
-  exe_reg_ctrl_wb_sel   := io.ctl.wb_sel
-
-  exe_reg_valid         := dec_reg_valid
-  exe_reg_inst          := dec_reg_inst
-  exe_reg_wbaddr        := dec_wbaddr
-  exe_reg_ctrl_rf_wen   := io.ctl.rf_wen
-  exe_reg_ctrl_mem_val  := io.ctl.mem_val
-  exe_reg_ctrl_mem_fcn  := io.ctl.mem_fcn
-  exe_reg_ctrl_mem_typ  := io.ctl.mem_typ
-//  exe_reg_ctrl_csr_cmd  := io.ctl.csr_cmd
-  exe_reg_ctrl_br_type  := io.ctl.br_type
+  // Branch/Jump Target Calculation
+  val brjmp_offset    = dec_op2_data
+  dec_brjmp_target    := dec_reg_pc + brjmp_offset
+  dec_jump_reg_target := (dec_op1_data + dec_op2_data)(XLEN-1, 0)
 
 
-  printf("DEC: dec_pc=[%x], inst=[%x]\n", dec_reg_pc, dec_reg_inst)
+
+  printf("DEC: valid = %d pc=[%x] inst=[%x] op2=[%x] bj_target = [%x]\n",ds_valid, dec_reg_pc, dec_reg_inst, dec_alu_op2, dec_brjmp_target)
 
 
   //******************************************************************************************************
   // Execute Stage
+  val es_ready_go = true.B
+  es_allowin      := !es_valid || es_ready_go && ms_allowin
+  val es_to_ms_valid = es_valid && es_ready_go
+  when(es_allowin){
+    es_valid := ds_to_es_valid
+  }
+  when(ds_to_es_valid && es_allowin){
+    // 传递流水线reg
+    exe_reg_pc            := dec_reg_pc
+    exe_reg_rs1_addr      := dec_rs1_addr
+    exe_reg_rs2_addr      := dec_rs2_addr
+    exe_reg_op1_data      := dec_op1_data
+    exe_reg_op2_data      := dec_op2_data
+    exe_reg_rs2_data      := dec_rs2_data
+    exe_reg_inst          := dec_reg_inst
+    exe_reg_wbaddr        := dec_wbaddr
+
+    // TODO: ctrl 传过来的信号等价于dec传过来的吧
+    exe_reg_ctrl_op2_sel  := io.ctl.op2_sel
+    exe_reg_ctrl_alu_fun  := io.ctl.alu_fun
+    exe_reg_ctrl_wb_sel   := io.ctl.wb_sel
+    exe_reg_ctrl_rf_wen   := io.ctl.rf_wen
+    exe_reg_ctrl_mem_val  := io.ctl.mem_val
+    exe_reg_ctrl_mem_fcn  := io.ctl.mem_fcn
+    exe_reg_ctrl_mem_typ  := io.ctl.mem_typ
+  }
+
+
 
   val exe_alu_op1 = exe_reg_op1_data.asUInt()
   val exe_alu_op2 = exe_reg_op2_data.asUInt()
@@ -225,36 +262,39 @@ class dpath extends Module
   alu.io.src1   := exe_alu_op1
   alu.io.src2   := exe_alu_op2
   exe_alu_out   := alu.io.result
-  val exe_adder_out = (exe_alu_op1 + exe_alu_op2)(XLEN-1,0)
-
-  // Branch/Jump Target Calculation
-  val brjmp_offset    = exe_reg_op2_data
-  exe_brjmp_target    := exe_reg_pc + brjmp_offset
-  exe_jump_reg_target := exe_adder_out
-
-  // 传递流水线
-  mem_reg_valid         := exe_reg_valid
-  mem_reg_pc            := exe_reg_pc
-  mem_reg_inst          := exe_reg_inst
-  mem_reg_alu_out       := exe_alu_out
-  mem_reg_wbaddr        := exe_reg_wbaddr
-  mem_reg_rs1_addr      := exe_reg_rs1_addr
-  mem_reg_rs2_addr      := exe_reg_rs2_addr
-  mem_reg_op1_data      := exe_reg_op1_data
-  mem_reg_op2_data      := exe_reg_op2_data
-  mem_reg_rs2_data      := exe_reg_rs2_data
-  mem_reg_ctrl_rf_wen   := exe_reg_ctrl_rf_wen
-  mem_reg_ctrl_mem_val  := exe_reg_ctrl_mem_val
-  mem_reg_ctrl_mem_fcn  := exe_reg_ctrl_mem_fcn
-  mem_reg_ctrl_mem_typ  := exe_reg_ctrl_mem_typ
-  mem_reg_ctrl_wb_sel   := exe_reg_ctrl_wb_sel
-  mem_reg_ctrl_csr_cmd  := exe_reg_ctrl_csr_cmd
+//  val exe_adder_out = (exe_alu_op1 + exe_alu_op2)(XLEN-1,0)
 
 
-  printf("EXE: pc=[%x] inst=[%x] \n",exe_reg_pc, exe_reg_inst)
+
+
+
+  printf("EXE: valid = %d pc=[%x] inst=[%x] \n",es_valid, exe_reg_pc, exe_reg_inst)
 
   //******************************************************************************************************
   // Memory Stage
+  val ms_ready_go     = true.B
+  ms_allowin         := !ms_valid || ms_ready_go && ws_allowin
+  val ms_to_ws_valid  = ms_valid && ms_ready_go
+  when(ms_allowin){
+    ms_valid := es_to_ms_valid
+  }
+  when(es_to_ms_valid && ms_allowin){
+    mem_reg_pc            := exe_reg_pc
+    mem_reg_inst          := exe_reg_inst
+    mem_reg_alu_out       := exe_alu_out
+    mem_reg_wbaddr        := exe_reg_wbaddr
+    mem_reg_rs1_addr      := exe_reg_rs1_addr
+    mem_reg_rs2_addr      := exe_reg_rs2_addr
+    mem_reg_op1_data      := exe_reg_op1_data
+    mem_reg_op2_data      := exe_reg_op2_data
+    mem_reg_rs2_data      := exe_reg_rs2_data
+    mem_reg_ctrl_rf_wen   := exe_reg_ctrl_rf_wen
+    mem_reg_ctrl_mem_val  := exe_reg_ctrl_mem_val
+    mem_reg_ctrl_mem_fcn  := exe_reg_ctrl_mem_fcn
+    mem_reg_ctrl_mem_typ  := exe_reg_ctrl_mem_typ
+    mem_reg_ctrl_wb_sel   := exe_reg_ctrl_wb_sel
+    mem_reg_ctrl_csr_cmd  := exe_reg_ctrl_csr_cmd
+  }
 
   // WB Mux
   mem_wbdata := MuxCase(mem_reg_alu_out, Array(
@@ -263,27 +303,34 @@ class dpath extends Module
 //    (mem_reg_ctrl_wb_sel === WB_MEM) -> io.dmem.resp.bits.data
   ))
 
-  printf("MEM: pc=[%x] inst=[%x] wb_sel=[%d] wbdata=[%x]\n", mem_reg_pc, mem_reg_inst, mem_reg_ctrl_wb_sel, mem_wbdata)
+  printf("MEM: valid = %d pc=[%x] inst=[%x] wb_sel=[%d] wbdata=[%x]\n", ms_valid, mem_reg_pc, mem_reg_inst, mem_reg_ctrl_wb_sel, mem_wbdata)
 
   //******************************************************************************************************
   // Writeback Stage
+  val ws_ready_go     = true.B
+  ws_allowin         := !ws_valid || ws_ready_go
+  when(ws_allowin){
+    ws_valid := ms_to_ws_valid
+  }
+  when(ms_to_ws_valid && ws_allowin){
+    wb_reg_wbaddr        := mem_reg_wbaddr
+    wb_reg_wbdata        := mem_wbdata
+    wb_reg_ctrl_rf_wen   := mem_reg_ctrl_rf_wen
+  }
 
-  wb_reg_valid         := mem_reg_valid
-  wb_reg_wbaddr        := mem_reg_wbaddr
-  wb_reg_wbdata        := mem_wbdata
-  wb_reg_ctrl_rf_wen   := mem_reg_ctrl_rf_wen
 
-  printf("WB : pc=[%x] inst=[%x]\n", RegNext(mem_reg_pc), RegNext(mem_reg_inst))
+
+
+  printf("WB : valid = %d pc=[%x] inst=[%x]\n", ws_valid, RegNext(mem_reg_pc), RegNext(mem_reg_inst))
 
   //******************************************************************************************************
   // External Signals
 
    // datapath to controlpath outputs
-   io.dat.dec_inst   := dec_reg_inst
-   io.dat.exe_br_eq  := (exe_reg_op1_data === exe_reg_rs2_data)
-   io.dat.exe_br_lt  := (exe_reg_op1_data.asSInt() < exe_reg_rs2_data.asSInt())
-   io.dat.exe_br_ltu := (exe_reg_op1_data.asUInt() < exe_reg_rs2_data.asUInt())
-   io.dat.exe_br_type:= exe_reg_ctrl_br_type
+   io.dat.dec_inst   := dec_reg_inst    // dec 的指令
+   io.dat.dec_br_eq  := (dec_op1_data === dec_rs2_data)   // 在译码级就判断了
+   io.dat.dec_br_lt  := (dec_op1_data.asSInt() < dec_rs2_data.asSInt())
+   io.dat.dec_br_ltu := (dec_op1_data.asUInt() < dec_rs2_data.asUInt())
 
     // datapath to data memory outputs
     io.dataWriteIO.en := true.B

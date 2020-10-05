@@ -17,6 +17,8 @@
 #define __RV64__
 // #define __RV32__
 
+#define vcdTrace true
+
 typedef unsigned int uint32_t;
 typedef unsigned long int uint64_t;
 

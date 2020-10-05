@@ -8,7 +8,7 @@ import common.instructions._
 // ctl -> dat 的输出数据
 class CtlToDatIo extends Bundle()
 {
-  val exe_pc_sel = Output(UInt(2.W))
+  val dec_pc_sel = Output(UInt(2.W))
   val br_type    = Output(UInt(4.W))
   val op1_sel    = Output(UInt(2.W))
   val op2_sel    = Output(UInt(3.W))
@@ -30,7 +30,7 @@ class cpath extends Module{
   val io = IO(new cpathIO())
   io := DontCare
 
-  // 一个大的译码表  inst -> 各个信号, 第一行是默认行, 可以看作一个大的MuxCase
+  // 一个大的译码表  译码级的inst -> 各个信号, 第一行是默认行, 可以看作一个大的MuxCase
   val csignals =
     ListLookup(io.dat.dec_inst,
       List(N, BR_N  , OP1_X , OP2_X    , OEN_0, OEN_0, ALU_X   , WB_X  ,  REN_0, MEN_0, M_X  , MT_X, CSR.N, N),
@@ -87,37 +87,35 @@ class cpath extends Module{
 
   // Branch Logic
   // 根据跳转类型决定pc_sel 信号线, pc_4. pc_br, pc_j, pc_jr, pc_exc
-  // Branch Logic
-  val ctrl_exe_pc_sel = Mux(false.B         , PC_EXC,
-    Mux(io.dat.exe_br_type === BR_N  , PC_4,
-      Mux(io.dat.exe_br_type === BR_NE , Mux(!io.dat.exe_br_eq,  PC_BRJMP, PC_4),
-        Mux(io.dat.exe_br_type === BR_EQ , Mux( io.dat.exe_br_eq,  PC_BRJMP, PC_4),
-          Mux(io.dat.exe_br_type === BR_GE , Mux(!io.dat.exe_br_lt,  PC_BRJMP, PC_4),
-            Mux(io.dat.exe_br_type === BR_GEU, Mux(!io.dat.exe_br_ltu, PC_BRJMP, PC_4),
-              Mux(io.dat.exe_br_type === BR_LT , Mux( io.dat.exe_br_lt,  PC_BRJMP, PC_4),
-                Mux(io.dat.exe_br_type === BR_LTU, Mux( io.dat.exe_br_ltu, PC_BRJMP, PC_4),
-                  Mux(io.dat.exe_br_type === BR_J  , PC_BRJMP,
-                    Mux(io.dat.exe_br_type === BR_JR , PC_JALR,
+  // TODO: 译码得到的cs_br_type, 等下一拍传到执行级, 再去选择pc?
+  // 直接在译码得到的cs_br_type, 就来决定pc_sel!
+  val ctrl_dec_pc_sel = Mux(false.B         , PC_EXC,
+    Mux(cs_br_type === BR_N  , PC_4,
+      Mux(cs_br_type === BR_NE , Mux(!io.dat.dec_br_eq,  PC_BRJMP, PC_4),
+        Mux(cs_br_type === BR_EQ , Mux( io.dat.dec_br_eq,  PC_BRJMP, PC_4),
+          Mux(cs_br_type === BR_GE , Mux(!io.dat.dec_br_lt,  PC_BRJMP, PC_4),
+            Mux(cs_br_type === BR_GEU, Mux(!io.dat.dec_br_ltu, PC_BRJMP, PC_4),
+              Mux(cs_br_type === BR_LT , Mux( io.dat.dec_br_lt,  PC_BRJMP, PC_4),
+                Mux(cs_br_type === BR_LTU, Mux( io.dat.dec_br_ltu, PC_BRJMP, PC_4),
+                  Mux(cs_br_type === BR_J  , PC_BRJMP,
+                    Mux(cs_br_type === BR_JR , PC_JALR,
                       PC_4
                     ))))))))))
 
-  val stall = false.B
 
   // Set the data-path control signals
-  io.ctl.exe_pc_sel := ctrl_exe_pc_sel
-  io.ctl.br_type    := cs_br_type
+  io.ctl.dec_pc_sel := ctrl_dec_pc_sel
+  io.ctl.br_type    := cs_br_type   // 这些传递给译码级使用
   io.ctl.op1_sel    := cs_op1_sel
   io.ctl.op2_sel    := cs_op2_sel
   io.ctl.alu_fun    := cs_alu_fun
   io.ctl.wb_sel     := cs_wb_sel
   io.ctl.rf_wen     := cs_rf_wen
 
-  printf("inst=[%x] br=[%d] br_e=[%d] stall=[%d] pc_sel=[%d] op1=[%d] op2=[%d] alu=[%d] wb=[%d] rf_wen=[%d]\n",
+  printf("inst=[%x] br_d=[%d] pc_sel=[%d] op1=[%d] op2=[%d] alu_f=[%d] wb_sel=[%d] rf_wen=[%d]\n",
     io.dat.dec_inst,
     cs_br_type,
-    io.dat.exe_br_type,
-    stall,
-    ctrl_exe_pc_sel,
+    ctrl_dec_pc_sel,
     cs_op1_sel,
     cs_op2_sel,
     cs_alu_fun,

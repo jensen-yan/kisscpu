@@ -17,6 +17,7 @@ private:
      * 
      */
     int m_cycles = 0;
+    long* m_sc_time;
     /**
      * @brief 模拟器运行需要的ram指针
      * 
@@ -38,13 +39,15 @@ private:
      * @param cycles n次
      */
     void reset_ncycles(int cycles);
+
+    void evalRam();
 public:
     /**
      * @brief Construct a new CEmulator object
      * 
      * @param input_ram 输入ram
      */
-    CEmulator(CRam* input_ram);
+    CEmulator(CRam* input_ram, long* input_time);
     ~CEmulator();
     /**
      * @brief 模拟器运行几步

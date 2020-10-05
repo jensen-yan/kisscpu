@@ -12,6 +12,7 @@ private:
     iaddr_t m_ram[RAMSIZE / sizeof(iaddr_t)];
     int m_ramSize;  ///< ram的大小, 单位为64byte
     int m_imgSize;  ///< ram内存储img的大小
+    long* sc_time;  ///< 打印波形的时钟
 
 public:
     /**

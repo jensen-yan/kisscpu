@@ -5,7 +5,8 @@
 using namespace std;
 #include "difftest.h"
 
-const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/verilator/nemu_so/riscv64-nemu-interpreter-so";
+const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/nemu/build/riscv64-nemu-interpreter-so";
+// const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/verilator/nemu_so/riscv64-nemu-interpreter-so";
 // 等待获取的6个函数指针
 void (*ref_difftest_memcpy_from_dut)(paddr_t dest, void *src, size_t n);
 void (*ref_difftest_getregs)(void *c);
@@ -67,21 +68,10 @@ void init_difftest(reg_t *reg, char* imgPath, CRam* ram){
     }
     ref_r[4] = 0x0000000000000444;
     ref_difftest_setregs(ref_r);        // test setregs*/
-    ref_isa_reg_display();
-    ref_difftest_exec(1);               // test exec
-    ref_isa_reg_display();  
-    ref_difftest_exec(1);               // test exec
-    ref_isa_reg_display(); 
-    ref_difftest_exec(1);               // test exec
-    ref_isa_reg_display(); 
-    ref_difftest_exec(1);               // test exec
-    ref_isa_reg_display();
-    ref_difftest_exec(1);               // test exec
-    ref_isa_reg_display();
-    ref_difftest_exec(1);               // test exec
-    ref_isa_reg_display();
-    ref_difftest_exec(1);               // test exec
-    ref_isa_reg_display();
+    for(int i = 0; i < 20; i ++){
+        ref_isa_reg_display();
+        ref_difftest_exec(1);               // test exec
+    }
 }
 /*
 int main(){
@@ -97,21 +87,26 @@ void difftest_step(CEmulator* emu)
     // emu走一条, nemu走一条, 比对, 错误就输出
     reg_t reg_dut[DIFFTEST_NR_REG];
     reg_t reg_ref[DIFFTEST_NR_REG];
-    emu->step(1);
-    emu->read_emu_regs(reg_dut);
-    ref_difftest_exec(1);
-    ref_difftest_getregs(&reg_ref);
-    // 每个比对
-    ref_isa_reg_display();
-    for (size_t i = 0; i < 32; i++)
-    {
-        if (reg_dut[i] != reg_ref[i])
+    // dut 先走4拍
+    emu->step(4);
+    // 不断比对
+    while(true){
+        emu->step(1);
+        emu->read_emu_regs(reg_dut);
+        ref_difftest_exec(1);
+        ref_difftest_getregs(&reg_ref);
+        // 每个比对
+        ref_isa_reg_display();
+        for (size_t i = 0; i < 32; i++)
         {
-            printf("reg %d %s different at pc = [0x%16lx], right=[0x%16lx], wrong=[0x%16lx]\n",
-                i, reg_name[i], reg_dut[32], reg_ref[i], reg_dut[i]);
+            if (reg_dut[i] != reg_ref[i])
+            {
+                printf("reg %d %s different at pc = [0x%16lx], right=[0x%16lx], wrong=[0x%16lx]\n",
+                    i, reg_name[i], reg_dut[32], reg_ref[i], reg_dut[i]);
+                break;
+            }
+
         }
-        
     }
-    
 
 }
