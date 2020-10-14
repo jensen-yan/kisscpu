@@ -1,8 +1,16 @@
+PWD := $(shell pwd)
 
 # src文件
-scalaFile = $(shell find ./src/main/scala -name '*.scala')
-VerilatorCppFile = $(shell find ./verilator -name '*.cpp')
+scalaFile = $(shell find $(PWD)/src/main/scala -name '*.scala')
+VerilatorCppFile = $(shell find $(PWD)/verilator -name '*.cpp')
+verilatorDir = $(PWD)/build/generated-cpp
 
+# 可执行文件
+exe = $(PWD)/obj_dir/VsimTop
+
+# 测试文件
+testDir = $(PWD)/nexus-am//tests/cputest/build
+test_dummy = $(testDir)/dummy-riscv64-nutshell.bin
 
 init:
 	export PATH=$HOME/.local/verilator/bin:$PATH
@@ -17,14 +25,13 @@ verilog:
 	sbt "runMain sim.elaborate"
 # -td  输出到build/ 文件中
 
-# 先make verilog, 再 make verilator, 再make run
-# obj_dir/verilated_vcd_c.cpp
 
-run-verilator: $(VerilatorCppFile)
+run-verilator: $(VerilatorCppFile) 
 	verilator simTop.v \
-	$(VerilatorCppFile)  \
+	--trace \
+	$(VerilatorCppFile) \
 	--cc --exe -LDFLAGS "-ldl" \
-	-CFLAGS "-g" --trace
+	-CFLAGS "-g"
 	make -C obj_dir -f VsimTop.mk
 
 build:
@@ -37,7 +44,8 @@ all:
 	make dummy
 
 dummy:
-	obj_dir/VsimTop /home/yanyue/nutshell_v2/kisscpu/nexus-am/tests/cputest/build/dummy-riscv64-nutshell.bin
+	$(exe) $(test_dummy)
+	# obj_dir/VsimTop /home/yanyue/nutshell_v2/kisscpu/nexus-am/tests/cputest/build/dummy-riscv64-nutshell.bin
 
 # 在verilator文件夹中
 # g++ -g -o difftest difftest.cpp ram.cpp -ldl

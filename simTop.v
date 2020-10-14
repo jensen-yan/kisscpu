@@ -400,39 +400,39 @@ module regfile(
   wire  _T = io_raddr1 == 6'h0; // @[regfile.scala 23:30]
   wire  _T_4 = io_raddr2 == 6'h0; // @[regfile.scala 24:30]
   wire  _T_9 = io_waddr != 6'h0; // @[regfile.scala 26:35]
-  wire  _T_49 = ~reset; // @[regfile.scala 33:9]
-  wire [63:0] _T_45_0 = rf__T_13_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_1 = rf__T_14_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_2 = rf__T_15_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_3 = rf__T_16_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_4 = rf__T_17_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_5 = rf__T_18_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_6 = rf__T_19_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_7 = rf__T_20_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_8 = rf__T_21_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_9 = rf__T_22_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_10 = rf__T_23_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_11 = rf__T_24_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_12 = rf__T_25_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_13 = rf__T_26_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_14 = rf__T_27_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_15 = rf__T_28_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_16 = rf__T_29_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_17 = rf__T_30_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_18 = rf__T_31_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_19 = rf__T_32_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_20 = rf__T_33_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_21 = rf__T_34_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_22 = rf__T_35_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_23 = rf__T_36_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_24 = rf__T_37_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_25 = rf__T_38_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_26 = rf__T_39_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_27 = rf__T_40_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_28 = rf__T_41_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_29 = rf__T_42_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_30 = rf__T_43_data; // @[regfile.scala 30:32 regfile.scala 30:32]
-  wire [63:0] _T_45_31 = rf__T_44_data; // @[regfile.scala 30:32 regfile.scala 30:32]
+  wire  _T_49 = ~reset; // @[regfile.scala 31:9]
+  wire [63:0] _T_45_0 = rf__T_13_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_1 = rf__T_14_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_2 = rf__T_15_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_3 = rf__T_16_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_4 = rf__T_17_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_5 = rf__T_18_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_6 = rf__T_19_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_7 = rf__T_20_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_8 = rf__T_21_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_9 = rf__T_22_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_10 = rf__T_23_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_11 = rf__T_24_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_12 = rf__T_25_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_13 = rf__T_26_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_14 = rf__T_27_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_15 = rf__T_28_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_16 = rf__T_29_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_17 = rf__T_30_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_18 = rf__T_31_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_19 = rf__T_32_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_20 = rf__T_33_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_21 = rf__T_34_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_22 = rf__T_35_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_23 = rf__T_36_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_24 = rf__T_37_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_25 = rf__T_38_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_26 = rf__T_39_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_27 = rf__T_40_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_28 = rf__T_41_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_29 = rf__T_42_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_30 = rf__T_43_data; // @[regfile.scala 29:32 regfile.scala 29:32]
+  wire [63:0] _T_45_31 = rf__T_44_data; // @[regfile.scala 29:32 regfile.scala 29:32]
   assign rf__T_2_addr = io_raddr1[4:0];
   assign rf__T_2_data = rf[rf__T_2_addr]; // @[regfile.scala 20:15]
   assign rf__T_6_addr = io_raddr2[4:0];
@@ -597,7 +597,7 @@ end // initial
       if (`PRINTF_COND) begin
     `endif
         if (_T_49) begin
-          $fwrite(32'h80000002,"RF: ra=[%x] sp=[%x] waddr=[%x] wdata=[%x] we=%d\n",rf__T_46_data,rf__T_47_data,io_waddr,io_wdata,io_we); // @[regfile.scala 33:9]
+          $fwrite(32'h80000002,"RF: ra=[%x] sp=[%x] rdata1(%d)=[%x] rdata2(%d)=[%x] wdata(%d)=[%x] we=%d\n",rf__T_46_data,rf__T_47_data,io_raddr1,io_rdata1,io_raddr2,io_rdata2,io_waddr,io_wdata,io_we); // @[regfile.scala 31:9]
         end
     `ifdef PRINTF_COND
       end
@@ -679,8 +679,10 @@ module dpath(
   output        io_dat_dec_br_ltu,
   output [63:0] io_instReadIO_addr,
   input  [63:0] io_instReadIO_data,
+  output        io_instReadIO_en,
   output [63:0] io_dataWriteIO_addr,
   output [63:0] io_dataWriteIO_data,
+  output        ws_valid_0,
   output [63:0] _T_45_0_0,
   output [63:0] _T_45_0_1,
   output [63:0] _T_45_0_2,
@@ -713,7 +715,7 @@ module dpath(
   output [63:0] _T_45_0_29,
   output [63:0] _T_45_0_30,
   output [63:0] _T_45_0_31,
-  output [63:0] _T_114_0
+  output [63:0] wb_reg_pc_0
 );
 `ifdef RANDOMIZE_REG_INIT
   reg [31:0] _RAND_0;
@@ -746,159 +748,196 @@ module dpath(
   reg [31:0] _RAND_27;
   reg [31:0] _RAND_28;
   reg [31:0] _RAND_29;
-  reg [31:0] _RAND_30;
-  reg [63:0] _RAND_31;
-  reg [31:0] _RAND_32;
-  reg [63:0] _RAND_33;
+  reg [63:0] _RAND_30;
+  reg [31:0] _RAND_31;
+  reg [63:0] _RAND_32;
+  reg [31:0] _RAND_33;
   reg [63:0] _RAND_34;
   reg [63:0] _RAND_35;
   reg [63:0] _RAND_36;
-  reg [63:0] _RAND_37;
-  reg [31:0] _RAND_38;
-  reg [63:0] _RAND_39;
-  reg [31:0] _RAND_40;
-  reg [63:0] _RAND_41;
-  reg [63:0] _RAND_42;
+  reg [31:0] _RAND_37;
+  reg [63:0] _RAND_38;
+  reg [31:0] _RAND_39;
+  reg [63:0] _RAND_40;
 `endif // RANDOMIZE_REG_INIT
-  wire  regfile_clock; // @[dpath.scala 159:23]
-  wire  regfile_reset; // @[dpath.scala 159:23]
-  wire [5:0] regfile_io_raddr1; // @[dpath.scala 159:23]
-  wire [5:0] regfile_io_raddr2; // @[dpath.scala 159:23]
-  wire [63:0] regfile_io_rdata1; // @[dpath.scala 159:23]
-  wire [63:0] regfile_io_rdata2; // @[dpath.scala 159:23]
-  wire  regfile_io_we; // @[dpath.scala 159:23]
-  wire [5:0] regfile_io_waddr; // @[dpath.scala 159:23]
-  wire [63:0] regfile_io_wdata; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_0; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_1; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_2; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_3; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_4; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_5; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_6; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_7; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_8; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_9; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_10; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_11; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_12; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_13; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_14; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_15; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_16; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_17; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_18; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_19; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_20; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_21; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_22; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_23; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_24; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_25; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_26; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_27; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_28; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_29; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_30; // @[dpath.scala 159:23]
-  wire [63:0] regfile__T_45_0_31; // @[dpath.scala 159:23]
-  wire  alu_clock; // @[dpath.scala 260:19]
-  wire  alu_reset; // @[dpath.scala 260:19]
-  wire [3:0] alu_io_alu_op; // @[dpath.scala 260:19]
-  wire [63:0] alu_io_src1; // @[dpath.scala 260:19]
-  wire [63:0] alu_io_src2; // @[dpath.scala 260:19]
-  wire [63:0] alu_io_result; // @[dpath.scala 260:19]
-  reg  fs_valid; // @[dpath.scala 36:38]
-  wire [31:0] _T_1 = 32'h80000000 - 32'h4; // @[dpath.scala 37:64]
-  reg [63:0] if_reg_pc; // @[dpath.scala 37:38]
-  reg  ds_valid; // @[dpath.scala 40:38]
-  reg [63:0] dec_reg_inst; // @[dpath.scala 41:38]
-  reg [63:0] dec_reg_pc; // @[dpath.scala 42:38]
-  reg  es_valid; // @[dpath.scala 46:38]
-  reg [63:0] exe_reg_inst; // @[dpath.scala 47:38]
-  reg [63:0] exe_reg_pc; // @[dpath.scala 48:38]
-  reg [4:0] exe_reg_wbaddr; // @[dpath.scala 49:34]
-  reg [4:0] exe_reg_rs1_addr; // @[dpath.scala 50:34]
-  reg [4:0] exe_reg_rs2_addr; // @[dpath.scala 51:34]
-  reg [63:0] exe_alu_op1; // @[dpath.scala 52:34]
-  reg [63:0] exe_alu_op2; // @[dpath.scala 53:34]
-  reg [63:0] exe_reg_rs2_data; // @[dpath.scala 54:34]
-  reg [3:0] exe_reg_ctrl_alu_fun; // @[dpath.scala 56:34]
-  reg [1:0] exe_reg_ctrl_wb_sel; // @[dpath.scala 57:34]
-  reg  exe_reg_ctrl_rf_wen; // @[dpath.scala 58:38]
-  reg  ms_valid; // @[dpath.scala 66:38]
-  reg [63:0] mem_reg_pc; // @[dpath.scala 67:34]
-  reg [63:0] mem_reg_inst; // @[dpath.scala 68:34]
-  reg [63:0] mem_reg_alu_out; // @[dpath.scala 69:34]
-  reg [4:0] mem_reg_wbaddr; // @[dpath.scala 70:34]
-  reg [4:0] mem_reg_rs1_addr; // @[dpath.scala 71:34]
-  reg [4:0] mem_reg_rs2_addr; // @[dpath.scala 72:34]
-  reg [63:0] mem_reg_op1_data; // @[dpath.scala 73:34]
-  reg [63:0] mem_reg_op2_data; // @[dpath.scala 74:34]
-  reg [63:0] mem_reg_rs2_data; // @[dpath.scala 75:34]
-  reg  mem_reg_ctrl_rf_wen; // @[dpath.scala 76:38]
-  reg [1:0] mem_reg_ctrl_wb_sel; // @[dpath.scala 80:34]
-  reg  ws_valid; // @[dpath.scala 85:38]
-  reg [4:0] wb_reg_wbaddr; // @[dpath.scala 86:34]
-  reg [63:0] wb_reg_wbdata; // @[dpath.scala 87:34]
-  reg  wb_reg_ctrl_rf_wen; // @[dpath.scala 88:38]
-  wire [63:0] if_pc_plus4 = if_reg_pc + 64'h4; // @[dpath.scala 105:31]
-  wire  _T_3 = io_ctl_dec_pc_sel == 2'h0; // @[dpath.scala 106:39]
-  wire  _T_4 = io_ctl_dec_pc_sel == 2'h1; // @[dpath.scala 107:27]
-  wire  _T_5 = io_ctl_dec_pc_sel == 2'h2; // @[dpath.scala 108:29]
-  wire  _T_68 = io_ctl_op1_sel == 2'h2; // @[dpath.scala 209:22]
+  wire  regfile_clock; // @[dpath.scala 164:23]
+  wire  regfile_reset; // @[dpath.scala 164:23]
+  wire [5:0] regfile_io_raddr1; // @[dpath.scala 164:23]
+  wire [5:0] regfile_io_raddr2; // @[dpath.scala 164:23]
+  wire [63:0] regfile_io_rdata1; // @[dpath.scala 164:23]
+  wire [63:0] regfile_io_rdata2; // @[dpath.scala 164:23]
+  wire  regfile_io_we; // @[dpath.scala 164:23]
+  wire [5:0] regfile_io_waddr; // @[dpath.scala 164:23]
+  wire [63:0] regfile_io_wdata; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_0; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_1; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_2; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_3; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_4; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_5; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_6; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_7; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_8; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_9; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_10; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_11; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_12; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_13; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_14; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_15; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_16; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_17; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_18; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_19; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_20; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_21; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_22; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_23; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_24; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_25; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_26; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_27; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_28; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_29; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_30; // @[dpath.scala 164:23]
+  wire [63:0] regfile__T_45_0_31; // @[dpath.scala 164:23]
+  wire  alu_clock; // @[dpath.scala 272:19]
+  wire  alu_reset; // @[dpath.scala 272:19]
+  wire [3:0] alu_io_alu_op; // @[dpath.scala 272:19]
+  wire [63:0] alu_io_src1; // @[dpath.scala 272:19]
+  wire [63:0] alu_io_src2; // @[dpath.scala 272:19]
+  wire [63:0] alu_io_result; // @[dpath.scala 272:19]
+  reg  fs_valid; // @[dpath.scala 33:25]
+  wire [31:0] _T_1 = 32'h80000000 - 32'h4; // @[dpath.scala 34:52]
+  reg [63:0] if_reg_pc; // @[dpath.scala 34:26]
+  reg  ds_valid; // @[dpath.scala 37:25]
+  reg [63:0] dec_reg_inst; // @[dpath.scala 38:29]
+  reg [63:0] dec_reg_pc; // @[dpath.scala 39:27]
+  reg  es_valid; // @[dpath.scala 43:25]
+  reg [63:0] exe_reg_inst; // @[dpath.scala 44:29]
+  reg [63:0] exe_reg_pc; // @[dpath.scala 45:27]
+  reg [4:0] exe_reg_wbaddr; // @[dpath.scala 46:27]
+  reg [4:0] exe_reg_rs1_addr; // @[dpath.scala 47:29]
+  reg [4:0] exe_reg_rs2_addr; // @[dpath.scala 48:29]
+  reg [63:0] exe_alu_op1; // @[dpath.scala 49:29]
+  reg [63:0] exe_alu_op2; // @[dpath.scala 50:29]
+  reg [63:0] exe_reg_rs2_data; // @[dpath.scala 51:29]
+  reg [3:0] exe_reg_ctrl_alu_fun; // @[dpath.scala 53:33]
+  reg [1:0] exe_reg_ctrl_wb_sel; // @[dpath.scala 54:32]
+  reg  exe_reg_ctrl_rf_wen; // @[dpath.scala 55:36]
+  reg  ms_valid; // @[dpath.scala 63:25]
+  reg [63:0] mem_reg_pc; // @[dpath.scala 64:23]
+  reg [63:0] mem_reg_inst; // @[dpath.scala 65:25]
+  reg [63:0] mem_reg_alu_out; // @[dpath.scala 66:28]
+  reg [4:0] mem_reg_wbaddr; // @[dpath.scala 67:27]
+  reg [4:0] mem_reg_rs1_addr; // @[dpath.scala 68:29]
+  reg [4:0] mem_reg_rs2_addr; // @[dpath.scala 69:29]
+  reg [63:0] mem_reg_op1_data; // @[dpath.scala 70:29]
+  reg [63:0] mem_reg_op2_data; // @[dpath.scala 71:29]
+  reg [63:0] mem_reg_rs2_data; // @[dpath.scala 72:29]
+  reg  mem_reg_ctrl_rf_wen; // @[dpath.scala 73:36]
+  reg [1:0] mem_reg_ctrl_wb_sel; // @[dpath.scala 77:32]
+  reg  ws_valid; // @[dpath.scala 82:25]
+  reg [63:0] wb_reg_pc; // @[dpath.scala 83:22]
+  reg [4:0] wb_reg_wbaddr; // @[dpath.scala 84:26]
+  reg [63:0] wb_reg_wbdata; // @[dpath.scala 85:26]
+  reg  wb_reg_ctrl_rf_wen; // @[dpath.scala 86:35]
+  wire [63:0] if_pc_plus4 = if_reg_pc + 64'h4; // @[dpath.scala 103:31]
+  wire  _T_3 = io_ctl_dec_pc_sel == 2'h0; // @[dpath.scala 105:39]
+  wire  _T_4 = io_ctl_dec_pc_sel == 2'h1; // @[dpath.scala 106:27]
+  wire  _T_5 = io_ctl_dec_pc_sel == 2'h2; // @[dpath.scala 107:29]
+  wire  _T_58 = io_ctl_op1_sel == 2'h2; // @[dpath.scala 200:22]
   wire [31:0] imm_z = {27'h0,dec_reg_inst[19:15]}; // @[Cat.scala 29:58]
-  wire  _T_69 = io_ctl_op1_sel == 2'h1; // @[dpath.scala 210:22]
-  wire [63:0] _T_70 = _T_69 ? dec_reg_pc : regfile_io_rdata1; // @[Mux.scala 98:16]
-  wire [63:0] dec_op1_data = _T_68 ? {{32'd0}, imm_z} : _T_70; // @[Mux.scala 98:16]
-  wire  _T_57 = io_ctl_op2_sel == 3'h0; // @[dpath.scala 188:21]
-  wire  _T_58 = io_ctl_op2_sel == 3'h1; // @[dpath.scala 189:21]
-  wire [11:0] imm_itype = dec_reg_inst[31:20]; // @[dpath.scala 170:32]
-  wire [51:0] _T_40 = imm_itype[11] ? 52'hfffffffffffff : 52'h0; // @[Bitwise.scala 72:12]
-  wire [63:0] imm_itype_sext = {_T_40,imm_itype}; // @[Cat.scala 29:58]
-  wire  _T_59 = io_ctl_op2_sel == 3'h2; // @[dpath.scala 190:21]
+  wire  _T_59 = io_ctl_op1_sel == 2'h1; // @[dpath.scala 201:22]
+  wire  _T_60 = exe_reg_wbaddr == dec_reg_inst[19:15]; // @[dpath.scala 202:34]
+  wire  _T_61 = es_valid & _T_60; // @[dpath.scala 202:15]
+  wire  _T_62 = dec_reg_inst[19:15] != 5'h0; // @[dpath.scala 202:69]
+  wire  _T_63 = _T_61 & _T_62; // @[dpath.scala 202:52]
+  wire  _T_64 = _T_63 & exe_reg_ctrl_rf_wen; // @[dpath.scala 202:78]
+  wire [63:0] exe_alu_out = alu_io_result; // @[dpath.scala 191:25 dpath.scala 276:15]
+  wire  _T_65 = mem_reg_wbaddr == dec_reg_inst[19:15]; // @[dpath.scala 203:34]
+  wire  _T_66 = ms_valid & _T_65; // @[dpath.scala 203:15]
+  wire  _T_68 = _T_66 & _T_62; // @[dpath.scala 203:52]
+  wire  _T_69 = _T_68 & mem_reg_ctrl_rf_wen; // @[dpath.scala 203:78]
+  wire  _T_70 = wb_reg_wbaddr == dec_reg_inst[19:15]; // @[dpath.scala 204:33]
+  wire  _T_71 = ws_valid & _T_70; // @[dpath.scala 204:15]
+  wire  _T_73 = _T_71 & _T_62; // @[dpath.scala 204:51]
+  wire  _T_74 = _T_73 & wb_reg_ctrl_rf_wen; // @[dpath.scala 204:77]
+  wire [63:0] _T_75 = _T_74 ? wb_reg_wbdata : regfile_io_rdata1; // @[Mux.scala 98:16]
+  wire [63:0] _T_76 = _T_69 ? mem_reg_alu_out : _T_75; // @[Mux.scala 98:16]
+  wire [63:0] _T_77 = _T_64 ? exe_alu_out : _T_76; // @[Mux.scala 98:16]
+  wire [63:0] _T_78 = _T_59 ? dec_reg_pc : _T_77; // @[Mux.scala 98:16]
+  wire [63:0] dec_op1_data = _T_58 ? {{32'd0}, imm_z} : _T_78; // @[Mux.scala 98:16]
+  wire [4:0] dec_rs2_addr = dec_reg_inst[24:20]; // @[dpath.scala 159:34]
+  wire  _T_91 = exe_reg_wbaddr == dec_rs2_addr; // @[dpath.scala 217:34]
+  wire  _T_92 = es_valid & _T_91; // @[dpath.scala 217:15]
+  wire  _T_93 = dec_rs2_addr != 5'h0; // @[dpath.scala 217:69]
+  wire  _T_94 = _T_92 & _T_93; // @[dpath.scala 217:52]
+  wire  _T_95 = _T_94 & exe_reg_ctrl_rf_wen; // @[dpath.scala 217:78]
+  wire  _T_96 = io_ctl_op2_sel == 3'h0; // @[dpath.scala 217:120]
+  wire  _T_97 = _T_95 & _T_96; // @[dpath.scala 217:101]
+  wire  _T_98 = mem_reg_wbaddr == dec_rs2_addr; // @[dpath.scala 218:34]
+  wire  _T_99 = ms_valid & _T_98; // @[dpath.scala 218:15]
+  wire  _T_101 = _T_99 & _T_93; // @[dpath.scala 218:52]
+  wire  _T_102 = _T_101 & mem_reg_ctrl_rf_wen; // @[dpath.scala 218:78]
+  wire  _T_104 = _T_102 & _T_96; // @[dpath.scala 218:101]
+  wire  _T_105 = wb_reg_wbaddr == dec_rs2_addr; // @[dpath.scala 219:33]
+  wire  _T_106 = ws_valid & _T_105; // @[dpath.scala 219:15]
+  wire  _T_108 = _T_106 & _T_93; // @[dpath.scala 219:51]
+  wire  _T_109 = _T_108 & wb_reg_ctrl_rf_wen; // @[dpath.scala 219:77]
+  wire  _T_111 = _T_109 & _T_96; // @[dpath.scala 219:99]
+  wire  _T_81 = io_ctl_op2_sel == 3'h1; // @[dpath.scala 209:21]
+  wire [11:0] imm_itype = dec_reg_inst[31:20]; // @[dpath.scala 175:31]
+  wire [51:0] _T_41 = imm_itype[11] ? 52'hfffffffffffff : 52'h0; // @[Bitwise.scala 72:12]
+  wire [63:0] imm_itype_sext = {_T_41,imm_itype}; // @[Cat.scala 29:58]
+  wire  _T_82 = io_ctl_op2_sel == 3'h2; // @[dpath.scala 210:21]
   wire [11:0] imm_stype = {dec_reg_inst[31:25],dec_reg_inst[11:7]}; // @[Cat.scala 29:58]
-  wire [51:0] _T_43 = imm_stype[11] ? 52'hfffffffffffff : 52'h0; // @[Bitwise.scala 72:12]
-  wire [63:0] imm_stype_sext = {_T_43,dec_reg_inst[31:25],dec_reg_inst[11:7]}; // @[Cat.scala 29:58]
-  wire  _T_60 = io_ctl_op2_sel == 3'h3; // @[dpath.scala 191:21]
+  wire [51:0] _T_44 = imm_stype[11] ? 52'hfffffffffffff : 52'h0; // @[Bitwise.scala 72:12]
+  wire [63:0] imm_stype_sext = {_T_44,dec_reg_inst[31:25],dec_reg_inst[11:7]}; // @[Cat.scala 29:58]
+  wire  _T_83 = io_ctl_op2_sel == 3'h3; // @[dpath.scala 211:21]
   wire [11:0] imm_sbtype = {dec_reg_inst[31],dec_reg_inst[7],dec_reg_inst[30:25],dec_reg_inst[11:8]}; // @[Cat.scala 29:58]
-  wire [50:0] _T_46 = imm_sbtype[11] ? 51'h7ffffffffffff : 51'h0; // @[Bitwise.scala 72:12]
-  wire [63:0] imm_sbtype_sext = {_T_46,dec_reg_inst[31],dec_reg_inst[7],dec_reg_inst[30:25],dec_reg_inst[11:8],1'h0}; // @[Cat.scala 29:58]
-  wire  _T_61 = io_ctl_op2_sel == 3'h4; // @[dpath.scala 192:21]
-  wire [19:0] imm_utype = dec_reg_inst[31:12]; // @[dpath.scala 173:32]
-  wire [31:0] _T_50 = imm_utype[19] ? 32'hffffffff : 32'h0; // @[Bitwise.scala 72:12]
-  wire [63:0] imm_utype_sext = {_T_50,imm_utype,12'h0}; // @[Cat.scala 29:58]
-  wire  _T_62 = io_ctl_op2_sel == 3'h5; // @[dpath.scala 193:21]
+  wire [50:0] _T_47 = imm_sbtype[11] ? 51'h7ffffffffffff : 51'h0; // @[Bitwise.scala 72:12]
+  wire [63:0] imm_sbtype_sext = {_T_47,dec_reg_inst[31],dec_reg_inst[7],dec_reg_inst[30:25],dec_reg_inst[11:8],1'h0}; // @[Cat.scala 29:58]
+  wire  _T_84 = io_ctl_op2_sel == 3'h4; // @[dpath.scala 212:21]
+  wire [19:0] imm_utype = dec_reg_inst[31:12]; // @[dpath.scala 178:31]
+  wire [31:0] _T_51 = imm_utype[19] ? 32'hffffffff : 32'h0; // @[Bitwise.scala 72:12]
+  wire [63:0] imm_utype_sext = {_T_51,imm_utype,12'h0}; // @[Cat.scala 29:58]
+  wire  _T_85 = io_ctl_op2_sel == 3'h5; // @[dpath.scala 213:21]
   wire [19:0] imm_ujtype = {dec_reg_inst[31],dec_reg_inst[19:12],dec_reg_inst[20],dec_reg_inst[30:21]}; // @[Cat.scala 29:58]
-  wire [42:0] _T_55 = imm_ujtype[19] ? 43'h7ffffffffff : 43'h0; // @[Bitwise.scala 72:12]
-  wire [63:0] imm_ujtype_sext = {_T_55,dec_reg_inst[31],dec_reg_inst[19:12],dec_reg_inst[20],dec_reg_inst[30:21],1'h0}; // @[Cat.scala 29:58]
-  wire [63:0] _T_63 = _T_62 ? imm_ujtype_sext : 64'h0; // @[Mux.scala 98:16]
-  wire [63:0] _T_64 = _T_61 ? imm_utype_sext : _T_63; // @[Mux.scala 98:16]
-  wire [63:0] _T_65 = _T_60 ? imm_sbtype_sext : _T_64; // @[Mux.scala 98:16]
-  wire [63:0] _T_66 = _T_59 ? imm_stype_sext : _T_65; // @[Mux.scala 98:16]
-  wire [63:0] _T_67 = _T_58 ? imm_itype_sext : _T_66; // @[Mux.scala 98:16]
-  wire [63:0] dec_alu_op2 = _T_57 ? regfile_io_rdata2 : _T_67; // @[Mux.scala 98:16]
-  wire [63:0] dec_jump_reg_target = dec_op1_data + dec_alu_op2; // @[dpath.scala 218:40]
-  wire [63:0] _T_6 = _T_5 ? dec_jump_reg_target : 64'h4033; // @[dpath.scala 108:10]
-  wire [63:0] dec_brjmp_target = dec_reg_pc + dec_alu_op2; // @[dpath.scala 217:37]
-  wire [63:0] _T_7 = _T_4 ? dec_brjmp_target : _T_6; // @[dpath.scala 107:8]
-  wire [63:0] if_pc_next = _T_3 ? if_pc_plus4 : _T_7; // @[dpath.scala 106:20]
-  reg [63:0] if_reg_inst; // @[dpath.scala 127:24]
-  wire [63:0] if_inst = _T_3 ? if_reg_inst : 64'h4033; // @[dpath.scala 130:17]
-  wire  _T_17 = ~reset; // @[dpath.scala 134:9]
-  wire [4:0] dec_rs2_addr = dec_reg_inst[24:20]; // @[dpath.scala 154:34]
-  wire [63:0] dec_rs2_data = regfile_io_rdata2; // @[dpath.scala 203:26 dpath.scala 212:16]
-  wire [63:0] exe_alu_out = alu_io_result; // @[dpath.scala 198:26 dpath.scala 264:17]
-  reg [63:0] _T_98; // @[dpath.scala 324:66]
-  reg [63:0] _T_99; // @[dpath.scala 324:87]
-  wire [63:0] _T_103 = _T_68 ? {{32'd0}, imm_z} : _T_70; // @[dpath.scala 332:45]
-  reg [63:0] wb_reg_inst; // @[dpath.scala 348:30]
-  reg [63:0] _T_107; // @[dpath.scala 351:12]
-  reg [4:0] _T_108; // @[dpath.scala 355:12]
-  reg [63:0] _T_109; // @[dpath.scala 356:12]
-  reg [4:0] _T_110; // @[dpath.scala 357:12]
-  reg [63:0] _T_111; // @[dpath.scala 358:12]
-  reg [63:0] _T_114; // @[dpath.scala 363:34]
-  regfile regfile ( // @[dpath.scala 159:23]
+  wire [42:0] _T_56 = imm_ujtype[19] ? 43'h7ffffffffff : 43'h0; // @[Bitwise.scala 72:12]
+  wire [63:0] imm_ujtype_sext = {_T_56,dec_reg_inst[31],dec_reg_inst[19:12],dec_reg_inst[20],dec_reg_inst[30:21],1'h0}; // @[Cat.scala 29:58]
+  wire [63:0] _T_86 = _T_85 ? imm_ujtype_sext : 64'h0; // @[Mux.scala 98:16]
+  wire [63:0] _T_87 = _T_84 ? imm_utype_sext : _T_86; // @[Mux.scala 98:16]
+  wire [63:0] _T_88 = _T_83 ? imm_sbtype_sext : _T_87; // @[Mux.scala 98:16]
+  wire [63:0] _T_89 = _T_82 ? imm_stype_sext : _T_88; // @[Mux.scala 98:16]
+  wire [63:0] _T_90 = _T_81 ? imm_itype_sext : _T_89; // @[Mux.scala 98:16]
+  wire [63:0] dec_alu_op2 = _T_96 ? regfile_io_rdata2 : _T_90; // @[Mux.scala 98:16]
+  wire [63:0] _T_112 = _T_111 ? wb_reg_wbdata : dec_alu_op2; // @[Mux.scala 98:16]
+  wire [63:0] _T_113 = _T_104 ? mem_reg_alu_out : _T_112; // @[Mux.scala 98:16]
+  wire [63:0] brjmp_offset = _T_97 ? exe_alu_out : _T_113; // @[Mux.scala 98:16]
+  wire [63:0] dec_jump_reg_target = dec_op1_data + brjmp_offset; // @[dpath.scala 232:40]
+  wire [63:0] _T_6 = _T_5 ? dec_jump_reg_target : 64'h4033; // @[dpath.scala 107:10]
+  wire [63:0] dec_brjmp_target = dec_reg_pc + brjmp_offset; // @[dpath.scala 231:34]
+  wire [63:0] _T_7 = _T_4 ? dec_brjmp_target : _T_6; // @[dpath.scala 106:8]
+  wire [63:0] if_pc_next = _T_3 ? if_pc_plus4 : _T_7; // @[dpath.scala 105:20]
+  wire  dec_reflush = io_ctl_dec_pc_sel != 2'h0; // @[dpath.scala 115:39]
+  reg [63:0] if_reg_inst; // @[dpath.scala 129:24]
+  wire [63:0] if_inst = dec_reflush ? 64'h4033 : if_reg_inst; // @[dpath.scala 132:17]
+  wire  _T_16 = ~reset; // @[dpath.scala 136:9]
+  wire [63:0] _T_130 = _T_109 ? wb_reg_wbdata : regfile_io_rdata2; // @[Mux.scala 98:16]
+  wire [63:0] _T_131 = _T_102 ? mem_reg_alu_out : _T_130; // @[Mux.scala 98:16]
+  wire [63:0] dec_rs2_data = _T_95 ? exe_alu_out : _T_131; // @[Mux.scala 98:16]
+  wire [63:0] exe_pc_plus4 = exe_reg_pc + 64'h4; // @[dpath.scala 279:34]
+  wire  _T_152 = exe_reg_ctrl_wb_sel == 2'h2; // @[dpath.scala 295:49]
+  reg [63:0] _T_163; // @[dpath.scala 334:77]
+  wire [63:0] _T_167 = _T_58 ? {{32'd0}, imm_z} : _T_78; // @[dpath.scala 342:43]
+  wire [63:0] _T_168 = _T_95 ? exe_alu_out : _T_131; // @[dpath.scala 342:67]
+  reg [63:0] wb_reg_inst; // @[dpath.scala 358:28]
+  reg [4:0] _T_171; // @[dpath.scala 365:12]
+  reg [63:0] _T_172; // @[dpath.scala 366:12]
+  reg [4:0] _T_173; // @[dpath.scala 367:12]
+  reg [63:0] _T_174; // @[dpath.scala 368:12]
+  regfile regfile ( // @[dpath.scala 164:23]
     .clock(regfile_clock),
     .reset(regfile_reset),
     .io_raddr1(regfile_io_raddr1),
@@ -941,7 +980,7 @@ module dpath(
     ._T_45_0_30(regfile__T_45_0_30),
     ._T_45_0_31(regfile__T_45_0_31)
   );
-  alu alu ( // @[dpath.scala 260:19]
+  alu alu ( // @[dpath.scala 272:19]
     .clock(alu_clock),
     .reset(alu_reset),
     .io_alu_op(alu_io_alu_op),
@@ -949,13 +988,15 @@ module dpath(
     .io_src2(alu_io_src2),
     .io_result(alu_io_result)
   );
-  assign io_dat_dec_inst = dec_reg_inst; // @[dpath.scala 330:22]
-  assign io_dat_dec_br_eq = dec_op1_data == dec_rs2_data; // @[dpath.scala 331:22]
-  assign io_dat_dec_br_lt = $signed(_T_103) < $signed(regfile_io_rdata2); // @[dpath.scala 332:22]
-  assign io_dat_dec_br_ltu = dec_op1_data < dec_rs2_data; // @[dpath.scala 333:22]
-  assign io_instReadIO_addr = _T_3 ? if_pc_plus4 : _T_7; // @[dpath.scala 124:22]
-  assign io_dataWriteIO_addr = mem_reg_alu_out; // @[dpath.scala 337:25]
-  assign io_dataWriteIO_data = mem_reg_rs2_data; // @[dpath.scala 338:25]
+  assign io_dat_dec_inst = dec_reg_inst; // @[dpath.scala 340:19]
+  assign io_dat_dec_br_eq = dec_op1_data == dec_rs2_data; // @[dpath.scala 341:20]
+  assign io_dat_dec_br_lt = $signed(_T_167) < $signed(_T_168); // @[dpath.scala 342:20]
+  assign io_dat_dec_br_ltu = dec_op1_data < dec_rs2_data; // @[dpath.scala 343:21]
+  assign io_instReadIO_addr = _T_3 ? if_pc_plus4 : _T_7; // @[dpath.scala 126:22]
+  assign io_instReadIO_en = 1'h1; // @[dpath.scala 127:20]
+  assign io_dataWriteIO_addr = mem_reg_alu_out; // @[dpath.scala 347:23]
+  assign io_dataWriteIO_data = mem_reg_rs2_data; // @[dpath.scala 348:23]
+  assign ws_valid_0 = ws_valid;
   assign _T_45_0_0 = regfile__T_45_0_0;
   assign _T_45_0_1 = regfile__T_45_0_1;
   assign _T_45_0_2 = regfile__T_45_0_2;
@@ -988,19 +1029,19 @@ module dpath(
   assign _T_45_0_29 = regfile__T_45_0_29;
   assign _T_45_0_30 = regfile__T_45_0_30;
   assign _T_45_0_31 = regfile__T_45_0_31;
-  assign _T_114_0 = _T_114;
+  assign wb_reg_pc_0 = wb_reg_pc;
   assign regfile_clock = clock;
   assign regfile_reset = reset;
-  assign regfile_io_raddr1 = {{1'd0}, dec_reg_inst[19:15]}; // @[dpath.scala 160:21]
-  assign regfile_io_raddr2 = {{1'd0}, dec_rs2_addr}; // @[dpath.scala 161:21]
-  assign regfile_io_we = wb_reg_ctrl_rf_wen; // @[dpath.scala 166:20]
-  assign regfile_io_waddr = {{1'd0}, wb_reg_wbaddr}; // @[dpath.scala 164:20]
-  assign regfile_io_wdata = wb_reg_wbdata; // @[dpath.scala 165:20]
+  assign regfile_io_raddr1 = {{1'd0}, dec_reg_inst[19:15]}; // @[dpath.scala 165:21]
+  assign regfile_io_raddr2 = {{1'd0}, dec_rs2_addr}; // @[dpath.scala 166:21]
+  assign regfile_io_we = wb_reg_ctrl_rf_wen; // @[dpath.scala 171:17]
+  assign regfile_io_waddr = {{1'd0}, wb_reg_wbaddr}; // @[dpath.scala 169:20]
+  assign regfile_io_wdata = wb_reg_wbdata; // @[dpath.scala 170:20]
   assign alu_clock = clock;
   assign alu_reset = reset;
-  assign alu_io_alu_op = exe_reg_ctrl_alu_fun; // @[dpath.scala 261:17]
-  assign alu_io_src1 = exe_alu_op1; // @[dpath.scala 262:17]
-  assign alu_io_src2 = exe_alu_op2; // @[dpath.scala 263:17]
+  assign alu_io_alu_op = exe_reg_ctrl_alu_fun; // @[dpath.scala 273:17]
+  assign alu_io_src1 = exe_alu_op1; // @[dpath.scala 274:15]
+  assign alu_io_src2 = exe_alu_op2; // @[dpath.scala 275:15]
 `ifdef RANDOMIZE_GARBAGE_ASSIGN
 `define RANDOMIZE
 `endif
@@ -1096,32 +1137,28 @@ initial begin
   mem_reg_ctrl_wb_sel = _RAND_28[1:0];
   _RAND_29 = {1{`RANDOM}};
   ws_valid = _RAND_29[0:0];
-  _RAND_30 = {1{`RANDOM}};
-  wb_reg_wbaddr = _RAND_30[4:0];
-  _RAND_31 = {2{`RANDOM}};
-  wb_reg_wbdata = _RAND_31[63:0];
-  _RAND_32 = {1{`RANDOM}};
-  wb_reg_ctrl_rf_wen = _RAND_32[0:0];
-  _RAND_33 = {2{`RANDOM}};
-  if_reg_inst = _RAND_33[63:0];
+  _RAND_30 = {2{`RANDOM}};
+  wb_reg_pc = _RAND_30[63:0];
+  _RAND_31 = {1{`RANDOM}};
+  wb_reg_wbaddr = _RAND_31[4:0];
+  _RAND_32 = {2{`RANDOM}};
+  wb_reg_wbdata = _RAND_32[63:0];
+  _RAND_33 = {1{`RANDOM}};
+  wb_reg_ctrl_rf_wen = _RAND_33[0:0];
   _RAND_34 = {2{`RANDOM}};
-  _T_98 = _RAND_34[63:0];
+  if_reg_inst = _RAND_34[63:0];
   _RAND_35 = {2{`RANDOM}};
-  _T_99 = _RAND_35[63:0];
+  _T_163 = _RAND_35[63:0];
   _RAND_36 = {2{`RANDOM}};
   wb_reg_inst = _RAND_36[63:0];
-  _RAND_37 = {2{`RANDOM}};
-  _T_107 = _RAND_37[63:0];
-  _RAND_38 = {1{`RANDOM}};
-  _T_108 = _RAND_38[4:0];
-  _RAND_39 = {2{`RANDOM}};
-  _T_109 = _RAND_39[63:0];
-  _RAND_40 = {1{`RANDOM}};
-  _T_110 = _RAND_40[4:0];
-  _RAND_41 = {2{`RANDOM}};
-  _T_111 = _RAND_41[63:0];
-  _RAND_42 = {2{`RANDOM}};
-  _T_114 = _RAND_42[63:0];
+  _RAND_37 = {1{`RANDOM}};
+  _T_171 = _RAND_37[4:0];
+  _RAND_38 = {2{`RANDOM}};
+  _T_172 = _RAND_38[63:0];
+  _RAND_39 = {1{`RANDOM}};
+  _T_173 = _RAND_39[4:0];
+  _RAND_40 = {2{`RANDOM}};
+  _T_174 = _RAND_40[63:0];
 `endif // RANDOMIZE_REG_INIT
   `endif // RANDOMIZE
 end // initial
@@ -1148,16 +1185,18 @@ end // initial
     end
     if (reset) begin
       ds_valid <= 1'h0;
+    end else if (dec_reflush) begin
+      ds_valid <= 1'h0;
     end else begin
       ds_valid <= fs_valid;
     end
     if (reset) begin
       dec_reg_inst <= 64'h4033;
     end else if (fs_valid) begin
-      if (_T_3) begin
-        dec_reg_inst <= if_reg_inst;
-      end else begin
+      if (dec_reflush) begin
         dec_reg_inst <= 64'h4033;
+      end else begin
+        dec_reg_inst <= if_reg_inst;
       end
     end
     if (reset) begin
@@ -1190,33 +1229,53 @@ end // initial
       exe_reg_rs2_addr <= dec_rs2_addr;
     end
     if (ds_valid) begin
-      if (_T_68) begin
+      if (_T_58) begin
         exe_alu_op1 <= {{32'd0}, imm_z};
-      end else if (_T_69) begin
+      end else if (_T_59) begin
         exe_alu_op1 <= dec_reg_pc;
+      end else if (_T_64) begin
+        exe_alu_op1 <= exe_alu_out;
+      end else if (_T_69) begin
+        exe_alu_op1 <= mem_reg_alu_out;
+      end else if (_T_74) begin
+        exe_alu_op1 <= wb_reg_wbdata;
       end else begin
         exe_alu_op1 <= regfile_io_rdata1;
       end
     end
     if (ds_valid) begin
-      if (_T_57) begin
+      if (_T_97) begin
+        exe_alu_op2 <= exe_alu_out;
+      end else if (_T_104) begin
+        exe_alu_op2 <= mem_reg_alu_out;
+      end else if (_T_111) begin
+        exe_alu_op2 <= wb_reg_wbdata;
+      end else if (_T_96) begin
         exe_alu_op2 <= regfile_io_rdata2;
-      end else if (_T_58) begin
+      end else if (_T_81) begin
         exe_alu_op2 <= imm_itype_sext;
-      end else if (_T_59) begin
+      end else if (_T_82) begin
         exe_alu_op2 <= imm_stype_sext;
-      end else if (_T_60) begin
+      end else if (_T_83) begin
         exe_alu_op2 <= imm_sbtype_sext;
-      end else if (_T_61) begin
+      end else if (_T_84) begin
         exe_alu_op2 <= imm_utype_sext;
-      end else if (_T_62) begin
+      end else if (_T_85) begin
         exe_alu_op2 <= imm_ujtype_sext;
       end else begin
         exe_alu_op2 <= 64'h0;
       end
     end
     if (ds_valid) begin
-      exe_reg_rs2_data <= dec_rs2_data;
+      if (_T_95) begin
+        exe_reg_rs2_data <= exe_alu_out;
+      end else if (_T_102) begin
+        exe_reg_rs2_data <= mem_reg_alu_out;
+      end else if (_T_109) begin
+        exe_reg_rs2_data <= wb_reg_wbdata;
+      end else begin
+        exe_reg_rs2_data <= regfile_io_rdata2;
+      end
     end
     if (ds_valid) begin
       exe_reg_ctrl_alu_fun <= io_ctl_alu_fun;
@@ -1241,7 +1300,11 @@ end // initial
       mem_reg_inst <= exe_reg_inst;
     end
     if (es_valid) begin
-      mem_reg_alu_out <= exe_alu_out;
+      if (_T_152) begin
+        mem_reg_alu_out <= exe_pc_plus4;
+      end else begin
+        mem_reg_alu_out <= exe_alu_out;
+      end
     end
     if (es_valid) begin
       mem_reg_wbaddr <= exe_reg_wbaddr;
@@ -1275,6 +1338,9 @@ end // initial
       ws_valid <= ms_valid;
     end
     if (ms_valid) begin
+      wb_reg_pc <= mem_reg_pc;
+    end
+    if (ms_valid) begin
       wb_reg_wbaddr <= mem_reg_wbaddr;
     end
     if (ms_valid) begin
@@ -1286,21 +1352,18 @@ end // initial
       wb_reg_ctrl_rf_wen <= mem_reg_ctrl_rf_wen;
     end
     if_reg_inst <= io_instReadIO_data;
-    _T_98 <= mem_reg_pc;
-    _T_99 <= mem_reg_inst;
+    _T_163 <= mem_reg_inst;
     wb_reg_inst <= mem_reg_inst;
-    _T_107 <= mem_reg_pc;
-    _T_108 <= mem_reg_rs1_addr;
-    _T_109 <= mem_reg_op1_data;
-    _T_110 <= mem_reg_rs2_addr;
-    _T_111 <= mem_reg_op2_data;
-    _T_114 <= mem_reg_pc;
+    _T_171 <= mem_reg_rs1_addr;
+    _T_172 <= mem_reg_op1_data;
+    _T_173 <= mem_reg_rs2_addr;
+    _T_174 <= mem_reg_op2_data;
     `ifndef SYNTHESIS
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_17) begin
-          $fwrite(32'h80000002,"IF : valid = %d pc=[%x] inst=[%x] if_pc_next=[%x] pc_sel=[%d] e_bj_pc=[%x]\n",fs_valid,if_reg_pc,if_inst,if_pc_next,io_ctl_dec_pc_sel,dec_brjmp_target); // @[dpath.scala 134:9]
+        if (_T_16) begin
+          $fwrite(32'h80000002,"Inst: addr=[%x], en=%d, data=[%x] \n",io_instReadIO_addr,io_instReadIO_en,if_reg_inst); // @[dpath.scala 136:9]
         end
     `ifdef PRINTF_COND
       end
@@ -1310,8 +1373,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_17) begin
-          $fwrite(32'h80000002,"DEC: valid = %d pc=[%x] inst=[%x] op2=[%x] bj_target = [%x]\n",ds_valid,dec_reg_pc,dec_reg_inst,dec_alu_op2,dec_brjmp_target); // @[dpath.scala 222:9]
+        if (_T_16) begin
+          $fwrite(32'h80000002,"IF : valid = %d pc=[%x] inst=[%x] if_pc_next=[%x] pc_sel=[%d] e_bj_pc=[%x]\n",fs_valid,if_reg_pc,if_inst,if_pc_next,io_ctl_dec_pc_sel,dec_brjmp_target); // @[dpath.scala 137:9]
         end
     `ifdef PRINTF_COND
       end
@@ -1321,8 +1384,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_17) begin
-          $fwrite(32'h80000002,"EXE: valid = %d pc=[%x] inst=[%x] \n",es_valid,exe_reg_pc,exe_reg_inst); // @[dpath.scala 271:9]
+        if (_T_16) begin
+          $fwrite(32'h80000002,"DEC: valid = %d pc=[%x] inst=[%x] op2=[%x] bj_target = [%x]\n",ds_valid,dec_reg_pc,dec_reg_inst,dec_alu_op2,dec_brjmp_target); // @[dpath.scala 235:9]
         end
     `ifdef PRINTF_COND
       end
@@ -1332,8 +1395,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_17) begin
-          $fwrite(32'h80000002,"MEM: valid = %d pc=[%x] inst=[%x] wb_sel=[%d] wbdata=[%x]\n",ms_valid,mem_reg_pc,mem_reg_inst,mem_reg_ctrl_wb_sel,mem_reg_alu_out); // @[dpath.scala 306:9]
+        if (_T_16) begin
+          $fwrite(32'h80000002,"EXE: valid = %d pc=[%x] inst=[%x] \n",es_valid,exe_reg_pc,exe_reg_inst); // @[dpath.scala 282:9]
         end
     `ifdef PRINTF_COND
       end
@@ -1343,8 +1406,8 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_17) begin
-          $fwrite(32'h80000002,"WB : valid = %d pc=[%x] inst=[%x]\n",ws_valid,_T_98,_T_99); // @[dpath.scala 324:9]
+        if (_T_16) begin
+          $fwrite(32'h80000002,"MEM: valid = %d pc=[%x] inst=[%x] wb_sel=[%d] wbdata=[%x]\n",ms_valid,mem_reg_pc,mem_reg_inst,mem_reg_ctrl_wb_sel,mem_reg_alu_out); // @[dpath.scala 317:9]
         end
     `ifdef PRINTF_COND
       end
@@ -1354,8 +1417,19 @@ end // initial
     `ifdef PRINTF_COND
       if (`PRINTF_COND) begin
     `endif
-        if (_T_17) begin
-          $fwrite(32'h80000002,"pc=[%x] W[r%d=%x][%d] Op1=[r%d][%x] Op2=[r%d][%x] inst=[%x] DASM(%x)\n",_T_107,wb_reg_wbaddr,wb_reg_wbdata,wb_reg_ctrl_rf_wen,_T_108,_T_109,_T_110,_T_111,wb_reg_inst,wb_reg_inst); // @[dpath.scala 350:11]
+        if (_T_16) begin
+          $fwrite(32'h80000002,"WB : valid = %d pc=[%x] inst=[%x]\n",ws_valid,wb_reg_pc,_T_163); // @[dpath.scala 334:9]
+        end
+    `ifdef PRINTF_COND
+      end
+    `endif
+    `endif // SYNTHESIS
+    `ifndef SYNTHESIS
+    `ifdef PRINTF_COND
+      if (`PRINTF_COND) begin
+    `endif
+        if (_T_16) begin
+          $fwrite(32'h80000002,"pc=[%x] W[r%d=%x][%d] Op1=[r%d][%x] Op2=[r%d][%x] inst=[%x]\n",wb_reg_pc,wb_reg_wbaddr,wb_reg_wbdata,wb_reg_ctrl_rf_wen,_T_171,_T_172,_T_173,_T_174,wb_reg_inst); // @[dpath.scala 360:9]
         end
     `ifdef PRINTF_COND
       end
@@ -1370,6 +1444,7 @@ module top(
   input  [63:0] io_instReadIO_data,
   output [63:0] io_dataWriteIO_addr,
   output [63:0] io_dataWriteIO_data,
+  output        ws_valid,
   output [63:0] _T_45_0,
   output [63:0] _T_45_1,
   output [63:0] _T_45_2,
@@ -1402,7 +1477,7 @@ module top(
   output [63:0] _T_45_29,
   output [63:0] _T_45_30,
   output [63:0] _T_45_31,
-  output [63:0] _T_114
+  output [63:0] wb_reg_pc
 );
   wire  cpath_clock; // @[top.scala 15:21]
   wire  cpath_reset; // @[top.scala 15:21]
@@ -1430,8 +1505,10 @@ module top(
   wire  dpath_io_dat_dec_br_ltu; // @[top.scala 16:21]
   wire [63:0] dpath_io_instReadIO_addr; // @[top.scala 16:21]
   wire [63:0] dpath_io_instReadIO_data; // @[top.scala 16:21]
+  wire  dpath_io_instReadIO_en; // @[top.scala 16:21]
   wire [63:0] dpath_io_dataWriteIO_addr; // @[top.scala 16:21]
   wire [63:0] dpath_io_dataWriteIO_data; // @[top.scala 16:21]
+  wire  dpath_ws_valid_0; // @[top.scala 16:21]
   wire [63:0] dpath__T_45_0_0; // @[top.scala 16:21]
   wire [63:0] dpath__T_45_0_1; // @[top.scala 16:21]
   wire [63:0] dpath__T_45_0_2; // @[top.scala 16:21]
@@ -1464,7 +1541,7 @@ module top(
   wire [63:0] dpath__T_45_0_29; // @[top.scala 16:21]
   wire [63:0] dpath__T_45_0_30; // @[top.scala 16:21]
   wire [63:0] dpath__T_45_0_31; // @[top.scala 16:21]
-  wire [63:0] dpath__T_114_0; // @[top.scala 16:21]
+  wire [63:0] dpath_wb_reg_pc_0; // @[top.scala 16:21]
   cpath cpath ( // @[top.scala 15:21]
     .clock(cpath_clock),
     .reset(cpath_reset),
@@ -1494,8 +1571,10 @@ module top(
     .io_dat_dec_br_ltu(dpath_io_dat_dec_br_ltu),
     .io_instReadIO_addr(dpath_io_instReadIO_addr),
     .io_instReadIO_data(dpath_io_instReadIO_data),
+    .io_instReadIO_en(dpath_io_instReadIO_en),
     .io_dataWriteIO_addr(dpath_io_dataWriteIO_addr),
     .io_dataWriteIO_data(dpath_io_dataWriteIO_data),
+    .ws_valid_0(dpath_ws_valid_0),
     ._T_45_0_0(dpath__T_45_0_0),
     ._T_45_0_1(dpath__T_45_0_1),
     ._T_45_0_2(dpath__T_45_0_2),
@@ -1528,11 +1607,12 @@ module top(
     ._T_45_0_29(dpath__T_45_0_29),
     ._T_45_0_30(dpath__T_45_0_30),
     ._T_45_0_31(dpath__T_45_0_31),
-    ._T_114_0(dpath__T_114_0)
+    .wb_reg_pc_0(dpath_wb_reg_pc_0)
   );
   assign io_instReadIO_addr = dpath_io_instReadIO_addr; // @[top.scala 19:17]
   assign io_dataWriteIO_addr = dpath_io_dataWriteIO_addr; // @[top.scala 21:18]
   assign io_dataWriteIO_data = dpath_io_dataWriteIO_data; // @[top.scala 21:18]
+  assign ws_valid = dpath_ws_valid_0;
   assign _T_45_0 = dpath__T_45_0_0;
   assign _T_45_1 = dpath__T_45_0_1;
   assign _T_45_2 = dpath__T_45_0_2;
@@ -1565,7 +1645,7 @@ module top(
   assign _T_45_29 = dpath__T_45_0_29;
   assign _T_45_30 = dpath__T_45_0_30;
   assign _T_45_31 = dpath__T_45_0_31;
-  assign _T_114 = dpath__T_114_0;
+  assign wb_reg_pc = dpath_wb_reg_pc_0;
   assign cpath_clock = clock;
   assign cpath_reset = reset;
   assign cpath_io_dat_dec_inst = dpath_io_dat_dec_inst; // @[top.scala 25:16]
@@ -1618,6 +1698,7 @@ module simTop(
   output [63:0] io_diffTestIO_regfile_30,
   output [63:0] io_diffTestIO_regfile_31,
   output [63:0] io_diffTestIO_PC,
+  output        io_diffTestIO_PC_valid,
   output [63:0] io_topIO_instReadIO_addr,
   input  [63:0] io_topIO_instReadIO_data,
   output        io_topIO_instReadIO_en,
@@ -1634,6 +1715,7 @@ module simTop(
   wire [63:0] mycoretop_io_instReadIO_data; // @[simTop.scala 15:25]
   wire [63:0] mycoretop_io_dataWriteIO_addr; // @[simTop.scala 15:25]
   wire [63:0] mycoretop_io_dataWriteIO_data; // @[simTop.scala 15:25]
+  wire  mycoretop_ws_valid; // @[simTop.scala 15:25]
   wire [63:0] mycoretop__T_45_0; // @[simTop.scala 15:25]
   wire [63:0] mycoretop__T_45_1; // @[simTop.scala 15:25]
   wire [63:0] mycoretop__T_45_2; // @[simTop.scala 15:25]
@@ -1666,7 +1748,7 @@ module simTop(
   wire [63:0] mycoretop__T_45_29; // @[simTop.scala 15:25]
   wire [63:0] mycoretop__T_45_30; // @[simTop.scala 15:25]
   wire [63:0] mycoretop__T_45_31; // @[simTop.scala 15:25]
-  wire [63:0] mycoretop__T_114; // @[simTop.scala 15:25]
+  wire [63:0] mycoretop_wb_reg_pc; // @[simTop.scala 15:25]
   top mycoretop ( // @[simTop.scala 15:25]
     .clock(mycoretop_clock),
     .reset(mycoretop_reset),
@@ -1674,6 +1756,7 @@ module simTop(
     .io_instReadIO_data(mycoretop_io_instReadIO_data),
     .io_dataWriteIO_addr(mycoretop_io_dataWriteIO_addr),
     .io_dataWriteIO_data(mycoretop_io_dataWriteIO_data),
+    .ws_valid(mycoretop_ws_valid),
     ._T_45_0(mycoretop__T_45_0),
     ._T_45_1(mycoretop__T_45_1),
     ._T_45_2(mycoretop__T_45_2),
@@ -1706,7 +1789,7 @@ module simTop(
     ._T_45_29(mycoretop__T_45_29),
     ._T_45_30(mycoretop__T_45_30),
     ._T_45_31(mycoretop__T_45_31),
-    ._T_114(mycoretop__T_114)
+    .wb_reg_pc(mycoretop_wb_reg_pc)
   );
   assign io_diffTestIO_regfile_0 = mycoretop__T_45_0;
   assign io_diffTestIO_regfile_1 = mycoretop__T_45_1;
@@ -1740,15 +1823,16 @@ module simTop(
   assign io_diffTestIO_regfile_29 = mycoretop__T_45_29;
   assign io_diffTestIO_regfile_30 = mycoretop__T_45_30;
   assign io_diffTestIO_regfile_31 = mycoretop__T_45_31;
-  assign io_diffTestIO_PC = mycoretop__T_114;
-  assign io_topIO_instReadIO_addr = mycoretop_io_instReadIO_addr; // @[simTop.scala 20:12]
-  assign io_topIO_instReadIO_en = 1'h1; // @[simTop.scala 20:12]
-  assign io_topIO_dataReadIO_addr = 64'h0; // @[simTop.scala 20:12]
-  assign io_topIO_dataReadIO_en = 1'h0; // @[simTop.scala 20:12]
-  assign io_topIO_dataWriteIO_addr = mycoretop_io_dataWriteIO_addr; // @[simTop.scala 20:12]
-  assign io_topIO_dataWriteIO_data = mycoretop_io_dataWriteIO_data; // @[simTop.scala 20:12]
-  assign io_topIO_dataWriteIO_en = 1'h1; // @[simTop.scala 20:12]
+  assign io_diffTestIO_PC = mycoretop_wb_reg_pc;
+  assign io_diffTestIO_PC_valid = mycoretop_ws_valid;
+  assign io_topIO_instReadIO_addr = mycoretop_io_instReadIO_addr; // @[simTop.scala 19:12]
+  assign io_topIO_instReadIO_en = 1'h1; // @[simTop.scala 19:12]
+  assign io_topIO_dataReadIO_addr = 64'h0; // @[simTop.scala 19:12]
+  assign io_topIO_dataReadIO_en = 1'h0; // @[simTop.scala 19:12]
+  assign io_topIO_dataWriteIO_addr = mycoretop_io_dataWriteIO_addr; // @[simTop.scala 19:12]
+  assign io_topIO_dataWriteIO_data = mycoretop_io_dataWriteIO_data; // @[simTop.scala 19:12]
+  assign io_topIO_dataWriteIO_en = 1'h1; // @[simTop.scala 19:12]
   assign mycoretop_clock = clock;
   assign mycoretop_reset = reset;
-  assign mycoretop_io_instReadIO_data = io_topIO_instReadIO_data; // @[simTop.scala 20:12]
+  assign mycoretop_io_instReadIO_data = io_topIO_instReadIO_data; // @[simTop.scala 19:12]
 endmodule

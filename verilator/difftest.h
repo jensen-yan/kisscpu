@@ -9,7 +9,7 @@
 
 
 void init_difftest(reg_t *reg, char* imgPath, CRam* ram);
-void difftest_step(CEmulator* emu);
+void difftest_step(CEmulator* emu, int i);
 
 
 static const char *reg_name[DIFFTEST_NR_REG] = {

@@ -1,7 +1,11 @@
 [
   {
     "class":"firrtl.transforms.DontTouchAnnotation",
-    "target":"~simTop|dpath>_T_114"
+    "target":"~simTop|dpath>ws_valid"
+  },
+  {
+    "class":"firrtl.transforms.DontTouchAnnotation",
+    "target":"~simTop|dpath>wb_reg_pc"
   },
   {
     "class":"firrtl.transforms.DontTouchAnnotation",

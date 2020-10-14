@@ -26,9 +26,7 @@ class regfile extends Module{
   when(io.we.toBool() && io.waddr =/= 0.U){
     rf(io.wdata) := io.wdata
   }
-  // VecInit((0 until NUM_REG).map(i => rf(i.U)))
-  BoringUtils.addSource(VecInit((0 to NUM_REG-1).map(i => rf(i.U))), "diffTestRegfile")
-//  def read(addr: UInt) : UInt = Mux(addr === 0.U, 0.U, rf(addr))
-//  def write(addr: UInt, data : UInt) = {rf(addr) := data(63, 0)}
-  printf("RF: ra=[%x] sp=[%x] waddr=[%x] wdata=[%x] we=%d\n", rf(1.U), rf(2.U), io.waddr, io.wdata, io.we)
+  BoringUtils.addSource(VecInit((0 to NUM_REG-1).map(i => rf(i.U))), "diffTestRegfile") // VecInit把32个rf输出包装成一个Vec输出!
+
+  printf("RF: ra=[%x] sp=[%x] rdata1(%d)=[%x] rdata2(%d)=[%x] wdata(%d)=[%x] we=%d\n", rf(1.U), rf(2.U), io.raddr1, io.rdata1, io.raddr2, io.rdata2, io.waddr, io.wdata, io.we)
 }

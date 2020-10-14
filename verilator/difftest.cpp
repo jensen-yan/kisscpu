@@ -67,11 +67,11 @@ void init_difftest(reg_t *reg, char* imgPath, CRam* ram){
         printf("reg[%d] = 0x%016lx \n", i, ref_r[i]);
     }
     ref_r[4] = 0x0000000000000444;
-    ref_difftest_setregs(ref_r);        // test setregs*/
+    ref_difftest_setregs(ref_r);        // test setregs
     for(int i = 0; i < 20; i ++){
         ref_isa_reg_display();
         ref_difftest_exec(1);               // test exec
-    }
+    }*/
 }
 /*
 int main(){
@@ -82,21 +82,24 @@ int main(){
 }*/
 
 // 输入reg_dut
-void difftest_step(CEmulator* emu)
+void difftest_step(CEmulator* emu, int i)
 {
     // emu走一条, nemu走一条, 比对, 错误就输出
     reg_t reg_dut[DIFFTEST_NR_REG];
     reg_t reg_ref[DIFFTEST_NR_REG];
     // dut 先走4拍
-    emu->step(4);
+    // emu->step(4);
     // 不断比对
-    while(true){
+    for(; i>0; i--){
         emu->step(1);
         emu->read_emu_regs(reg_dut);
         ref_difftest_exec(1);
         ref_difftest_getregs(&reg_ref);
-        // 每个比对
         ref_isa_reg_display();
+        // 每个比对
+        /* ref_isa_reg_display();
+        printf("reg ra = [0x%16x] sp = [0x%16x]\n", reg_dut[1], reg_dut[2]);
+
         for (size_t i = 0; i < 32; i++)
         {
             if (reg_dut[i] != reg_ref[i])
@@ -106,7 +109,13 @@ void difftest_step(CEmulator* emu)
                 break;
             }
 
+        }*/
+        // 先只比较pc就好
+        if(reg_dut[32] != reg_ref[32]){
+            printf("right pc = [0x%16x], wrong pc = [0x%16x] \n", reg_ref[32], reg_dut[32]);
+            // break;
         }
+
     }
 
 }
