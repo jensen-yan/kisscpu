@@ -13,7 +13,7 @@ class regfile extends Module{
     val raddr2 = Input (UInt(ADDR_W.W))
     val rdata1 = Output(UInt(XLEN.W))
     val rdata2 = Output(UInt(XLEN.W))
-    val we     = Input (UInt(1.W))
+    val we     = Input (Bool())
     val waddr  = Input (UInt(ADDR_W.W))
     val wdata  = Input (UInt(XLEN.W))
   })
@@ -23,8 +23,8 @@ class regfile extends Module{
   io.rdata1 := Mux(io.raddr1 === 0.U, 0.U(XLEN.W), rf(io.raddr1))
   io.rdata2 := Mux(io.raddr2 === 0.U, 0.U(XLEN.W), rf(io.raddr2))
   // 写
-  when(io.we.toBool() && io.waddr =/= 0.U){
-    rf(io.wdata) := io.wdata
+  when(io.we && (io.waddr =/= 0.U)){
+    rf(io.waddr) := io.wdata
   }
   BoringUtils.addSource(VecInit((0 to NUM_REG-1).map(i => rf(i.U))), "diffTestRegfile") // VecInit把32个rf输出包装成一个Vec输出!
 

@@ -62,6 +62,8 @@ public:
      */
     void read_emu_regs(reg_t* r);    
     double sc_time_stamp ();
+    void single_cycle();
+    void execute_cycles(int n);
 };
 
 #endif

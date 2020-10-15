@@ -13,11 +13,11 @@ CEmulator::CEmulator(CRam* input_ram, long* input_time)
     m_simtop = new VsimTop("m_simtop");
 
     if(vcdTrace){   // 波形
-        Verilated::traceEverOn(true);
+        Verilated::traceEverOn(true);	// Verilator must compute traced signals
+        VL_PRINTF("Enabling waves...\n");
         m_tfp = new VerilatedVcdC;
-        m_simtop->trace(m_tfp, 99);  // Trace 99 levels of hierarchy
-        // m_tfp->open("/home/yanyue/nutshell_v2/kisscpu/build/trace/simvcd.vcd");
-        m_tfp->open("build/trace/myVCD.vcd");
+        m_simtop->trace(m_tfp, 99);	// Trace 99 levels of hierarchy
+        m_tfp->open("vlt_dump.vcd");	// Open the dump file
     }
     
     reset_ncycles(10);
@@ -51,6 +51,7 @@ void CEmulator::step(int i)
         
         cout << endl;
       }
+
         // 真正走一步
         cout << "clock = " << m_cycles << endl;
         m_cycles++;
@@ -69,21 +70,48 @@ void CEmulator::step(int i)
     }
 }
 
+void CEmulator::execute_cycles(int n)
+{
+    while (n-- >0)
+    {
+        single_cycle();
+
+        // difftest
+        if(m_simtop->io_diffTestIO_PC_valid){
+            extern int difftest_step(CEmulator* emu);
+            int ret = difftest_step(this);
+            assert(ret>=0);
+
+        }
+    }
+    
+}
+
 void CEmulator::reset_ncycles(int m_cycles)
 {
-    m_simtop->clock = 0;
     m_simtop->reset = 1;
-    m_simtop->eval();
-    for (int i = 0; i < m_cycles; i++)
+    for (size_t i = 0; i < m_cycles; i++)
     {
-        m_simtop->clock = m_simtop->clock ? 0 : 1;
+        m_simtop->clock = 0;
         m_simtop->eval();
-        (*m_sc_time)++;
-        if(vcdTrace) {m_tfp->dump((double)*m_sc_time);}
+        m_simtop->clock = 1;
+        m_simtop->eval();       // clock 从0 到1 , eval会打印
     }
     m_simtop->reset = 0;
+}
+
+void CEmulator::single_cycle()
+{
+    printf("cycle = %d \n", m_cycles);
     m_simtop->clock = 0;
     m_simtop->eval();
+
+    evalRam();      // 访问内存
+
+    m_simtop->clock = 1;
+    m_simtop->eval();
+    if(vcdTrace) m_tfp->dump(m_cycles);
+    m_cycles++;
 }
 
 

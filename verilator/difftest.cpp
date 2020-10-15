@@ -73,49 +73,46 @@ void init_difftest(reg_t *reg, char* imgPath, CRam* ram){
         ref_difftest_exec(1);               // test exec
     }*/
 }
-/*
-int main(){
-    printf("start\n");
-    init_difftest(0, NULL);
-    printf("end\n");
-    return 0;
-}*/
 
-// 输入reg_dut
-void difftest_step(CEmulator* emu, int i)
+
+
+int difftest_step(CEmulator* emu)
 {
     // emu走一条, nemu走一条, 比对, 错误就输出
     reg_t reg_dut[DIFFTEST_NR_REG];
     reg_t reg_ref[DIFFTEST_NR_REG];
-    // dut 先走4拍
-    // emu->step(4);
-    // 不断比对
-    for(; i>0; i--){
-        emu->step(1);
-        emu->read_emu_regs(reg_dut);
-        ref_difftest_exec(1);
-        ref_difftest_getregs(&reg_ref);
-        ref_isa_reg_display();
-        // 每个比对
-        /* ref_isa_reg_display();
-        printf("reg ra = [0x%16x] sp = [0x%16x]\n", reg_dut[1], reg_dut[2]);
-
-        for (size_t i = 0; i < 32; i++)
-        {
-            if (reg_dut[i] != reg_ref[i])
-            {
-                printf("reg %d %s different at pc = [0x%16lx], right=[0x%16lx], wrong=[0x%16lx]\n",
-                    i, reg_name[i], reg_dut[32], reg_ref[i], reg_dut[i]);
-                break;
-            }
-
-        }*/
-        // 先只比较pc就好
-        if(reg_dut[32] != reg_ref[32]){
-            printf("right pc = [0x%16x], wrong pc = [0x%16x] \n", reg_ref[32], reg_dut[32]);
-            // break;
-        }
-
+    emu->read_emu_regs(reg_dut);
+    // ref_difftest_exec(1);       
+    ref_difftest_getregs(&reg_ref);
+    ref_isa_reg_display();
+    
+    // 先只比较pc就好
+    if(reg_dut[32] != reg_ref[32]){
+        printf("right pc = [0x%16x], wrong pc = [0x%16x] \n", reg_ref[32], reg_dut[32]);
+        // break;
+        return -1;
     }
+    // 每个reg比对
+    for (size_t i = 0; i < 32; i++)
+    {
+        if (reg_dut[i] != reg_ref[i])
+        {
+            printf("reg %d %s different at pc = [0x%16lx], right=[0x%16lx], wrong=[0x%16lx]\n",
+                i, reg_name[i], reg_dut[32], reg_ref[i], reg_dut[i]);
+            // break;
+            return -1;
+        }
+    }
+    /*
+    for (int i = 0; i < NUM_REG; i += 4) {
+        printf("0x%016lx : 0x%016lx\t", reg_dut[i+0], reg_ref[i+0]);
+        printf("0x%016lx : 0x%016lx\t", reg_dut[i+1], reg_ref[i+1]);
+        printf("0x%016lx : 0x%016lx\t", reg_dut[i+2], reg_ref[i+2]);
+        printf("0x%016lx : 0x%016lx\n", reg_dut[i+3], reg_ref[i+3]);
+    }*/
 
+
+    ref_difftest_exec(1);    // 最后再执行, 保证比对正确
+    return 0;
 }
+

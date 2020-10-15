@@ -15,7 +15,7 @@ trait RISCVConstants {
   // TODO: 修改
   val XLEN = 64
   val NUM_REG = 32
-  val ADDR_W = log2Ceil(XLEN) // 地址宽度 = 5
+  val ADDR_W = log2Ceil(NUM_REG) // 地址宽度 = 5
 
   val START_ADDR = "h80000000".U
 
