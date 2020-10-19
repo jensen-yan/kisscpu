@@ -15,7 +15,7 @@ class CtlToDatIo extends Bundle()
   val alu_fun    = Output(UInt(4.W))
   val wb_sel     = Output(UInt(2.W))
   val rf_wen     = Output(Bool())
-  val mem_val    = Output(Bool())
+  val mem_val    = Output(Bool())     // 5条load, 3条store指令, Dmem_en = mem_val
   val mem_fcn    = Output(UInt(2.W))
   val mem_typ    = Output(UInt(3.W))
 }
@@ -111,8 +111,9 @@ class cpath extends Module{
   io.ctl.alu_fun    := cs_alu_fun
   io.ctl.wb_sel     := cs_wb_sel
   io.ctl.rf_wen     := cs_rf_wen
+  io.ctl.mem_val    := cs_mem_en
 
-  printf("inst=[%x] br_d=[%d] pc_sel=[%d] op1=[%d] op2=[%d] alu_f=[%d] wb_sel=[%d] rf_wen=[%d]\n",
+  printf("inst=[%x] br_d=[%d] pc_sel=[%d] op1=[%d] op2=[%d] alu_f=[%d] wb_sel=[%d] rf_wen=[%d] mem_val=%d\n",
     io.dat.dec_inst,
     cs_br_type,
     ctrl_dec_pc_sel,
@@ -120,6 +121,7 @@ class cpath extends Module{
     cs_op2_sel,
     cs_alu_fun,
     cs_wb_sel,
-    cs_rf_wen)
+    cs_rf_wen,
+    cs_mem_en)
 
 }

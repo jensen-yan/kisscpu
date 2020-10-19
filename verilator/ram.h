@@ -8,8 +8,10 @@
 class CRam
 {
 private:
-    /** 巨大的RAM数组(存储指令), 每个元素64位 */
-    iaddr_t m_ram[RAMSIZE / sizeof(iaddr_t)];
+    /** 巨大的RAM数组(存储指令), 每个元素32位 */
+    iaddr_t m_Iram[RAMSIZE / sizeof(iaddr_t)];
+    /** 存储数据的RAM数组, 每个元素64位 */
+    paddr_t m_Dram[RAMSIZE / sizeof(paddr_t)];
     int m_ramSize;  ///< ram的大小, 单位为64byte
     int m_imgSize;  ///< ram内存储img的大小
     long* sc_time;  ///< 打印波形的时钟

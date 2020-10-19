@@ -28,7 +28,7 @@ typedef uint32_t reg_t;
 typedef uint32_t paddr_t;  
 #else
 typedef uint64_t reg_t;
-typedef uint64_t paddr_t;  
+typedef uint64_t paddr_t;   // 对数据地址取64位, 数据也是64位
 #endif
 
 typedef uint32_t iaddr_t;   // 对指令地址取32位

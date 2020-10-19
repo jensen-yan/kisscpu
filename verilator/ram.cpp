@@ -5,9 +5,9 @@
 
 CRam::CRam(char* imgPath)
 {
-    m_ramSize = RAMSIZE / sizeof(iaddr_t);
-    memset(m_ram, 0, m_ramSize);
-    // memset(dram, 0, m_ramSize);
+    m_ramSize = RAMSIZE / sizeof(paddr_t);
+    memset(m_Iram, 0, m_ramSize);
+    memset(m_Dram, 0, m_ramSize);
     /*
 #ifdef DEBUG
     m_imgSize = 4;
@@ -26,7 +26,7 @@ CRam::CRam(char* imgPath)
     m_imgSize = ftell(fp);
 
     fseek(fp, 0, SEEK_SET);
-    int ret = fread(m_ram, m_imgSize, 1, fp);
+    int ret = fread(m_Iram, m_imgSize, 1, fp);  // 把指令读入Iram中
     assert(ret && "read img failed");
     fclose(fp);
 
@@ -42,7 +42,7 @@ CRam::~CRam()
 
 void* CRam::getImgStart()
 {
-    return m_ram;
+    return m_Iram;
 }
     
 int CRam::getImgSize()
@@ -57,23 +57,25 @@ iaddr_t CRam::InstRead(iaddr_t addr, bool en){
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + m_ramSize &&
         "read addr out of range");
-    return en ? m_ram[(addr - ADDRSTART) / sizeof(iaddr_t)] : 0;
+    return en ? m_Iram[(addr - ADDRSTART) / sizeof(iaddr_t)] : 0;   // 读Iram
 }
 
 paddr_t CRam::DataRead(paddr_t addr, bool en){
-    printf("data addr = 0x%016lx \n", addr);
+    printf("data read addr = 0x%016lx en = %d\n", addr, en);
+    if(!en) return 0;
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + m_ramSize &&
         "read data addr out of range");
-    return en ? m_ram[(addr - ADDRSTART) / sizeof(paddr_t)] : 0; // 读data_ram
+    return en ? m_Dram[(addr - ADDRSTART) / sizeof(paddr_t)] : 0; // 读data_ram
 }
 
 // TODO: 加上mask信号
 void    CRam::DataWrite(paddr_t addr, paddr_t data, bool en){
+    if(!en) return;
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + m_ramSize &&
         "write data addr out of range");
     if (en) {
-    m_ram[(addr - ADDRSTART) / sizeof(paddr_t)] = data;
+    m_Dram[(addr - ADDRSTART) / sizeof(paddr_t)] = data;
   }
 }

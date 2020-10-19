@@ -31,6 +31,7 @@ CEmulator::~CEmulator()
     delete m_tfp;
 }
 
+/*
 void CEmulator::step(int i)
 {
     for(; i > 0; i--){
@@ -68,7 +69,7 @@ void CEmulator::step(int i)
 
         cout << endl;
     }
-}
+}*/
 
 void CEmulator::execute_cycles(int n)
 {
@@ -135,11 +136,10 @@ void CEmulator::evalRam(){
     m_simtop->io_topIO_instReadIO_data = 
             m_ram->InstRead(m_simtop->io_topIO_instReadIO_addr, m_simtop->io_topIO_instReadIO_en);
     // printf("read inst = 0x%lx \n", m_simtop->io_topIO_instReadIO_data);
-    /*
+
     m_simtop->io_topIO_dataReadIO_data =
         m_ram->DataRead(m_simtop->io_topIO_dataReadIO_addr, m_simtop->io_topIO_dataReadIO_en);
     m_ram->DataWrite( m_simtop->io_topIO_dataWriteIO_addr,
                     m_simtop->io_topIO_dataWriteIO_data,
                     m_simtop->io_topIO_dataWriteIO_en);
-    */
 }

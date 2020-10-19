@@ -77,6 +77,7 @@ class dpath extends Module {
   val mem_reg_ctrl_wb_sel = Reg(UInt())
   val mem_reg_ctrl_csr_cmd = RegInit(CSR.N)
   val ms_allowin = Wire(Bool())
+  val mem_reg_dram_data = RegInit(0.asUInt(XLEN.W))   // 强行缓存一拍的dram读取值
 
   // Writeback State
   val ws_valid = RegInit(false.B)
@@ -106,6 +107,13 @@ class dpath extends Module {
     Mux(io.ctl.dec_pc_sel === PC_BRJMP, dec_brjmp_target,
       Mux(io.ctl.dec_pc_sel === PC_JALR, dec_jump_reg_target,
         /*Mux(io.ctl.exe_pc_sel === PC_EXC*/ BUBBLE))) // TODO:
+  // 获取此时的inst指令, 本质在预取阶段做的!
+  io.instReadIO.addr := if_pc_next
+  io.instReadIO.en := to_fs_valid && fs_allowin   // 握手成功且可以流水才读指令
+  val if_inst = Wire(UInt(XLEN.W))    // 缓存后的指令
+  val if_reg_inst = Reg(UInt(XLEN.W)) // 强行缓存一拍获取的指令
+  if_reg_inst := io.instReadIO.data
+
 
   // IF stage
   fs_ready_go := true.B
@@ -121,20 +129,14 @@ class dpath extends Module {
   when(to_fs_valid && fs_allowin) {
     if_reg_pc := if_pc_next
   }
-  // 获取此时的inst指令
-  // TODO: inst Read
-  io.instReadIO.addr := if_pc_next
-  io.instReadIO.en := to_fs_valid && fs_allowin   // 握手成功且可以流水才读指令
-  val if_inst = Wire(UInt(XLEN.W))
-  val if_reg_inst = Reg(UInt(XLEN.W)) // 强行缓存一拍获取的指令
-  if_reg_inst := io.instReadIO.data
+
 //    if_inst := if_reg_inst
   if_inst := Mux(dec_reflush, BUBBLE, if_reg_inst) // 如果是跳转指令, 强行改成nop
 
 
-  //DEBUG: TODO:
-  printf("Inst: addr=[%x], en=%d, data=[%x] \n", io.instReadIO.addr, io.instReadIO.en, if_reg_inst);
-  printf("IF : valid = %d pc=[%x] inst=[%x] if_pc_next=[%x] pc_sel=[%d] e_bj_pc=[%x]\n", fs_valid, if_reg_pc, if_inst, if_pc_next, io.ctl.dec_pc_sel, dec_brjmp_target)
+  //DEBUG:
+//  printf("Inst: addr=[%x], en=%d, data=[%x] \n", io.instReadIO.addr, io.instReadIO.en, if_reg_inst);
+  printf("IF : valid = %d pc=[%x] inst=[%x] if_pc_next=[%x] en=%d pc_sel=[%d] e_bj_pc=[%x]\n", fs_valid, if_reg_pc, if_inst, if_pc_next, io.instReadIO.en, io.ctl.dec_pc_sel, dec_brjmp_target)
 
 
   //******************************************************************************************************
@@ -193,7 +195,7 @@ class dpath extends Module {
 
   val dec_op1_data = Wire(UInt(XLEN.W)) // op1 ,op2 是传递给alu使用的
   val dec_op2_data = Wire(UInt(XLEN.W))
-  val dec_rs2_data = Wire(UInt(XLEN.W)) // rs2 是regfile读出的值
+  val dec_rs2_data = Wire(UInt(XLEN.W)) // rs2 是regfile读出的值, 有什么作用?
 
 
   dec_op1_data := MuxCase(rf_rs1_data, Array(
@@ -310,8 +312,8 @@ class dpath extends Module {
   // WB Mux
   mem_wbdata := MuxCase(mem_reg_alu_out, Array(
     (mem_reg_ctrl_wb_sel === WB_ALU) -> mem_reg_alu_out,
-    (mem_reg_ctrl_wb_sel === WB_PC4) -> mem_reg_alu_out
-    //    (mem_reg_ctrl_wb_sel === WB_MEM) -> io.dmem.resp.bits.data
+    (mem_reg_ctrl_wb_sel === WB_PC4) -> mem_reg_alu_out,
+    (mem_reg_ctrl_wb_sel === WB_MEM) -> mem_reg_dram_data
   ))
 
   printf("MEM: valid = %d pc=[%x] inst=[%x] wb_sel=[%d] wbdata=[%x]\n", ms_valid, mem_reg_pc, mem_reg_inst, mem_reg_ctrl_wb_sel, mem_wbdata)
@@ -342,16 +344,18 @@ class dpath extends Module {
   io.dat.dec_br_lt := (dec_op1_data.asSInt() < dec_rs2_data.asSInt())
   io.dat.dec_br_ltu := (dec_op1_data.asUInt() < dec_rs2_data.asUInt())
 
-  // datapath to data memory outputs
-  io.dataWriteIO.en := true.B
-  io.dataWriteIO.addr := mem_reg_alu_out.asUInt()
-  io.dataWriteIO.data := mem_reg_rs2_data // TODO: 为何写入mem的rf的第二个读取值?
+  // datapath to data memory outputs 在执行级!
+  io.dataWriteIO.en := es_valid && exe_reg_ctrl_mem_val   // 当前es有效且为 load, store指令
+  io.dataWriteIO.addr := exe_alu_out.asUInt()   // 写地址为执行级alu结果
+  io.dataWriteIO.data := exe_reg_op2_data // TODO: 写值为rs2的值(包括前递信号), 先不用rs2_data, 看这个有没有用, 可以删除吗
 
 
   // TODO: 读取地址是啥?
-  // WB Mux 确定写入regfile的值
-  // io.dataReadIO.en := true.B
-  // io.dataReadIO.addr := alu_out
+  // TODO: dataRead, dataWrite 的en, addr 应该是同一个值! 要简化一下
+  io.dataReadIO.en := es_valid && exe_reg_ctrl_mem_val  // 或者为1也行
+  io.dataReadIO.addr := exe_alu_out.asUInt()
+  mem_reg_dram_data := io.dataReadIO.data
+  printf("dataRead: addr = [%x] en = %d data = [%x] data_reg=[%x]\n", io.dataReadIO.addr, io.dataReadIO.en, io.dataReadIO.data, mem_reg_dram_data);
 
 
   // Printout
