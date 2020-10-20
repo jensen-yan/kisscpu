@@ -12,23 +12,23 @@ exe = $(PWD)/obj_dir/VsimTop
 testDir = $(PWD)/nexus-am//tests/cputest/build
 test_dummy = $(testDir)/dummy-riscv64-nutshell.bin
 
-#testName ?= add-longlong-riscv64-nutshell
-#testName ?= add-riscv64-nutshell
+# testName ?= add-longlong-riscv64-nutshell
+# testName ?= add-riscv64-nutshell
 #testName ?= bit-riscv64-nutshell
-#testName ?= bubble-sort-riscv64-nutshell
+# testName ?= bubble-sort-riscv64-nutshell
 #testName ?= div-riscv64-nutshell
 #testName ?= dummy-riscv64-nutshell
 #testName ?= fact-riscv64-nutshell
 #testName ?= fib-riscv64-nutshell
 #testName ?= goldbach-riscv64-nutshell
 #testName ?= hello-str-riscv64-nutshell
-#testName ?= if-else-riscv64-nutshell
+# testName ?= if-else-riscv64-nutshell
 #testName ?= leap-year-riscv64-nutshell
 #testName ?= load-store-riscv64-nutshell
 #testName ?= matrix-mul-riscv64-nutshell
 #testName ?= max-riscv64-nutshell
 #testName ?= min3-riscv64-nutshell
-#testName ?= mov-c-riscv64-nutshell
+testName ?= mov-c-riscv64-nutshell
 #testName ?= movsx-riscv64-nutshell
 #testName ?= mul-longlong-riscv64-nutshell
 #testName ?= pascal-riscv64-nutshell
@@ -40,12 +40,12 @@ test_dummy = $(testDir)/dummy-riscv64-nutshell.bin
 #testName ?= shuixianhua-riscv64-nutshell
 #testName ?= string-riscv64-nutshell  
 #testName ?= sub-longlong-riscv64-nutshell  
-testName ?= sum-riscv64-nutshell #done
+# testName ?= sum-riscv64-nutshell
 #testName ?= switch-riscv64-nutshell  
 #testName ?= to-lower-case-riscv64-nutshell  
-#testName ?= unalign-riscv64-nutshell 
-#testName ?= wanshu-riscv64-nutshell
-
+# testName ?= unalign-riscv64-nutshell
+# testName ?= wanshu-riscv64-nutshell			#skip
+# 完成 dummy, sum, mov-c
 
 
 

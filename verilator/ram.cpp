@@ -62,16 +62,17 @@ iaddr_t CRam::InstRead(iaddr_t addr, bool en){
 
 paddr_t CRam::DataRead(paddr_t addr, bool en){
     // printf("data read addr = 0x%016lx en = %d\n", addr, en);
-    // paddr_t addr_debug = 0x0000000080008fdc;
-    // printf("data[8fdc] = 0x%016lx\n", m_Dram[(addr_debug - ADDRSTART) / sizeof(paddr_t)]);
+    // paddr_t addr_debug = 0x0000000080000db8;
+    // printf("data[] = 0x%016lx\n", m_Dram[(addr_debug - ADDRSTART) / sizeof(paddr_t)]);
     if(!en) return 0;
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + m_ramSize &&
         "read data addr out of range");
-    return en ? m_Dram[(addr - ADDRSTART) / sizeof(paddr_t)] : 0; // 读data_ram
+    return m_Dram[(addr - ADDRSTART) / sizeof(paddr_t)] >> ((addr % sizeof(paddr_t)) * 8); // 读data_ram
+    // 根据地址后3位选取确定的数据, lw, lb, lh这些需要
+    // TODO: 应该需要在chisel中实现!
 }
 
-// TODO: 加上mask信号
 void    CRam::DataWrite(paddr_t addr, paddr_t data, bool en, mask_t mask){
     if(!en) return;
     assert(ADDRSTART <= addr &&
@@ -79,20 +80,18 @@ void    CRam::DataWrite(paddr_t addr, paddr_t data, bool en, mask_t mask){
         "write data addr out of range");
     if (en) {
         paddr_t data_mask = data;
-        switch (mask)
+        paddr_t fullMask = 0;
+        paddr_t ff = 0xff;      // 直接用0xff会导致默认转换成32位的! 一定要注意!
+        for (size_t i = 0; i < 8; i++)
         {
-        case 0b1:
-            data_mask = data & 0xff; break;
-        case 0b11:
-            data_mask = data & 0xffff; break;
-        case 0b1111:
-            data_mask = data & 0xffffffff; break;
-        case 0b11111111:
-            data_mask = data & 0xffffffffffffffff; break;
-        default:
-            data_mask = data & 0xffffffffffffffff; break;
+            if ((mask >> i) & 0x1)
+            {
+                fullMask = fullMask | (ff << (i*8));
+            }
         }
+        data_mask = (fullMask & data) | (~fullMask & m_Dram[(addr - ADDRSTART) / sizeof(paddr_t)]);
+        // 如果lb写入8byte, 其他要保持不变
         m_Dram[(addr - ADDRSTART) / sizeof(paddr_t)] = data_mask;
-        printf("mask = %x, data = 0x%016lx, data_mask = 0x%016lx\n", mask, data, data_mask);
+        printf("mask = %x, fullMask= 0x%016lx, data = 0x%016lx, data_mask = 0x%016lx\n", mask, fullMask, data, data_mask);
   }
 }

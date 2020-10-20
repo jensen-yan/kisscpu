@@ -333,7 +333,7 @@ class dpath extends Module {
     (mem_reg_ctrl_wb_sel === WB_ALU) -> mem_reg_alu_out,
     (mem_reg_ctrl_wb_sel === WB_ALUW)-> Cat(Fill(32, mem_reg_alu_out(31)), mem_reg_alu_out(31,0)),
     (mem_reg_ctrl_wb_sel === WB_PC4) -> mem_reg_alu_out,
-    (mem_reg_ctrl_wb_sel === WB_MEM) -> mem_reg_dram_data
+    (mem_reg_ctrl_wb_sel === WB_MEM) -> maskedReadData
   ))
 
   printf("MEM: valid = %d pc=[%x] inst=[%x] wb_sel=[%d] wbdata=[%x]\n", ms_valid, mem_reg_pc, mem_reg_inst, mem_reg_ctrl_wb_sel, mem_wbdata)
@@ -365,19 +365,28 @@ class dpath extends Module {
   io.dat.dec_br_ltu := (dec_op1_data.asUInt() < dec_rs2_data.asUInt())
 
   // datapath to data memory outputs 在执行级!
+  val memWriteData = MuxCase(exe_reg_rs2_data, Array(
+    (exe_reg_ctrl_mem_mask === MSK_B)  -> Fill(8, exe_reg_rs2_data( 7,0)),
+    (exe_reg_ctrl_mem_mask === MSK_H)  -> Fill(4, exe_reg_rs2_data(15,0)),
+    (exe_reg_ctrl_mem_mask === MSK_W)  -> Fill(2, exe_reg_rs2_data(31,0)),
+    (exe_reg_ctrl_mem_mask === MSK_D)  ->         exe_reg_rs2_data,
+  ))    // 对于lb, 扩展8次来写入
+  val memWriteMask = Wire(UInt(8.W))
+  memWriteMask := (exe_reg_ctrl_mem_mask << exe_alu_out(2,0))(7,0)      // 类似strb信号, 根据地址后3位来确定写入位置
+
   io.dataWriteIO.en := es_valid && exe_reg_ctrl_mem_wen   // 当前es有效且为 store指令
   io.dataWriteIO.addr := exe_alu_out.asUInt()   // 写地址为执行级alu结果
-  io.dataWriteIO.data := exe_reg_rs2_data       // 写值为rs2的值(包括前递信号), 例如sw, 不是写入op2!
-  io.dataWriteIO.mask := exe_reg_ctrl_mem_mask    // TODO: 删除多余的信号
-//  printf("dataStore:addr = [%x] en=%d data = [%x] mask = %x\n ", io.dataWriteIO.addr, io.dataWriteIO.en, io.dataWriteIO.data, io.dataWriteIO.mask)
+  io.dataWriteIO.data := memWriteData       // 写值为rs2的值(包括前递信号), 例如sw, 不是写入op2!
+  io.dataWriteIO.mask := memWriteMask    // TODO: 删除多余的信号
+  printf("dataStore:addr = [%x] en=%d data = [%x] mask = %b\n ", io.dataWriteIO.addr, io.dataWriteIO.en, io.dataWriteIO.data, io.dataWriteIO.mask)
 
 
   // TODO: 读取地址是啥?
   // TODO: dataRead, dataWrite 的en, addr 应该是同一个值! 要简化一下
-  io.dataReadIO.en := es_valid && exe_reg_ctrl_mem_ren  // 或者为1也行
-  io.dataReadIO.addr := exe_alu_out.asUInt()
+  io.dataReadIO.en    := es_valid && exe_reg_ctrl_mem_ren  // 或者为1也行
+  io.dataReadIO.addr  := exe_alu_out.asUInt()
   mem_reg_dram_data := io.dataReadIO.data
-//  printf("dataRead: addr = [%x] en = %d data = [%x] data_reg=[%x]\n", io.dataReadIO.addr, io.dataReadIO.en, io.dataReadIO.data, mem_reg_dram_data);
+  printf("dataRead: addr = [%x] en = %d data = [%x] mask_data = [%x]\n", io.dataReadIO.addr, io.dataReadIO.en, io.dataReadIO.data, maskedReadData);
 
 
   // Printout

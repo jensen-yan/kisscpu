@@ -4,9 +4,10 @@ import chisel3._
 import common._
 
 class topIO extends Bundle{
-  val instReadIO = new InstReadIO
-  val dataReadIO = new DataReadIO
+  val instReadIO  = new InstReadIO
+  val dataReadIO  = new DataReadIO
   val dataWriteIO = new DataWriteIO
+//  val dataRamIO   = new DataRamIO
 }
 
 
@@ -19,6 +20,7 @@ class top extends Module{
   io.instReadIO <> dpath.io.instReadIO
   io.dataReadIO <> dpath.io.dataReadIO
   io.dataWriteIO <> dpath.io.dataWriteIO
+//  io.dataRamIO  <> dpath.io.dataRamIO
 
   // 两个模块连接
   cpath.io.ctl <> dpath.io.ctl
