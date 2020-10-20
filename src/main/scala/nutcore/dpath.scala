@@ -53,9 +53,10 @@ class dpath extends Module {
   val exe_reg_ctrl_alu_fun = Reg(UInt())
   val exe_reg_ctrl_wb_sel = Reg(UInt())
   val exe_reg_ctrl_rf_wen = RegInit(false.B)
-  val exe_reg_ctrl_mem_val = RegInit(false.B)
-  val exe_reg_ctrl_mem_fcn = RegInit(M_X)
-  val exe_reg_ctrl_mem_typ = RegInit(MT_X)
+  val exe_reg_ctrl_mem_ren = RegInit(false.B)
+  val exe_reg_ctrl_mem_wen = RegInit(false.B)
+  val exe_reg_ctrl_mem_mask = RegInit(MSK_X)
+  val exe_reg_ctrl_mem_ext = RegInit(EXT_X)
   val exe_reg_ctrl_csr_cmd = RegInit(CSR.N)
   val es_allowin = Wire(Bool())
 
@@ -71,9 +72,8 @@ class dpath extends Module {
   val mem_reg_op2_data = Reg(UInt(XLEN.W))
   val mem_reg_rs2_data = Reg(UInt(XLEN.W))
   val mem_reg_ctrl_rf_wen = RegInit(false.B)
-  val mem_reg_ctrl_mem_val = RegInit(false.B)
-  val mem_reg_ctrl_mem_fcn = RegInit(M_X)
-  val mem_reg_ctrl_mem_typ = RegInit(MT_X)
+  val mem_reg_ctrl_mem_mask = RegInit(MSK_X)
+  val mem_reg_ctrl_mem_ext = RegInit(EXT_X)
   val mem_reg_ctrl_wb_sel = Reg(UInt())
   val mem_reg_ctrl_csr_cmd = RegInit(CSR.N)
   val ms_allowin = Wire(Bool())
@@ -112,7 +112,10 @@ class dpath extends Module {
   io.instReadIO.en := to_fs_valid && fs_allowin   // 握手成功且可以流水才读指令
   val if_inst = Wire(UInt(XLEN.W))    // 缓存后的指令
   val if_reg_inst = Reg(UInt(XLEN.W)) // 强行缓存一拍获取的指令
-  if_reg_inst := io.instReadIO.data
+  when(io.instReadIO.en){
+    if_reg_inst := io.instReadIO.data   // 只有需要更新才更新!
+  }
+
 
 
   // IF stage
@@ -141,7 +144,7 @@ class dpath extends Module {
 
   //******************************************************************************************************
   // Decode Stage
-  val ds_ready_go = true.B
+  val ds_ready_go = !(es_valid && exe_reg_ctrl_mem_ren)      // load 在exe, 要阻塞一下
   ds_allowin := !ds_valid || ds_ready_go && es_allowin
   val ds_to_es_valid = ds_valid && ds_ready_go
 
@@ -197,21 +200,26 @@ class dpath extends Module {
   val dec_op2_data = Wire(UInt(XLEN.W))
   val dec_rs2_data = Wire(UInt(XLEN.W)) // rs2 是regfile读出的值, 有什么作用?
 
+  val dec_alu_op1 = MuxCase(0.U, Array(
+    (io.ctl.op1_sel === OP1_RS1)    -> rf_rs1_data,
+    (io.ctl.op1_sel === OP1_RS1W)   -> Cat(Fill(32, 0.U), rf_rs1_data(31,0)),
+    (io.ctl.op1_sel === OP1_IMZ)    -> imm_z,
+    (io.ctl.op1_sel === OP1_PC)     -> dec_reg_pc,
+  )).asUInt()
 
-  dec_op1_data := MuxCase(rf_rs1_data, Array(
-    ((io.ctl.op1_sel === OP1_IMZ)) -> imm_z,
-    ((io.ctl.op1_sel === OP1_PC)) -> dec_reg_pc,
+  dec_op1_data := MuxCase(dec_alu_op1, Array(
     (es_valid && (exe_reg_wbaddr === dec_rs1_addr) && (dec_rs1_addr =/= 0.U) && exe_reg_ctrl_rf_wen) -> exe_alu_out,
     (ms_valid && (mem_reg_wbaddr === dec_rs1_addr) && (dec_rs1_addr =/= 0.U) && mem_reg_ctrl_rf_wen) -> mem_wbdata,
     (ws_valid && (wb_reg_wbaddr === dec_rs1_addr) && (dec_rs1_addr =/= 0.U) && wb_reg_ctrl_rf_wen) -> wb_reg_wbdata
   )) // 且那一级别需要有效
   // 确保当前拍指令有效才行啊, 加valid, 且源地址有效, 是OP1_rs1(默认了)
   val dec_alu_op2 = MuxCase(0.U, Array(
-    (io.ctl.op2_sel === OP2_RS2) -> rf_rs2_data,
-    (io.ctl.op2_sel === OP2_ITYPE) -> imm_itype_sext,
-    (io.ctl.op2_sel === OP2_STYPE) -> imm_stype_sext,
+    (io.ctl.op2_sel === OP2_RS2)    -> rf_rs2_data,
+    (io.ctl.op2_sel === OP2_RS2W)   -> Cat(Fill(32, 0.U), rf_rs2_data(31,0)),
+    (io.ctl.op2_sel === OP2_ITYPE)  -> imm_itype_sext,
+    (io.ctl.op2_sel === OP2_STYPE)  -> imm_stype_sext,
     (io.ctl.op2_sel === OP2_SBTYPE) -> imm_sbtype_sext,
-    (io.ctl.op2_sel === OP2_UTYPE) -> imm_utype_sext,
+    (io.ctl.op2_sel === OP2_UTYPE)  -> imm_utype_sext,
     (io.ctl.op2_sel === OP2_UJTYPE) -> imm_ujtype_sext
   )).asUInt()
 
@@ -234,7 +242,7 @@ class dpath extends Module {
   dec_jump_reg_target := (dec_op1_data + dec_op2_data) (XLEN - 1, 0)
 
 
-  printf("DEC: valid = %d pc=[%x] inst=[%x] op2=[%x] bj_target = [%x]\n", ds_valid, dec_reg_pc, dec_reg_inst, dec_alu_op2, dec_brjmp_target)
+  printf("DEC: valid = %d pc=[%x] inst=[%x] alu1=[%x] op1=[%x] alu2=[%x] op2=[%x] bj_target = [%x]\n", ds_valid, dec_reg_pc, dec_reg_inst, dec_alu_op1, dec_op1_data, dec_alu_op2, dec_op2_data, dec_brjmp_target)
 
 
   //******************************************************************************************************
@@ -261,9 +269,10 @@ class dpath extends Module {
     exe_reg_ctrl_alu_fun := io.ctl.alu_fun
     exe_reg_ctrl_wb_sel := io.ctl.wb_sel
     exe_reg_ctrl_rf_wen := io.ctl.rf_wen
-    exe_reg_ctrl_mem_val := io.ctl.mem_val
-    exe_reg_ctrl_mem_fcn := io.ctl.mem_fcn
-    exe_reg_ctrl_mem_typ := io.ctl.mem_typ
+    exe_reg_ctrl_mem_ren := io.ctl.mem_ren
+    exe_reg_ctrl_mem_wen := io.ctl.mem_wen
+    exe_reg_ctrl_mem_mask := io.ctl.mem_mask
+    exe_reg_ctrl_mem_ext := io.ctl.mem_ext
   }
 
 
@@ -301,17 +310,28 @@ class dpath extends Module {
     mem_reg_op1_data := exe_reg_op1_data
     mem_reg_op2_data := exe_reg_op2_data
     mem_reg_rs2_data := exe_reg_rs2_data
-    mem_reg_ctrl_rf_wen := exe_reg_ctrl_rf_wen
-    mem_reg_ctrl_mem_val := exe_reg_ctrl_mem_val
-    mem_reg_ctrl_mem_fcn := exe_reg_ctrl_mem_fcn
-    mem_reg_ctrl_mem_typ := exe_reg_ctrl_mem_typ
-    mem_reg_ctrl_wb_sel := exe_reg_ctrl_wb_sel
-    mem_reg_ctrl_csr_cmd := exe_reg_ctrl_csr_cmd
+    mem_reg_ctrl_rf_wen   := exe_reg_ctrl_rf_wen
+    mem_reg_ctrl_mem_mask := exe_reg_ctrl_mem_mask
+    mem_reg_ctrl_mem_ext  := exe_reg_ctrl_mem_ext
+    mem_reg_ctrl_wb_sel   := exe_reg_ctrl_wb_sel
+    mem_reg_ctrl_csr_cmd  := exe_reg_ctrl_csr_cmd
   }
+
+  // load的值根据指令不同, 读取的值不同
+  val maskedReadData = MuxCase(mem_reg_dram_data, Array(
+    (mem_reg_ctrl_mem_ext === EXT_BS) -> Cat(Fill(56, mem_reg_dram_data( 7)), mem_reg_dram_data(7,0)),
+    (mem_reg_ctrl_mem_ext === EXT_BU) -> Cat(Fill(56, 0.U                  ), mem_reg_dram_data(7,0)),
+    (mem_reg_ctrl_mem_ext === EXT_HS) -> Cat(Fill(48, mem_reg_dram_data(15)), mem_reg_dram_data(15,0)),
+    (mem_reg_ctrl_mem_ext === EXT_HU) -> Cat(Fill(48, 0.U                  ), mem_reg_dram_data(15,0)),
+    (mem_reg_ctrl_mem_ext === EXT_WS) -> Cat(Fill(32, mem_reg_dram_data(31)), mem_reg_dram_data(31,0)),
+    (mem_reg_ctrl_mem_ext === EXT_WU) -> Cat(Fill(32, 0.U                  ), mem_reg_dram_data(31,0)),
+    (mem_reg_ctrl_mem_ext === EXT_D ) ->                                       mem_reg_dram_data
+  ))
 
   // WB Mux
   mem_wbdata := MuxCase(mem_reg_alu_out, Array(
     (mem_reg_ctrl_wb_sel === WB_ALU) -> mem_reg_alu_out,
+    (mem_reg_ctrl_wb_sel === WB_ALUW)-> Cat(Fill(32, mem_reg_alu_out(31)), mem_reg_alu_out(31,0)),
     (mem_reg_ctrl_wb_sel === WB_PC4) -> mem_reg_alu_out,
     (mem_reg_ctrl_wb_sel === WB_MEM) -> mem_reg_dram_data
   ))
@@ -345,23 +365,25 @@ class dpath extends Module {
   io.dat.dec_br_ltu := (dec_op1_data.asUInt() < dec_rs2_data.asUInt())
 
   // datapath to data memory outputs 在执行级!
-  io.dataWriteIO.en := es_valid && exe_reg_ctrl_mem_val   // 当前es有效且为 load, store指令
+  io.dataWriteIO.en := es_valid && exe_reg_ctrl_mem_wen   // 当前es有效且为 store指令
   io.dataWriteIO.addr := exe_alu_out.asUInt()   // 写地址为执行级alu结果
-  io.dataWriteIO.data := exe_reg_op2_data // TODO: 写值为rs2的值(包括前递信号), 先不用rs2_data, 看这个有没有用, 可以删除吗
+  io.dataWriteIO.data := exe_reg_rs2_data       // 写值为rs2的值(包括前递信号), 例如sw, 不是写入op2!
+  io.dataWriteIO.mask := exe_reg_ctrl_mem_mask    // TODO: 删除多余的信号
+//  printf("dataStore:addr = [%x] en=%d data = [%x] mask = %x\n ", io.dataWriteIO.addr, io.dataWriteIO.en, io.dataWriteIO.data, io.dataWriteIO.mask)
 
 
   // TODO: 读取地址是啥?
   // TODO: dataRead, dataWrite 的en, addr 应该是同一个值! 要简化一下
-  io.dataReadIO.en := es_valid && exe_reg_ctrl_mem_val  // 或者为1也行
+  io.dataReadIO.en := es_valid && exe_reg_ctrl_mem_ren  // 或者为1也行
   io.dataReadIO.addr := exe_alu_out.asUInt()
   mem_reg_dram_data := io.dataReadIO.data
-  printf("dataRead: addr = [%x] en = %d data = [%x] data_reg=[%x]\n", io.dataReadIO.addr, io.dataReadIO.en, io.dataReadIO.data, mem_reg_dram_data);
+//  printf("dataRead: addr = [%x] en = %d data = [%x] data_reg=[%x]\n", io.dataReadIO.addr, io.dataReadIO.en, io.dataReadIO.data, mem_reg_dram_data);
 
 
   // Printout
   val wb_reg_inst = RegNext(mem_reg_inst)
 
-  printf("pc=[%x] W[r%d=%x][%d] Op1=[r%d][%x] Op2=[r%d][%x] inst=[%x]\n",
+  printf("pc=[%x] W[r%d=%x][%d] Op1=[r%d][%x] Op2=[r%d][%x] inst=[%x]\n\n",
     wb_reg_pc,
     wb_reg_wbaddr,
     wb_reg_wbdata,

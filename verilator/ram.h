@@ -65,7 +65,7 @@ public:
      * @param data 
      * @param en 
      */
-    void    DataWrite(paddr_t addr, paddr_t data, bool en);
+    void    DataWrite(paddr_t addr, paddr_t data, bool en, mask_t mask);
 };
 
 

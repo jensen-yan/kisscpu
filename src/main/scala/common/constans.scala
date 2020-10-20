@@ -4,12 +4,24 @@ import chisel3._
 import chisel3.util.log2Ceil
 
 object constans extends
+  commonConstants with
   RISCVConstants with
-  ScalarOpConstants with
-  MemoryOpConstants
-{
+  PCConstants with
+  instConstants with
+  brTypeConstants with
+  regfileConstants with
+  aluFuncConstants with
+  memTypeConstants with
+  opSelConstants {
+
 }
 
+
+trait commonConstants
+{
+  val Y        = true.B
+  val N        = false.B
+}
 
 trait RISCVConstants {
   // TODO: 修改
@@ -19,134 +31,132 @@ trait RISCVConstants {
 
   val START_ADDR = "h80000000".U
 
-  // abstract out instruction decode magic numbers
-  val RD_MSB  = 11
-  val RD_LSB  = 7
-  val RS1_MSB = 19
-  val RS1_LSB = 15
-  val RS2_MSB = 24
-  val RS2_LSB = 20
-
-  val CSR_ADDR_MSB = 31
-  val CSR_ADDR_LSB = 20
 
   // TODO: 改成64位了
-  val BUBBLE  = 0x4033.U(64.W)
+  val BUBBLE = 0x4033.U(64.W)
 }
 
 
+trait PCConstants {
+  val PCSel_w = 2
+  val PC_4 = 0.asUInt(PCSel_w.W) // PC + 4
+  val PC_BRJMP = 1.asUInt(PCSel_w.W) // brjmp_target
+  val PC_JALR = 2.asUInt(PCSel_w.W) // jump_reg_target
+  val PC_EXC = 3.asUInt(PCSel_w.W) // exception
+}
 
-trait ScalarOpConstants
-{
+trait instConstants {
+  val RS2_MSB = 24
+  val RS2_LSB = 20
+  val RS1_MSB = 19
+  val RS1_LSB = 15
+  val RD_MSB = 11
+  val RD_LSB = 7
 
-  //************************************
-  // Control Signals
-  val Y        = true.B
-  val N        = false.B
+}
 
-  // PC Select Signal
-  val PC_4     = 0.asUInt(2.W)  // PC + 4
-val PC_BRJMP = 1.asUInt(2.W)  // brjmp_target
-val PC_JALR  = 2.asUInt(2.W)  // jump_reg_target
-val PC_EXC   = 3.asUInt(2.W)  // exception
+trait brTypeConstants {
+  val brType_w = 4
+  val BR_N = 0.asUInt(brType_w.W) // Next
+  val BR_NE = 1.asUInt(brType_w.W) // Branch on NotEqual
+  val BR_EQ = 2.asUInt(brType_w.W) // Branch on Equal
+  val BR_GE = 3.asUInt(brType_w.W) // Branch on Greater/Equal
+  val BR_GEU = 4.asUInt(brType_w.W) // Branch on Greater/Equal Unsigned
+  val BR_LT = 5.asUInt(brType_w.W) // Branch on Less Than
+  val BR_LTU = 6.asUInt(brType_w.W) // Branch on Less Than Unsigned
+  val BR_J = 7.asUInt(brType_w.W) // Jump
+  val BR_JR = 8.asUInt(brType_w.W) // Jump Register
 
-  // Branch Type
-  val BR_N     = 0.asUInt(4.W)  // Next
-val BR_NE    = 1.asUInt(4.W)  // Branch on NotEqual
-val BR_EQ    = 2.asUInt(4.W)  // Branch on Equal
-val BR_GE    = 3.asUInt(4.W)  // Branch on Greater/Equal
-val BR_GEU   = 4.asUInt(4.W)  // Branch on Greater/Equal Unsigned
-val BR_LT    = 5.asUInt(4.W)  // Branch on Less Than
-val BR_LTU   = 6.asUInt(4.W)  // Branch on Less Than Unsigned
-val BR_J     = 7.asUInt(4.W)  // Jump
-val BR_JR    = 8.asUInt(4.W)  // Jump Register
+}
 
-  // RS1 Operand Select Signal
-  val OP1_RS1   = 0.asUInt(2.W) // Register Source #1
-val OP1_PC    = 1.asUInt(2.W) // PC
-val OP1_IMZ   = 2.asUInt(2.W) // Zero-extended Immediate from RS1 field, for use by CSRI instructions
-val OP1_X     = 0.asUInt(2.W)
+trait opSelConstants {
+  val op1Sel_w = 2
+  val OP1_RS1 = 0.asUInt(op1Sel_w.W) // Register Source #1
+  val OP1_RS1W = 1.asUInt(op1Sel_w.W) // Register Source #1 cut for 32 bit
+  val OP1_PC = 2.asUInt(op1Sel_w.W) // PC
+  val OP1_IMZ = 3.asUInt(op1Sel_w.W) // Zero-extended Immediate from RS1 field, for use by CSRI instructions
+  val OP1_X = 0.asUInt(op1Sel_w.W)
 
-  // RS2 Operand Select Signal
-  val OP2_RS2    = 0.asUInt(3.W) // Register Source #2
-val OP2_ITYPE  = 1.asUInt(3.W) // immediate, I-type
-val OP2_STYPE  = 2.asUInt(3.W) // immediate, S-type
-val OP2_SBTYPE = 3.asUInt(3.W) // immediate, B
-val OP2_UTYPE  = 4.asUInt(3.W) // immediate, U-type
-val OP2_UJTYPE = 5.asUInt(3.W) // immediate, J-type
-val OP2_X      = 0.asUInt(3.W)
+  val op2Sel_w = 3
+  val OP2_RS2 = 0.asUInt(op2Sel_w.W) // Register Source #2
+  val OP2_RS2W = 1.asUInt(op2Sel_w.W) // Register Source #2 cut for 32 bit
+  val OP2_ITYPE = 2.asUInt(op2Sel_w.W) // immediate, I-type
+  val OP2_STYPE = 3.asUInt(op2Sel_w.W) // immediate, S-type
+  val OP2_SBTYPE = 4.asUInt(op2Sel_w.W) // immediate, B
+  val OP2_UTYPE = 5.asUInt(op2Sel_w.W) // immediate, U-type
+  val OP2_UJTYPE = 6.asUInt(op2Sel_w.W) // immediate, J-type
+  val OP2_X = 0.asUInt(op2Sel_w.W)
+}
 
+trait regfileConstants {
   // Register Operand Output Enable Signal
-  val OEN_0   = false.B
-  val OEN_1   = true.B
+  val OEN_0 = false.B
+  val OEN_1 = true.B
 
-  // Register File Write Enable Signal
-  val REN_0   = false.B
-  val REN_1   = true.B
-
-  // ALU Operation Signal
-  val ALU_ADD    = 0.asUInt(4.W)
-  val ALU_SUB    = 1.asUInt(4.W)
-  val ALU_SLL    = 2.asUInt(4.W)
-  val ALU_SRL    = 3.asUInt(4.W)
-  val ALU_SRA    = 4.asUInt(4.W)
-  val ALU_AND    = 5.asUInt(4.W)
-  val ALU_OR     = 6.asUInt(4.W)
-  val ALU_XOR    = 7.asUInt(4.W)
-  val ALU_SLT    = 8.asUInt(4.W)
-  val ALU_SLTU   = 9.asUInt(4.W)
-  val ALU_COPY_1 = 10.asUInt(4.W)
-  val ALU_COPY_2 = 11.asUInt(4.W)
-  val ALU_X      = 0.asUInt(4.W)
+  // Register File Write Enable Signal reg可以些
+  val REN_0 = false.B
+  val REN_1 = true.B
 
   // Writeback Select Signal
-  val WB_ALU  = 0.asUInt(2.W)
-  val WB_MEM  = 1.asUInt(2.W)
-  val WB_PC4  = 2.asUInt(2.W)
-  val WB_CSR  = 3.asUInt(2.W)
-  val WB_X    = 0.asUInt(2.W)
+  val wbSel_w = 3
+  val WB_ALU = 0.asUInt(wbSel_w.W)
+  val WB_ALUW = 1.asUInt(wbSel_w.W)
+  val WB_MEM = 2.asUInt(wbSel_w.W)
+  val WB_PC4 = 3.asUInt(wbSel_w.W)
+  val WB_CSR = 4.asUInt(wbSel_w.W)
+  val WB_X = 0.asUInt(wbSel_w.W)
+}
+
+trait aluFuncConstants {
+  val aluFunc_w = 4
+  val ALU_ADD = 0.asUInt(aluFunc_w.W)
+  val ALU_SUB = 1.asUInt(aluFunc_w.W)
+  val ALU_SLL = 2.asUInt(aluFunc_w.W)
+  val ALU_SRL = 3.asUInt(aluFunc_w.W)
+  val ALU_SRA = 4.asUInt(aluFunc_w.W)
+  val ALU_SRAW = 5.asUInt(aluFunc_w.W)
+  val ALU_AND = 6.asUInt(aluFunc_w.W)
+  val ALU_OR = 7.asUInt(aluFunc_w.W)
+  val ALU_XOR = 8.asUInt(aluFunc_w.W)
+  val ALU_SLT = 9.asUInt(aluFunc_w.W)
+  val ALU_SLTU = 10.asUInt(aluFunc_w.W)
+  val ALU_COPY_1 = 11.asUInt(aluFunc_w.W)
+  val ALU_COPY_2 = 12.asUInt(aluFunc_w.W)
+  val ALU_X = 0.asUInt(aluFunc_w.W)
+}
+
+trait memTypeConstants {
+  // Memory Read Signal
+  val MRD_0 = false.B
+  val MRD_1 = true.B
+  val MRD_X = false.B
 
   // Memory Write Signal
-  val MWR_0   = false.B
-  val MWR_1   = true.B
-  val MWR_X   = false.B
-
-  // Memory Enable Signal
-  val MEN_0   = false.B
-  val MEN_1   = true.B
-  val MEN_X   = false.B
+  val MWR_0 = false.B
+  val MWR_1 = true.B
+  val MWR_X = false.B
 
   // Memory Mask Type Signal
-  val MSK_B   = 0.asUInt(3.W)
-  val MSK_BU  = 1.asUInt(3.W)
-  val MSK_H   = 2.asUInt(3.W)
-  val MSK_HU  = 3.asUInt(3.W)
-  val MSK_W   = 4.asUInt(3.W)
-  val MSK_X   = 4.asUInt(3.W)
+  val memMask_w = 8
+  val MSK_B = Integer.parseInt("1", 2).asUInt(memMask_w.W)
+  val MSK_H = Integer.parseInt("11", 2).asUInt(memMask_w.W)
+  val MSK_W = Integer.parseInt("1111", 2).asUInt(memMask_w.W)
+  val MSK_D = Integer.parseInt("11111111", 2).asUInt(memMask_w.W)
+  val MSK_X = Integer.parseInt("11111111", 2).asUInt(memMask_w.W) //TODO: How to be compatibale with 32bit machine?
 
+  val memExt_w = 3
+  val EXT_BS = 0.asUInt(memExt_w.W)
+  val EXT_BU = 1.asUInt(memExt_w.W)
+  val EXT_HS = 2.asUInt(memExt_w.W)
+  val EXT_HU = 3.asUInt(memExt_w.W)
+  val EXT_WS = 4.asUInt(memExt_w.W)
+  val EXT_WU = 5.asUInt(memExt_w.W)
+  val EXT_D = 6.asUInt(memExt_w.W)
+  val EXT_X = 0.asUInt(memExt_w.W)
 }
 
-trait MemoryOpConstants
-{
-  val MT_X  = 0.asUInt(3.W)
-  val MT_B  = 1.asUInt(3.W)
-  val MT_H  = 2.asUInt(3.W)
-  val MT_W  = 3.asUInt(3.W)
-  val MT_D  = 4.asUInt(3.W)
-  val MT_BU = 5.asUInt(3.W)
-  val MT_HU = 6.asUInt(3.W)
-  val MT_WU = 7.asUInt(3.W)
 
-  val M_X   = "b0".asUInt(1.W)
-  val M_XRD = "b0".asUInt(1.W) // int load
-val M_XWR = "b1".asUInt(1.W) // int store
-
-  val DPORT = 0
-  val IPORT = 1
-}
-
-object CSR
-{
+object CSR {
   // commands
   val SZ = 3.W
   val X = 0.asUInt(SZ)

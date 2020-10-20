@@ -10,10 +10,10 @@ class alu_test(c: alu) extends PeekPokeTester(c){
   for(i <- 0 until 17){
     // 先写入, 再读出进行验证
     // rf(i) = i, 在expect
-    poke(c.io.alu_op, ALU_SRA)
-    poke(c.io.src1, i)
-    poke(c.io.src2, 2)
-    expect(c.io.result, i/4)
+    poke(c.io.alu_op, ALU_SRAW)
+    poke(c.io.src1, -8)
+    poke(c.io.src2, 1)
+    expect(c.io.result, i/2)
   }
 
 }

@@ -118,4 +118,6 @@ object instructions {
   def RDCYCLEH           = BitPat("b11001000000000000010?????1110011")
   def RDTIMEH            = BitPat("b11001000000100000010?????1110011")
   def RDINSTRETH         = BitPat("b11001000001000000010?????1110011")
+
+  def NEMUHALT           = BitPat("b00000000000001010000000001101011")  //For AMCPUTest
 }

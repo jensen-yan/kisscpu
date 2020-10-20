@@ -53,7 +53,7 @@ int CRam::getImgSize()
 
 
 iaddr_t CRam::InstRead(iaddr_t addr, bool en){
-    printf("inst read addr = 0x%016lx \n", addr);
+    // printf("inst read addr = 0x%016lx en = %d\n", addr, en);
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + m_ramSize &&
         "read addr out of range");
@@ -61,7 +61,9 @@ iaddr_t CRam::InstRead(iaddr_t addr, bool en){
 }
 
 paddr_t CRam::DataRead(paddr_t addr, bool en){
-    printf("data read addr = 0x%016lx en = %d\n", addr, en);
+    // printf("data read addr = 0x%016lx en = %d\n", addr, en);
+    // paddr_t addr_debug = 0x0000000080008fdc;
+    // printf("data[8fdc] = 0x%016lx\n", m_Dram[(addr_debug - ADDRSTART) / sizeof(paddr_t)]);
     if(!en) return 0;
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + m_ramSize &&
@@ -70,12 +72,27 @@ paddr_t CRam::DataRead(paddr_t addr, bool en){
 }
 
 // TODO: 加上mask信号
-void    CRam::DataWrite(paddr_t addr, paddr_t data, bool en){
+void    CRam::DataWrite(paddr_t addr, paddr_t data, bool en, mask_t mask){
     if(!en) return;
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + m_ramSize &&
         "write data addr out of range");
     if (en) {
-    m_Dram[(addr - ADDRSTART) / sizeof(paddr_t)] = data;
+        paddr_t data_mask = data;
+        switch (mask)
+        {
+        case 0b1:
+            data_mask = data & 0xff; break;
+        case 0b11:
+            data_mask = data & 0xffff; break;
+        case 0b1111:
+            data_mask = data & 0xffffffff; break;
+        case 0b11111111:
+            data_mask = data & 0xffffffffffffffff; break;
+        default:
+            data_mask = data & 0xffffffffffffffff; break;
+        }
+        m_Dram[(addr - ADDRSTART) / sizeof(paddr_t)] = data_mask;
+        printf("mask = %x, data = 0x%016lx, data_mask = 0x%016lx\n", mask, data, data_mask);
   }
 }

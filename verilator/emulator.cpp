@@ -141,5 +141,6 @@ void CEmulator::evalRam(){
         m_ram->DataRead(m_simtop->io_topIO_dataReadIO_addr, m_simtop->io_topIO_dataReadIO_en);
     m_ram->DataWrite( m_simtop->io_topIO_dataWriteIO_addr,
                     m_simtop->io_topIO_dataWriteIO_data,
-                    m_simtop->io_topIO_dataWriteIO_en);
+                    m_simtop->io_topIO_dataWriteIO_en,
+                    m_simtop->io_topIO_dataWriteIO_mask);
 }

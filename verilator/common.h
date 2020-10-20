@@ -19,6 +19,7 @@
 
 #define vcdTrace true
 
+typedef unsigned char uint8_t;
 typedef unsigned int uint32_t;
 typedef unsigned long int uint64_t;
 
@@ -32,6 +33,7 @@ typedef uint64_t paddr_t;   // 对数据地址取64位, 数据也是64位
 #endif
 
 typedef uint32_t iaddr_t;   // 对指令地址取32位
+typedef uint8_t  mask_t;    
 
 /**
  * @brief 枚举的不同变量
@@ -60,6 +62,5 @@ enum {
 #define ADDRSTART 0x80000000
 #define RAMSIZE (128 * 1024 * 1024)
 
-typedef uint32_t mask_t;
 
 #endif

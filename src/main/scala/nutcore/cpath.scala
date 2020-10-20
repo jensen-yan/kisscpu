@@ -8,16 +8,17 @@ import common.instructions._
 // ctl -> dat 的输出数据
 class CtlToDatIo extends Bundle()
 {
-  val dec_pc_sel = Output(UInt(2.W))
-  val br_type    = Output(UInt(4.W))
-  val op1_sel    = Output(UInt(2.W))
-  val op2_sel    = Output(UInt(3.W))
-  val alu_fun    = Output(UInt(4.W))
-  val wb_sel     = Output(UInt(2.W))
+  val dec_pc_sel = Output(UInt(PCSel_w.W))
+  val br_type    = Output(UInt(brType_w.W))
+  val op1_sel    = Output(UInt(op1Sel_w.W))
+  val op2_sel    = Output(UInt(op2Sel_w.W))
+  val alu_fun    = Output(UInt(aluFunc_w.W))
+  val wb_sel     = Output(UInt(wbSel_w.W))
   val rf_wen     = Output(Bool())
-  val mem_val    = Output(Bool())     // 5条load, 3条store指令, Dmem_en = mem_val
-  val mem_fcn    = Output(UInt(2.W))
-  val mem_typ    = Output(UInt(3.W))
+  val mem_ren    = Output(Bool())
+  val mem_wen    = Output(Bool())
+  val mem_mask   = Output(UInt(memMask_w.W))
+  val mem_ext    = Output(UInt(memExt_w.W))
 }
 
 class cpathIO extends Bundle{
@@ -31,59 +32,64 @@ class cpath extends Module{
   io := DontCare
 
   // 一个大的译码表  译码级的inst -> 各个信号, 第一行是默认行, 可以看作一个大的MuxCase
-  val csignals =
-    ListLookup(io.dat.dec_inst,
-      List(N, BR_N  , OP1_X , OP2_X    , OEN_0, OEN_0, ALU_X   , WB_X  ,  REN_0, MEN_0, M_X  , MT_X, CSR.N, N),
-      Array(       /* val  |  BR  |  op1  |   op2     |  R1  |  R2  |  ALU    |  wb   | rf   | mem  | mem  | mask | csr | fence.i */
-        /* inst | type |   sel |    sel    |  oen |  oen |   fcn   |  sel  | wen  |  en  |  wr  | type | cmd |         */
-        LW     -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_ADD , WB_MEM, REN_1, MEN_1, M_XRD, MT_W, CSR.N, N),
-        LB     -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_ADD , WB_MEM, REN_1, MEN_1, M_XRD, MT_B, CSR.N, N),
-        LBU    -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_ADD , WB_MEM, REN_1, MEN_1, M_XRD, MT_BU,CSR.N, N),
-        LH     -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_ADD , WB_MEM, REN_1, MEN_1, M_XRD, MT_H, CSR.N, N),
-        LHU    -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_ADD , WB_MEM, REN_1, MEN_1, M_XRD, MT_HU,CSR.N, N),
-        SW     -> List(Y, BR_N  , OP1_RS1, OP2_STYPE , OEN_1, OEN_1, ALU_ADD , WB_X  , REN_0, MEN_1, M_XWR, MT_W, CSR.N, N),
-        SB     -> List(Y, BR_N  , OP1_RS1, OP2_STYPE , OEN_1, OEN_1, ALU_ADD , WB_X  , REN_0, MEN_1, M_XWR, MT_B, CSR.N, N),
-        SH     -> List(Y, BR_N  , OP1_RS1, OP2_STYPE , OEN_1, OEN_1, ALU_ADD , WB_X  , REN_0, MEN_1, M_XWR, MT_H, CSR.N, N),
+  // TODO: csrCmd is a foo one for now.
+  val csignals = ListLookup(io.dat.dec_inst,
+    List(N, BR_N  , OP1_X  , OP2_X     , OEN_0, OEN_0, ALU_X     , WB_X  , REN_0, MRD_0, MWR_0, MSK_X , EXT_X,    N, N),
+    Array(     /* val  |  BR   |   op1   |    op2    |  R1  |  R2  |    ALU    |   wb   | rf   | mem  | mem  | mask |extend| csr | fence.i */
+               /* inst | type  |   sel   |    sel    |  oen |  oen |    fcn    |   sel  | wen  |  rd  |  wr  | type | type | cmd |         */
+      LH     -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_X, EXT_HS,    N, N),
+      LW     -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_X, EXT_WS,    N, N),
+      LBU    -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_X, EXT_BU,    N, N),
+      LHU    -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_X, EXT_HU,    N, N),
+      SB     -> List(Y, BR_N  , OP1_RS1 , OP2_STYPE , OEN_1, OEN_1, ALU_ADD   , WB_X   , REN_0, MRD_0, MWR_1, MSK_B, EXT_X ,    N, N),
+      SH     -> List(Y, BR_N  , OP1_RS1 , OP2_STYPE , OEN_1, OEN_1, ALU_ADD   , WB_X   , REN_0, MRD_0, MWR_1, MSK_H, EXT_X ,    N, N),
+      SW     -> List(Y, BR_N  , OP1_RS1 , OP2_STYPE , OEN_1, OEN_1, ALU_ADD   , WB_X   , REN_0, MRD_0, MWR_1, MSK_W, EXT_X ,    N, N),
+      LUI    -> List(Y, BR_N  , OP1_X   , OP2_UTYPE , OEN_0, OEN_0, ALU_COPY_2, WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      AUIPC  -> List(Y, BR_N  , OP1_PC  , OP2_UTYPE , OEN_0, OEN_0, ALU_ADD   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
 
-        AUIPC  -> List(Y, BR_N  , OP1_PC , OP2_UTYPE , OEN_0, OEN_0, ALU_ADD   ,WB_ALU,REN_1, MEN_0, M_X , MT_X,  CSR.N, N),
-        LUI    -> List(Y, BR_N  , OP1_X  , OP2_UTYPE , OEN_0, OEN_0, ALU_COPY_2,WB_ALU,REN_1, MEN_0, M_X , MT_X,  CSR.N, N),
+      JAL    -> List(Y, BR_J  , OP1_X   , OP2_UJTYPE, OEN_0, OEN_0, ALU_COPY_2, WB_PC4 , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      JALR   -> List(Y, BR_JR , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_PC4 , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      BEQ    -> List(Y, BR_EQ , OP1_RS1 , OP2_SBTYPE, OEN_1, OEN_1, ALU_X     , WB_X   , REN_0, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      BNE    -> List(Y, BR_NE , OP1_RS1 , OP2_SBTYPE, OEN_1, OEN_1, ALU_X     , WB_X   , REN_0, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      BLT    -> List(Y, BR_LT , OP1_RS1 , OP2_SBTYPE, OEN_1, OEN_1, ALU_X     , WB_X   , REN_0, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      BGE    -> List(Y, BR_GE , OP1_RS1 , OP2_SBTYPE, OEN_1, OEN_1, ALU_X     , WB_X   , REN_0, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      BLTU   -> List(Y, BR_LTU, OP1_RS1 , OP2_SBTYPE, OEN_1, OEN_1, ALU_X     , WB_X   , REN_0, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      BGEU   -> List(Y, BR_GEU, OP1_RS1 , OP2_SBTYPE, OEN_1, OEN_1, ALU_X     , WB_X   , REN_0, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
 
-        ADDI   -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_ADD , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        ANDI   -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_AND , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        ORI    -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_OR  , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        XORI   -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_XOR , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        SLTI   -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_SLT , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        SLTIU  -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_SLTU, WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        SLLI   -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_SLL , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        SRAI   -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_SRA , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        SRLI   -> List(Y, BR_N  , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_SRL , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
+      ADDI   -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SLTIU  -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_SLTU  , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      XORI   -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_XOR   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      ANDI   -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_AND   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      ADD    -> List(Y, BR_N  , OP1_RS1 , OP2_RS2   , OEN_1, OEN_1, ALU_ADD   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SUB    -> List(Y, BR_N  , OP1_RS1 , OP2_RS2   , OEN_1, OEN_1, ALU_SUB   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SLT    -> List(Y, BR_N  , OP1_RS1 , OP2_RS2   , OEN_1, OEN_1, ALU_SLT   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SLTU   -> List(Y, BR_N  , OP1_RS1 , OP2_RS2   , OEN_1, OEN_1, ALU_SLTU  , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      //XOR    -> List(Y, BR_N  , OP1_RS1 , OP2_RS2   , OEN_1, OEN_1, ALU_XOR   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      OR     -> List(Y, BR_N  , OP1_RS1 , OP2_RS2   , OEN_1, OEN_1, ALU_OR    , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      AND    -> List(Y, BR_N  , OP1_RS1 , OP2_RS2   , OEN_1, OEN_1, ALU_AND   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
 
-        SLL    -> List(Y, BR_N  , OP1_RS1, OP2_RS2   , OEN_1, OEN_1, ALU_SLL , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        ADD    -> List(Y, BR_N  , OP1_RS1, OP2_RS2   , OEN_1, OEN_1, ALU_ADD , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        SUB    -> List(Y, BR_N  , OP1_RS1, OP2_RS2   , OEN_1, OEN_1, ALU_SUB , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        SLT    -> List(Y, BR_N  , OP1_RS1, OP2_RS2   , OEN_1, OEN_1, ALU_SLT , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        SLTU   -> List(Y, BR_N  , OP1_RS1, OP2_RS2   , OEN_1, OEN_1, ALU_SLTU, WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        AND    -> List(Y, BR_N  , OP1_RS1, OP2_RS2   , OEN_1, OEN_1, ALU_AND , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        OR     -> List(Y, BR_N  , OP1_RS1, OP2_RS2   , OEN_1, OEN_1, ALU_OR  , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        XOR    -> List(Y, BR_N  , OP1_RS1, OP2_RS2   , OEN_1, OEN_1, ALU_XOR , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        SRA    -> List(Y, BR_N  , OP1_RS1, OP2_RS2   , OEN_1, OEN_1, ALU_SRA , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        SRL    -> List(Y, BR_N  , OP1_RS1, OP2_RS2   , OEN_1, OEN_1, ALU_SRL , WB_ALU, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
+      LD     -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_X, EXT_D ,    N, N),
+      SD     -> List(Y, BR_N  , OP1_RS1 , OP2_STYPE , OEN_1, OEN_1, ALU_ADD   , WB_X   , REN_0, MRD_0, MWR_1, MSK_D, EXT_X ,    N, N),
+      SLLI   -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_SLL   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SRLI   -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_SRL   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SRAI   -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_SRA   , WB_ALU , REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      ADDIW  -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_ALUW, REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),  //TODO check whether have overflow expection problem
+      SLLIW  -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_SLL   , WB_ALUW, REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SRLIW  -> List(Y, BR_N  , OP1_RS1W, OP2_ITYPE , OEN_1, OEN_0, ALU_SRL   , WB_ALUW, REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SRAIW  -> List(Y, BR_N  , OP1_RS1W, OP2_ITYPE , OEN_1, OEN_0, ALU_SRAW  , WB_ALUW, REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      ADDW   -> List(Y, BR_N  , OP1_RS1 , OP2_RS2   , OEN_1, OEN_1, ALU_ADD   , WB_ALUW, REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SUBW   -> List(Y, BR_N  , OP1_RS1 , OP2_RS2   , OEN_1, OEN_1, ALU_SUB   , WB_ALUW, REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SLLW   -> List(Y, BR_N  , OP1_RS1 , OP2_RS2   , OEN_1, OEN_1, ALU_SLL   , WB_ALUW, REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SRLW   -> List(Y, BR_N  , OP1_RS1W, OP2_RS2   , OEN_1, OEN_1, ALU_SRL   , WB_ALUW, REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
+      SRAW   -> List(Y, BR_N  , OP1_RS1W, OP2_RS2   , OEN_1, OEN_1, ALU_SRAW  , WB_ALUW, REN_1, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N),
 
-        JAL    -> List(Y, BR_J  , OP1_RS1, OP2_UJTYPE, OEN_0, OEN_0, ALU_X   , WB_PC4, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        JALR   -> List(Y, BR_JR , OP1_RS1, OP2_ITYPE , OEN_1, OEN_0, ALU_X   , WB_PC4, REN_1, MEN_0, M_X  , MT_X, CSR.N, N),
-        BEQ    -> List(Y, BR_EQ , OP1_RS1, OP2_SBTYPE, OEN_1, OEN_1, ALU_X   , WB_X  , REN_0, MEN_0, M_X  , MT_X, CSR.N, N),
-        BNE    -> List(Y, BR_NE , OP1_RS1, OP2_SBTYPE, OEN_1, OEN_1, ALU_X   , WB_X  , REN_0, MEN_0, M_X  , MT_X, CSR.N, N),
-        BGE    -> List(Y, BR_GE , OP1_RS1, OP2_SBTYPE, OEN_1, OEN_1, ALU_X   , WB_X  , REN_0, MEN_0, M_X  , MT_X, CSR.N, N),
-        BGEU   -> List(Y, BR_GEU, OP1_RS1, OP2_SBTYPE, OEN_1, OEN_1, ALU_X   , WB_X  , REN_0, MEN_0, M_X  , MT_X, CSR.N, N),
-        BLT    -> List(Y, BR_LT , OP1_RS1, OP2_SBTYPE, OEN_1, OEN_1, ALU_X   , WB_X  , REN_0, MEN_0, M_X  , MT_X, CSR.N, N),
-        BLTU   -> List(Y, BR_LTU, OP1_RS1, OP2_SBTYPE, OEN_1, OEN_1, ALU_X   , WB_X  , REN_0, MEN_0, M_X  , MT_X, CSR.N, N),
-
-        ))
+      NEMUHALT->List(Y, BR_N  , OP1_X   , OP2_X     , OEN_0, OEN_0, ALU_X     , WB_X   , REN_0, MRD_0, MWR_0, MSK_X, EXT_X ,    N, N)  //For AMCPUTest
+    ))
 
   // Put these control signals into variables
   // 把查到的c signals 数组拆分成好几个信号
   val (cs_val_inst: Bool) :: cs_br_type :: cs_op1_sel :: cs_op2_sel :: (cs_rs1_oen: Bool) :: (cs_rs2_oen: Bool) :: cs0 = csignals
-  val cs_alu_fun :: cs_wb_sel :: (cs_rf_wen: Bool) :: (cs_mem_en: Bool) :: cs_mem_fcn :: cs_msk_sel :: cs_csr_cmd :: (cs_fencei: Bool) :: Nil = cs0
+  val cs_alu_fun :: cs_wb_sel :: (cs_rf_wen: Bool) :: (cs_mem_ren: Bool) :: (cs_mem_wen: Bool) :: cs_mem_mask :: cs_mem_ext :: cs_csr_cmd :: (cs_fencei: Bool) :: Nil = cs0
 
   // Branch Logic
   // 根据跳转类型决定pc_sel 信号线, pc_4. pc_br, pc_j, pc_jr, pc_exc
@@ -111,9 +117,12 @@ class cpath extends Module{
   io.ctl.alu_fun    := cs_alu_fun
   io.ctl.wb_sel     := cs_wb_sel
   io.ctl.rf_wen     := cs_rf_wen
-  io.ctl.mem_val    := cs_mem_en
-
-  printf("inst=[%x] br_d=[%d] pc_sel=[%d] op1=[%d] op2=[%d] alu_f=[%d] wb_sel=[%d] rf_wen=[%d] mem_val=%d\n",
+  io.ctl.mem_ren    := cs_mem_ren
+  io.ctl.mem_wen    := cs_mem_wen
+  io.ctl.mem_mask   := cs_mem_mask
+  io.ctl.mem_ext    := cs_mem_ext
+/*
+  printf("inst=[%x] br_d=[%d] pc_sel=[%d] op1=[%d] op2=[%d] alu_f=[%d] wb_sel=[%d] rf_wen=[%d] mem_ren=%d\n",
     io.dat.dec_inst,
     cs_br_type,
     ctrl_dec_pc_sel,
@@ -122,6 +131,6 @@ class cpath extends Module{
     cs_alu_fun,
     cs_wb_sel,
     cs_rf_wen,
-    cs_mem_en)
+    cs_mem_ren)*/
 
 }

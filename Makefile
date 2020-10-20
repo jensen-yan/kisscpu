@@ -12,7 +12,7 @@ exe = $(PWD)/obj_dir/VsimTop
 testDir = $(PWD)/nexus-am//tests/cputest/build
 test_dummy = $(testDir)/dummy-riscv64-nutshell.bin
 
-testName ?= add-longlong-riscv64-nutshell
+#testName ?= add-longlong-riscv64-nutshell
 #testName ?= add-riscv64-nutshell
 #testName ?= bit-riscv64-nutshell
 #testName ?= bubble-sort-riscv64-nutshell
@@ -38,12 +38,12 @@ testName ?= add-longlong-riscv64-nutshell
 #testName ?= select-sort-riscv64-nutshell
 #testName ?= shift-riscv64-nutshell
 #testName ?= shuixianhua-riscv64-nutshell
-#testName ?= string-riscv64-nutshell  #done
-#testName ?= sub-longlong-riscv64-nutshell  #done
-#testName ?= sum-riscv64-nutshell  #done
-#testName ?= switch-riscv64-nutshell  #done
-#testName ?= to-lower-case-riscv64-nutshell  #done
-#testName ?= unalign-riscv64-nutshell  #done
+#testName ?= string-riscv64-nutshell  
+#testName ?= sub-longlong-riscv64-nutshell  
+testName ?= sum-riscv64-nutshell #done
+#testName ?= switch-riscv64-nutshell  
+#testName ?= to-lower-case-riscv64-nutshell  
+#testName ?= unalign-riscv64-nutshell 
 #testName ?= wanshu-riscv64-nutshell
 
 

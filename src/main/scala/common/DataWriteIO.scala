@@ -7,5 +7,5 @@ class DataWriteIO extends Bundle {
   val addr = Output(UInt(XLEN.W))
   val data = Output(UInt(XLEN.W))
   val en   = Output(Bool())
-//  val mask = Output((XLEN/8).W)
+  val mask = Output(UInt((XLEN/8).W))
 }

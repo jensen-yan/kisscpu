@@ -18,7 +18,7 @@ class alu extends Module{
   val shamt = io.src2(5,0).asUInt()   // 移位, 取低5位,
   // TODO: 64位 取低6位
 
-  // 只实现了10个
+  // 只实现了12个
   io.result := MuxCase(0.U, Array(
     (op === ALU_ADD) -> (src1 + src2).asUInt(),
     (op === ALU_SUB) -> (src1 - src2).asUInt(),
@@ -29,11 +29,12 @@ class alu extends Module{
     (op === ALU_SLTU)-> (src1 < src2).asUInt(),
     (op === ALU_SLL) -> (src1 << shamt)(XLEN-1, 0).asUInt(),
     (op === ALU_SRA) -> (src1.asSInt() >> shamt).asUInt(),
+    (op === ALU_SRAW)-> Cat(Fill(32, src1(31)), (src1(31,0).asSInt() >> shamt).asUInt()),
     (op === ALU_SRL) -> (src1 >> shamt).asUInt(),
     (op === ALU_COPY_1)-> src1,
     (op === ALU_COPY_2)-> src2,
   ))
 
-  printf("alu debug: func = %d, src1=[%x] src2=[%x] result=[%x]\n", op, src1, src2, io.result);
+  printf("ALU: func = %d, src1=[%x] src2=[%x] result=[%x]\n", op, src1, src2, io.result);
 
 }
