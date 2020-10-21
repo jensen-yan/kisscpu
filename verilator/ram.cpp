@@ -6,8 +6,7 @@
 CRam::CRam(char* imgPath)
 {
     m_ramSize = RAMSIZE / sizeof(paddr_t);
-    memset(m_Iram, 0, m_ramSize);
-    memset(m_Dram, 0, m_ramSize);
+    memset(m_ram, 0, m_ramSize);
     /*
 #ifdef DEBUG
     m_imgSize = 4;
@@ -26,7 +25,7 @@ CRam::CRam(char* imgPath)
     m_imgSize = ftell(fp);
 
     fseek(fp, 0, SEEK_SET);
-    int ret = fread(m_Iram, m_imgSize, 1, fp);  // 把指令读入Iram中
+    int ret = fread(m_ram, m_imgSize, 1, fp);  // 把指令数据都读入ram中
     assert(ret && "read img failed");
     fclose(fp);
 
@@ -42,7 +41,7 @@ CRam::~CRam()
 
 void* CRam::getImgStart()
 {
-    return m_Iram;
+    return m_ram;
 }
     
 int CRam::getImgSize()
@@ -52,23 +51,24 @@ int CRam::getImgSize()
 
 
 
-iaddr_t CRam::InstRead(iaddr_t addr, bool en){
+iaddr_t CRam::InstRead(paddr_t addr, bool en){
     // printf("inst read addr = 0x%016lx en = %d\n", addr, en);
+    if(!en) return 0;
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + m_ramSize &&
         "read addr out of range");
-    return en ? m_Iram[(addr - ADDRSTART) / sizeof(iaddr_t)] : 0;   // 读Iram
+    return m_ram[(addr - ADDRSTART) / sizeof(paddr_t)] >> ((addr % sizeof(paddr_t)) * 8);   // 读Iram
 }
 
 paddr_t CRam::DataRead(paddr_t addr, bool en){
-    // printf("data read addr = 0x%016lx en = %d\n", addr, en);
-    // paddr_t addr_debug = 0x0000000080000db8;
-    // printf("data[] = 0x%016lx\n", m_Dram[(addr_debug - ADDRSTART) / sizeof(paddr_t)]);
+    printf("data read addr = 0x%016lx en = %d\n", addr, en);
+    // paddr_t addr_debug = 0x0000000080000030;
+    // printf("data[] = 0x%016lx\n", m_ram[(addr_debug - ADDRSTART) / sizeof(paddr_t)]);
     if(!en) return 0;
     assert(ADDRSTART <= addr &&
         addr <= ADDRSTART + m_ramSize &&
         "read data addr out of range");
-    return m_Dram[(addr - ADDRSTART) / sizeof(paddr_t)] >> ((addr % sizeof(paddr_t)) * 8); // 读data_ram
+    return m_ram[(addr - ADDRSTART) / sizeof(paddr_t)] >> ((addr % sizeof(paddr_t)) * 8); // 读data_ram
     // 根据地址后3位选取确定的数据, lw, lb, lh这些需要
     // TODO: 应该需要在chisel中实现!
 }
@@ -89,9 +89,9 @@ void    CRam::DataWrite(paddr_t addr, paddr_t data, bool en, mask_t mask){
                 fullMask = fullMask | (ff << (i*8));
             }
         }
-        data_mask = (fullMask & data) | (~fullMask & m_Dram[(addr - ADDRSTART) / sizeof(paddr_t)]);
+        data_mask = (fullMask & data) | (~fullMask & m_ram[(addr - ADDRSTART) / sizeof(paddr_t)]);
         // 如果lb写入8byte, 其他要保持不变
-        m_Dram[(addr - ADDRSTART) / sizeof(paddr_t)] = data_mask;
+        m_ram[(addr - ADDRSTART) / sizeof(paddr_t)] = data_mask;
         printf("mask = %x, fullMask= 0x%016lx, data = 0x%016lx, data_mask = 0x%016lx\n", mask, fullMask, data, data_mask);
   }
 }

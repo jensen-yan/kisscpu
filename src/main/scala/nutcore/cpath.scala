@@ -37,12 +37,12 @@ class cpath extends Module{
     List(N, BR_N  , OP1_X  , OP2_X     , OEN_0, OEN_0, ALU_X     , WB_X  , REN_0, MRD_0, MWR_0, MSK_X , EXT_X,    N, N),
     Array(     /* val  |  BR   |   op1   |    op2    |  R1  |  R2  |    ALU    |   wb   | rf   | mem  | mem  | mask |extend| csr | fence.i */
                /* inst | type  |   sel   |    sel    |  oen |  oen |    fcn    |   sel  | wen  |  rd  |  wr  | type | type | cmd |         */
-      LB     -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_B, EXT_BS,    N, N),
-      LH     -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_H, EXT_HS,    N, N),
-      LW     -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_W, EXT_WS,    N, N),
-      LBU    -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_B, EXT_BU,    N, N),
-      LHU    -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_H, EXT_HU,    N, N),
-      LWU    -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_W, EXT_WU,    N, N),
+      LB     -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_X, EXT_BS,    N, N),
+      LH     -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_X, EXT_HS,    N, N),
+      LW     -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_X, EXT_WS,    N, N),
+      LBU    -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_X, EXT_BU,    N, N),
+      LHU    -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_X, EXT_HU,    N, N),
+      LWU    -> List(Y, BR_N  , OP1_RS1 , OP2_ITYPE , OEN_1, OEN_0, ALU_ADD   , WB_MEM , REN_1, MRD_1, MWR_0, MSK_X, EXT_WU,    N, N),
       SB     -> List(Y, BR_N  , OP1_RS1 , OP2_STYPE , OEN_1, OEN_1, ALU_ADD   , WB_X   , REN_0, MRD_0, MWR_1, MSK_B, EXT_X ,    N, N),
       SH     -> List(Y, BR_N  , OP1_RS1 , OP2_STYPE , OEN_1, OEN_1, ALU_ADD   , WB_X   , REN_0, MRD_0, MWR_1, MSK_H, EXT_X ,    N, N),
       SW     -> List(Y, BR_N  , OP1_RS1 , OP2_STYPE , OEN_1, OEN_1, ALU_ADD   , WB_X   , REN_0, MRD_0, MWR_1, MSK_W, EXT_X ,    N, N),

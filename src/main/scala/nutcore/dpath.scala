@@ -148,8 +148,9 @@ class dpath extends Module {
   ds_allowin := !ds_valid || ds_ready_go && es_allowin
   val ds_to_es_valid = ds_valid && ds_ready_go
 
-  when(dec_reflush){
-    ds_valid := false.B
+  // TODO: 之后可能还要改这里!
+  when(dec_reflush && ds_ready_go){
+    ds_valid := false.B   // 如果exe有load指令, 还要等下一拍才刷新
   }.elsewhen(ds_allowin) {
     ds_valid := fs_to_ds_valid
   }
@@ -284,10 +285,18 @@ class dpath extends Module {
   alu.io.alu_op := exe_reg_ctrl_alu_fun // 这里应该用decode缓存一次的func!
   alu.io.src1 := exe_alu_op1
   alu.io.src2 := exe_alu_op2
-  exe_alu_out := alu.io.result
-  //  val exe_adder_out = (exe_alu_op1 + exe_alu_op2)(XLEN-1,0)
+//  exe_alu_out := alu.io.result
 
   val exe_pc_plus4 = (exe_reg_pc + 4.U) (XLEN - 1, 0)
+
+  // 为了保证exe 前递到dec的信号正确, 需要提前判断
+  exe_alu_out := MuxCase(alu.io.result, Array(
+    (exe_reg_ctrl_wb_sel === WB_ALU) -> alu.io.result,
+    (exe_reg_ctrl_wb_sel === WB_ALUW)-> Cat(Fill(32, alu.io.result(31)), alu.io.result(31,0)),
+    (exe_reg_ctrl_wb_sel === WB_PC4) -> exe_pc_plus4   // 不用管mem
+  ))
+
+
 
 
   printf("EXE: valid = %d pc=[%x] inst=[%x] \n", es_valid, exe_reg_pc, exe_reg_inst)
@@ -303,7 +312,7 @@ class dpath extends Module {
   when(es_to_ms_valid && ms_allowin) {
     mem_reg_pc := exe_reg_pc
     mem_reg_inst := exe_reg_inst
-    mem_reg_alu_out := Mux((exe_reg_ctrl_wb_sel === WB_PC4), exe_pc_plus4, exe_alu_out) // 特别判断一下!
+    mem_reg_alu_out := exe_alu_out
     mem_reg_wbaddr := exe_reg_wbaddr
     mem_reg_rs1_addr := exe_reg_rs1_addr
     mem_reg_rs2_addr := exe_reg_rs2_addr
@@ -330,9 +339,9 @@ class dpath extends Module {
 
   // WB Mux
   mem_wbdata := MuxCase(mem_reg_alu_out, Array(
-    (mem_reg_ctrl_wb_sel === WB_ALU) -> mem_reg_alu_out,
-    (mem_reg_ctrl_wb_sel === WB_ALUW)-> Cat(Fill(32, mem_reg_alu_out(31)), mem_reg_alu_out(31,0)),
-    (mem_reg_ctrl_wb_sel === WB_PC4) -> mem_reg_alu_out,
+//    (mem_reg_ctrl_wb_sel === WB_ALU) -> mem_reg_alu_out,
+//    (mem_reg_ctrl_wb_sel === WB_ALUW)-> Cat(Fill(32, mem_reg_alu_out(31)), mem_reg_alu_out(31,0)),
+//    (mem_reg_ctrl_wb_sel === WB_PC4) -> mem_reg_alu_out,
     (mem_reg_ctrl_wb_sel === WB_MEM) -> maskedReadData
   ))
 
@@ -381,7 +390,6 @@ class dpath extends Module {
   printf("dataStore:addr = [%x] en=%d data = [%x] mask = %b\n ", io.dataWriteIO.addr, io.dataWriteIO.en, io.dataWriteIO.data, io.dataWriteIO.mask)
 
 
-  // TODO: 读取地址是啥?
   // TODO: dataRead, dataWrite 的en, addr 应该是同一个值! 要简化一下
   io.dataReadIO.en    := es_valid && exe_reg_ctrl_mem_ren  // 或者为1也行
   io.dataReadIO.addr  := exe_alu_out.asUInt()
