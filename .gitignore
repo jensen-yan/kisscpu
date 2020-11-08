@@ -355,3 +355,9 @@ vlt_dump.vcd
 first_vcd.gtkw
 AXI_Bridge.v
 firrtl_black_box_resource_files.f
+ysys_yanyue.v
+ysys_yanyue.anno.json
+ysys_yanyue.fir
+CPU_Core.fir
+CPU_Core.v
+CPU_Core.anno.json

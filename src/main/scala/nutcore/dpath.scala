@@ -460,6 +460,6 @@ class dpath extends Module {
     wb_reg_inst)
 
 
-  BoringUtils.addSource(wb_reg_pc, "diffTestPC")
-  BoringUtils.addSource(ws_valid, "diffTestPC_valid")   // 表示这是一条有效的PC, 参加比对
+//  BoringUtils.addSource(wb_reg_pc, "diffTestPC")
+//  BoringUtils.addSource(ws_valid, "diffTestPC_valid")   // 表示这是一条有效的PC, 参加比对
 }

@@ -15,8 +15,34 @@ class AXI_BridgeIO extends Bundle{
 
 }
 
-class AXI_Bridge extends BlackBox with HasBlackBoxInline {
-    val io = IO(new AXI_BridgeIO())
+class AXI_Bridge(width: Int) extends BlackBox with HasBlackBoxInline {
+//    val io = IO(new AXI_BridgeIO())
+    val io = IO(Flipped(new AXI_interface {
+        val clock = Output(Clock())
+        val reset = Output(Reset())
+        // CPU side
+
+        // inst sram-like
+        val inst_req = Output(UInt(1.W))
+        val inst_wr = Output(UInt(1.W))
+        val inst_size = Output(UInt(2.W))
+        val inst_addr = Output(UInt(width.W))
+        val inst_wdata = Output(UInt(width.W))
+        val inst_rdata = Input(UInt(width.W))
+        val inst_addr_ok = Input(UInt(1.W))
+        val inst_data_ok = Input(UInt(1.W))
+        // data sram-like
+        val data_req = Output(UInt(1.W))
+        val data_wr = Output(UInt(1.W))
+        val data_size = Output(UInt(2.W))
+        val data_addr = Output(UInt(width.W))
+        val data_wdata = Output(UInt(width.W))
+        val data_rdata = Input(UInt(width.W))
+        val data_addr_ok = Input(UInt(1.W))
+        val data_data_ok = Input(UInt(1.W))
+
+        // AXI side is automatically included in AXI_interface
+    }))
     setInline("AXI_Bridge.v",
         s"""
            module AXI_Bridge
