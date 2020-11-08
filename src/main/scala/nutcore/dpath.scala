@@ -17,9 +17,13 @@ class DatToCtlIo extends Bundle() {
 class DpathIo extends Bundle() {
   val ctl = Flipped(new CtlToDatIo())
   val dat = new DatToCtlIo()
-  val instReadIO = new InstReadIO()
-  val dataReadIO = new DataReadIO()
-  val dataWriteIO = new DataWriteIO()
+//  val instReadIO = new InstReadIO()
+//  val dataReadIO = new DataReadIO()
+//  val dataWriteIO = new DataWriteIO()
+
+  val InstRamIO = new RamIO
+  val DataRamIO = new RamIO
+
 }
 
 class dpath extends Module {
@@ -57,7 +61,6 @@ class dpath extends Module {
   val exe_reg_ctrl_mem_wen = RegInit(false.B)
   val exe_reg_ctrl_mem_mask = RegInit(MSK_X)
   val exe_reg_ctrl_mem_ext = RegInit(EXT_X)
-  val exe_reg_ctrl_csr_cmd = RegInit(CSR.N)
   val es_allowin = Wire(Bool())
 
   // Memory State
@@ -75,7 +78,6 @@ class dpath extends Module {
   val mem_reg_ctrl_mem_mask = RegInit(MSK_X)
   val mem_reg_ctrl_mem_ext = RegInit(EXT_X)
   val mem_reg_ctrl_wb_sel = Reg(UInt())
-  val mem_reg_ctrl_csr_cmd = RegInit(CSR.N)
   val ms_allowin = Wire(Bool())
   val mem_reg_dram_data = RegInit(0.asUInt(XLEN.W))   // 强行缓存一拍的dram读取值
 
@@ -107,6 +109,9 @@ class dpath extends Module {
     Mux(io.ctl.dec_pc_sel === PC_BRJMP, dec_brjmp_target,
       Mux(io.ctl.dec_pc_sel === PC_JALR, dec_jump_reg_target,
         /*Mux(io.ctl.exe_pc_sel === PC_EXC*/ BUBBLE))) // TODO:
+
+
+  /*
   // 获取此时的inst指令, 本质在预取阶段做的!
   io.instReadIO.addr := if_pc_next
   io.instReadIO.en := to_fs_valid && fs_allowin   // 握手成功且可以流水才读指令
@@ -114,7 +119,31 @@ class dpath extends Module {
   val if_reg_inst = Reg(UInt(XLEN.W)) // 强行缓存一拍获取的指令
   when(io.instReadIO.en){
     if_reg_inst := io.instReadIO.data   // 只有需要更新才更新!
+  }*/
+  // instRam 接口
+  val inst_fetching = RegInit(false.B)  // 表示正在取指令
+  when(io.InstRamIO.req && io.InstRamIO.addr_ok){
+    inst_fetching := true.B   // 地址握手成功, 开始取指令
+  }.elsewhen(io.InstRamIO.data_ok){
+    inst_fetching := false.B  // 数据握手成功, 结束取指令
   }
+  io.InstRamIO.req  := !inst_fetching  // 不在取指时候发请求
+  io.InstRamIO.wr   := false.B
+  io.InstRamIO.size := 2.U
+  io.InstRamIO.addr := if_pc_next
+  io.InstRamIO.wdata:= 0.U
+  val inst_valid = RegInit(false.B)       // 表示buf是否为空
+  val inst_buffer = RegInit(0.U(XLEN.W))  // 暂存获取的指令
+  when(inst_fetching && io.InstRamIO.data_ok && !inst_valid){
+    // 正在取指令, 数据握手成功, 指令buf空的, 存入
+    inst_valid  := true.B
+    inst_buffer := io.InstRamIO.rdata
+  }.elsewhen(to_fs_valid && ds_allowin){
+    inst_valid  := false.B    // 流水成功, buf清空
+  }
+  val if_inst = Wire(UInt(XLEN.W))    // 缓存后的指令
+  val if_reg_inst    = inst_buffer
+
 
 
 
@@ -139,7 +168,7 @@ class dpath extends Module {
 
   //DEBUG:
 //  printf("Inst: addr=[%x], en=%d, data=[%x] \n", io.instReadIO.addr, io.instReadIO.en, if_reg_inst);
-  printf("IF : valid = %d pc=[%x] inst=[%x] if_pc_next=[%x] en=%d pc_sel=[%d] e_bj_pc=[%x]\n", fs_valid, if_reg_pc, if_inst, if_pc_next, io.instReadIO.en, io.ctl.dec_pc_sel, dec_brjmp_target)
+  printf("IF : valid = %d pc=[%x] inst=[%x] if_pc_next=[%x] pc_sel=[%d] e_bj_pc=[%x]\n", fs_valid, if_reg_pc, if_inst, if_pc_next, io.ctl.dec_pc_sel, dec_brjmp_target)
 
 
   //******************************************************************************************************
@@ -209,11 +238,11 @@ class dpath extends Module {
   )).asUInt()
 
   dec_op1_data := MuxCase(dec_alu_op1, Array(
-    (es_valid && (exe_reg_wbaddr === dec_rs1_addr) && (dec_rs1_addr =/= 0.U) && exe_reg_ctrl_rf_wen) -> exe_alu_out,
-    (ms_valid && (mem_reg_wbaddr === dec_rs1_addr) && (dec_rs1_addr =/= 0.U) && mem_reg_ctrl_rf_wen) -> mem_wbdata,
-    (ws_valid && (wb_reg_wbaddr === dec_rs1_addr) && (dec_rs1_addr =/= 0.U) && wb_reg_ctrl_rf_wen) -> wb_reg_wbdata
+    (es_valid && (exe_reg_wbaddr === dec_rs1_addr) && (dec_rs1_addr =/= 0.U) && exe_reg_ctrl_rf_wen && (io.ctl.op1_sel === OP1_RS1)) -> exe_alu_out,
+    (ms_valid && (mem_reg_wbaddr === dec_rs1_addr) && (dec_rs1_addr =/= 0.U) && mem_reg_ctrl_rf_wen && (io.ctl.op1_sel === OP1_RS1)) -> mem_wbdata,
+    (ws_valid && (wb_reg_wbaddr  === dec_rs1_addr) && (dec_rs1_addr =/= 0.U) && wb_reg_ctrl_rf_wen  && (io.ctl.op1_sel === OP1_RS1)) -> wb_reg_wbdata
   )) // 且那一级别需要有效
-  // 确保当前拍指令有效才行啊, 加valid, 且源地址有效, 是OP1_rs1(默认了)
+  // 确保当前拍指令有效才行啊, 加valid, 且源地址有效, 是OP1_rs1(不默认了!) 新加的
   val dec_alu_op2 = MuxCase(0.U, Array(
     (io.ctl.op2_sel === OP2_RS2)    -> rf_rs2_data,
     (io.ctl.op2_sel === OP2_RS2W)   -> Cat(Fill(32, 0.U), rf_rs2_data(31,0)),
@@ -244,7 +273,6 @@ class dpath extends Module {
 
 
   printf("DEC: valid = %d pc=[%x] inst=[%x] alu1=[%x] op1=[%x] alu2=[%x] op2=[%x] bj_target = [%x]\n", ds_valid, dec_reg_pc, dec_reg_inst, dec_alu_op1, dec_op1_data, dec_alu_op2, dec_op2_data, dec_brjmp_target)
-
 
   //******************************************************************************************************
   // Execute Stage
@@ -323,7 +351,6 @@ class dpath extends Module {
     mem_reg_ctrl_mem_mask := exe_reg_ctrl_mem_mask
     mem_reg_ctrl_mem_ext  := exe_reg_ctrl_mem_ext
     mem_reg_ctrl_wb_sel   := exe_reg_ctrl_wb_sel
-    mem_reg_ctrl_csr_cmd  := exe_reg_ctrl_csr_cmd
   }
 
   // load的值根据指令不同, 读取的值不同
@@ -383,6 +410,7 @@ class dpath extends Module {
   val memWriteMask = Wire(UInt(8.W))
   memWriteMask := (exe_reg_ctrl_mem_mask << exe_alu_out(2,0))(7,0)      // 类似strb信号, 根据地址后3位来确定写入位置
 
+  /*
   io.dataWriteIO.en := es_valid && exe_reg_ctrl_mem_wen   // 当前es有效且为 store指令
   io.dataWriteIO.addr := exe_alu_out.asUInt()   // 写地址为执行级alu结果
   io.dataWriteIO.data := memWriteData       // 写值为rs2的值(包括前递信号), 例如sw, 不是写入op2!
@@ -395,6 +423,26 @@ class dpath extends Module {
   io.dataReadIO.addr  := exe_alu_out.asUInt()
   mem_reg_dram_data := io.dataReadIO.data
   printf("dataRead: addr = [%x] en = %d data = [%x] mask_data = [%x]\n", io.dataReadIO.addr, io.dataReadIO.en, io.dataReadIO.data, maskedReadData);
+*/
+  // DataRam 接口
+  val data_fetching = RegInit(false.B)
+  when(io.DataRamIO.req && io.DataRamIO.addr_ok){
+    data_fetching := true.B
+  }.elsewhen(io.DataRamIO.data_ok){
+    data_fetching := false.B
+  }
+  io.DataRamIO.req  := ms_allowin && !data_fetching &&  (exe_reg_ctrl_mem_wen || exe_reg_ctrl_mem_ren) && es_valid
+  io.DataRamIO.wr   := exe_reg_ctrl_mem_wen   // 表示写
+  io.DataRamIO.size := MuxCase(3.U, Array(
+                            (exe_reg_ctrl_mem_mask === MSK_B)  -> 0.U,
+                            (exe_reg_ctrl_mem_mask === MSK_H)  -> 1.U,
+                            (exe_reg_ctrl_mem_mask === MSK_W)  -> 2.U,
+                            (exe_reg_ctrl_mem_mask === MSK_D)  -> 3.U,
+                          ))  // TODO: 这里要检查下是不是约定正确, 应该正确
+  io.DataRamIO.addr := exe_alu_out.asUInt()
+  io.DataRamIO.wdata:= memWriteData   // TODO: 这里mask怎么处理, 应该就这样
+  mem_reg_dram_data := io.DataRamIO.rdata
+
 
 
   // Printout

@@ -12,8 +12,9 @@ object constans extends
   regfileConstants with
   aluFuncConstants with
   memTypeConstants with
-  opSelConstants {
-
+  opSelConstants with
+  CSRConstants
+{
 }
 
 
@@ -156,29 +157,25 @@ trait memTypeConstants {
 }
 
 
-object CSR {
-  // commands
-  val SZ = 3.W
-  val X = 0.asUInt(SZ)
-  val N = 0.asUInt(SZ)
-  val W = 1.asUInt(SZ)
-  val S = 2.asUInt(SZ)
-  val C = 3.asUInt(SZ)
-  val I = 4.asUInt(SZ)
-  val R = 5.asUInt(SZ)
 
-  val ADDRSZ = 12
-  /*
-  val firstCtr = CSRs.cycle
-  val firstCtrH = CSRs.cycleh
-  val firstHPC = CSRs.hpmcounter3
-  val firstHPCH = CSRs.hpmcounter3h
-  //val firstHPE = CSRs.mhpmevent3
-  val firstMHPC = CSRs.mhpmcounter3
-  val firstMHPCH = CSRs.mhpmcounter3h
-  val firstHPM = 3
-  val nCtr = 32
-  val nHPM = nCtr - firstHPM
-  val hpmWidth = 40
-   */
+trait CSRConstants {
+  val MSTATUS = 0x300.U
+  val MISA = 0x301.U
+  val MIE = 0x304.U
+  val MTVEC = 0x305.U
+  val MSCRATCH = 0x340.U
+  val MEPC = 0x341.U
+  val MCAUSE = 0x342.U
+  val MTVAL = 0x343.U
+  val MIP = 0x344.U
+  val MVENDORID = 0xf11.U
+  val MARCHID = 0xf12.U
+  val MIMPID = 0xf13.U
+  val MHARTID = 0xf14.U
+
+  // custom encoding
+  val MTIMELO = 0x7c0.U
+  val MTIMEHI = 0x7c1.U
+  val MTIMECMPLO = 0x7c2.U
+  val MTIMECMPHI = 0x7c3.U
 }

@@ -9,7 +9,7 @@ verilatorDir = $(PWD)/build/generated-cpp
 exe = $(PWD)/obj_dir/VsimTop
 
 # 测试文件
-testDir = $(PWD)/nexus-am//tests/cputest/build
+testDir = $(PWD)/nexus-am/tests/cputest/build
 test_dummy = $(testDir)/dummy-riscv64-nutshell.bin
 teat_allName = $(shell find testDir/ -name "*.bin")
 
@@ -49,6 +49,15 @@ teat_allName = $(shell find testDir/ -name "*.bin")
 # testName ?= shuixianhua-riscv64-nutshell
 # testName ?= wanshu-riscv64-nutshell			#skip
 
+# 3个apps
+microbench 	= $(PWD)/nexus-am/apps/microbench/build/microbench-riscv64-nutshell.bin
+coremark	= $(PWD)/nexus-am/apps/coremark/build/coremark-riscv64-nutshell.bin
+dhrystone	= $(PWD)/nexus-am/apps/dhrystone/build/dhrystone-riscv64-nutshell.bin
+
+# rt-thread
+rtthread  	= $(PWD)/../RT-Thread/bsp/riscv64/rtthread.bin
+# rtthread  	= $(PWD)/../riscv64_rtt/rtthread.bin
+
 
 init:
 	export PATH=$HOME/.local/verilator/bin:$PATH
@@ -79,7 +88,7 @@ all:
 	make verilog
 	make clean
 	make run-verilator
-	make test
+	make rtthread
 
 dummy:
 	$(exe) $(test_dummy)
@@ -87,6 +96,18 @@ dummy:
 
 test:
 	$(exe) $(testDir)/$(testName)
+
+microbench:
+	$(exe) $(microbench)
+
+coremark:
+	$(exe) $(coremark)
+
+dhrystone:
+	$(exe) $(dhrystone)
+
+rtthread:
+	$(exe) $(rtthread)
 
 # 在verilator文件夹中
 # g++ -g -o difftest difftest.cpp ram.cpp -ldl

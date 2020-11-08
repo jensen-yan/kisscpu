@@ -353,3 +353,5 @@ simTop.anno.json
 # 波形
 vlt_dump.vcd
 first_vcd.gtkw
+AXI_Bridge.v
+firrtl_black_box_resource_files.f
