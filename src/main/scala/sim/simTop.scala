@@ -3,7 +3,9 @@ package sim
 import chisel3._
 import chisel3.util._
 import chisel3.util.experimental.BoringUtils
+import common._
 import nutcore._
+
 
 class simTop extends Module{
   val io = IO(new Bundle{
@@ -12,7 +14,7 @@ class simTop extends Module{
   })
   io := DontCare    // 不会被使用
 
-  val mycoretop = Module(new CPU_Core())
+  val mycoretop = Module(new top())
   BoringUtils.addSink(io.diffTestIO.regfile, "diffTestRegfile")
   BoringUtils.addSink(io.diffTestIO.PC, "diffTestPC")
   BoringUtils.addSink(io.diffTestIO.PC_valid, "diffTestPC_valid")

@@ -37,17 +37,17 @@ teat_allName = $(shell find testDir/ -name "*.bin")
 # testName ?= unalign-riscv64-nutshell.bin			#done
 
 # 乘除法相关
-# testName ?= div-riscv64-nutshell				#skip
-# testName ?= fact-riscv64-nutshell				#skip
-# testName ?= goldbach-riscv64-nutshell
-# testName ?= hello-str-riscv64-nutshell
-# testName ?= leap-year-riscv64-nutshell
-# testName ?= matrix-mul-riscv64-nutshell
-# testName ?= mul-longlong-riscv64-nutshell
-# testName ?= prime-riscv64-nutshell
-# testName ?= recursion-riscv64-nutshell
-# testName ?= shuixianhua-riscv64-nutshell
-# testName ?= wanshu-riscv64-nutshell			#skip
+# testName ?= div-riscv64-nutshell.bin				#done 	14154 / 874
+# testName ?= fact-riscv64-nutshell.bin				#done
+testName ?= goldbach-riscv64-nutshell.bin
+# testName ?= hello-str-riscv64-nutshell.bin
+# testName ?= leap-year-riscv64-nutshell.bin		#done 	10718 / 1825
+# testName ?= matrix-mul-riscv64-nutshell.bin		# 超时
+# testName ?= mul-longlong-riscv64-nutshell.bin		#done 	974 / 239
+# testName ?= prime-riscv64-nutshell.bin
+# testName ?= recursion-riscv64-nutshell.bin
+# testName ?= shuixianhua-riscv64-nutshell.bin
+# testName ?= wanshu-riscv64-nutshell.bin			#done	29867 / 2685 ?? 差这么多?
 
 # 3个apps
 microbench 	= $(PWD)/nexus-am/apps/microbench/build/microbench-riscv64-nutshell.bin
@@ -88,7 +88,7 @@ all:
 	make verilog
 	make clean
 	make run-verilator
-	make rtthread
+	make test
 
 dummy:
 	$(exe) $(test_dummy)

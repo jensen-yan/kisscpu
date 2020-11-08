@@ -1,7 +1,7 @@
 package print
 
 import chisel3.iotesters.PeekPokeTester
-
+/*
 class mem_test(c: mem_print) extends PeekPokeTester(c){
 
   for(i <- 0 until 32){
@@ -23,4 +23,4 @@ class mem_test(c: mem_print) extends PeekPokeTester(c){
 
 object mem_test_gen extends App{
   chisel3.iotesters.Driver.execute(args, () => new mem_print)(c => new mem_test(c))
-}
+}*/

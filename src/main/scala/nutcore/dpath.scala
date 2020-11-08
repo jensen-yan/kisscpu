@@ -17,12 +17,12 @@ class DatToCtlIo extends Bundle() {
 class DpathIo extends Bundle() {
   val ctl = Flipped(new CtlToDatIo())
   val dat = new DatToCtlIo()
-//  val instReadIO = new InstReadIO()
-//  val dataReadIO = new DataReadIO()
-//  val dataWriteIO = new DataWriteIO()
+  val instReadIO = new InstReadIO()
+  val dataReadIO = new DataReadIO()
+  val dataWriteIO = new DataWriteIO()
 
-  val InstRamIO = new RamIO
-  val DataRamIO = new RamIO
+//  val InstRamIO = new RamIO
+//  val DataRamIO = new RamIO
 
 }
 
@@ -111,7 +111,7 @@ class dpath extends Module {
         /*Mux(io.ctl.exe_pc_sel === PC_EXC*/ BUBBLE))) // TODO:
 
 
-  /*
+
   // 获取此时的inst指令, 本质在预取阶段做的!
   io.instReadIO.addr := if_pc_next
   io.instReadIO.en := to_fs_valid && fs_allowin   // 握手成功且可以流水才读指令
@@ -119,7 +119,8 @@ class dpath extends Module {
   val if_reg_inst = Reg(UInt(XLEN.W)) // 强行缓存一拍获取的指令
   when(io.instReadIO.en){
     if_reg_inst := io.instReadIO.data   // 只有需要更新才更新!
-  }*/
+  }
+  /*
   // instRam 接口
   val inst_fetching = RegInit(false.B)  // 表示正在取指令
   when(io.InstRamIO.req && io.InstRamIO.addr_ok){
@@ -143,7 +144,7 @@ class dpath extends Module {
   }
   val if_inst = Wire(UInt(XLEN.W))    // 缓存后的指令
   val if_reg_inst    = inst_buffer
-
+*/
 
 
 
@@ -276,7 +277,11 @@ class dpath extends Module {
 
   //******************************************************************************************************
   // Execute Stage
-  val es_ready_go = true.B
+  // ALU
+  val alu = Module(new alu)
+  val es_stall = alu.io.stall   // 暂时只有alu乘除法产生阻塞
+
+  val es_ready_go = !es_stall
   es_allowin := !es_valid || es_ready_go && ms_allowin
   val es_to_ms_valid = es_valid && es_ready_go
   when(es_allowin) {
@@ -308,8 +313,7 @@ class dpath extends Module {
   val exe_alu_op1 = exe_reg_op1_data.asUInt()
   val exe_alu_op2 = exe_reg_op2_data.asUInt()
 
-  // ALU
-  val alu = Module(new alu)
+
   alu.io.alu_op := exe_reg_ctrl_alu_fun // 这里应该用decode缓存一次的func!
   alu.io.src1 := exe_alu_op1
   alu.io.src2 := exe_alu_op2
@@ -410,7 +414,7 @@ class dpath extends Module {
   val memWriteMask = Wire(UInt(8.W))
   memWriteMask := (exe_reg_ctrl_mem_mask << exe_alu_out(2,0))(7,0)      // 类似strb信号, 根据地址后3位来确定写入位置
 
-  /*
+
   io.dataWriteIO.en := es_valid && exe_reg_ctrl_mem_wen   // 当前es有效且为 store指令
   io.dataWriteIO.addr := exe_alu_out.asUInt()   // 写地址为执行级alu结果
   io.dataWriteIO.data := memWriteData       // 写值为rs2的值(包括前递信号), 例如sw, 不是写入op2!
@@ -423,7 +427,7 @@ class dpath extends Module {
   io.dataReadIO.addr  := exe_alu_out.asUInt()
   mem_reg_dram_data := io.dataReadIO.data
   printf("dataRead: addr = [%x] en = %d data = [%x] mask_data = [%x]\n", io.dataReadIO.addr, io.dataReadIO.en, io.dataReadIO.data, maskedReadData);
-*/
+/*
   // DataRam 接口
   val data_fetching = RegInit(false.B)
   when(io.DataRamIO.req && io.DataRamIO.addr_ok){
@@ -442,7 +446,7 @@ class dpath extends Module {
   io.DataRamIO.addr := exe_alu_out.asUInt()
   io.DataRamIO.wdata:= memWriteData   // TODO: 这里mask怎么处理, 应该就这样
   mem_reg_dram_data := io.DataRamIO.rdata
-
+*/
 
 
   // Printout
@@ -460,6 +464,6 @@ class dpath extends Module {
     wb_reg_inst)
 
 
-//  BoringUtils.addSource(wb_reg_pc, "diffTestPC")
-//  BoringUtils.addSource(ws_valid, "diffTestPC_valid")   // 表示这是一条有效的PC, 参加比对
+  BoringUtils.addSource(wb_reg_pc, "diffTestPC")
+  BoringUtils.addSource(ws_valid, "diffTestPC_valid")   // 表示这是一条有效的PC, 参加比对
 }

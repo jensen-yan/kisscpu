@@ -5,7 +5,7 @@ import common._
 import common.constans._
 import AXI._
 
-class topIO extends Bundle{
+class CPU_CoreIO extends Bundle{
 //  val instReadIO  = new InstReadIO
 //  val dataReadIO  = new DataReadIO
 //  val dataWriteIO = new DataWriteIO
@@ -14,9 +14,9 @@ class topIO extends Bundle{
   val axi_mmio = Flipped(new AXI_interface)
 }
 
-
+/*
 class CPU_Core extends Module{
-  val io = IO(new topIO)
+  val io = IO(new CPU_CoreIO)
   val cpath = Module(new cpath)
   val dpath = Module(new dpath)
 
@@ -162,4 +162,4 @@ class CPU_Core extends Module{
 
 object CPU_Core extends App {
   (new stage.ChiselStage).execute(args, Seq(stage.ChiselGeneratorAnnotation(() => new CPU_Core)))
-}
+}*/

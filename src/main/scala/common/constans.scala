@@ -109,7 +109,7 @@ trait regfileConstants {
 }
 
 trait aluFuncConstants {
-  val aluFunc_w = 4
+  val aluFunc_w = 5
   val ALU_ADD = 0.asUInt(aluFunc_w.W)
   val ALU_SUB = 1.asUInt(aluFunc_w.W)
   val ALU_SLL = 2.asUInt(aluFunc_w.W)
@@ -123,6 +123,21 @@ trait aluFuncConstants {
   val ALU_SLTU = 10.asUInt(aluFunc_w.W)
   val ALU_COPY_1 = 11.asUInt(aluFunc_w.W)
   val ALU_COPY_2 = 12.asUInt(aluFunc_w.W)
+  // M
+  val ALU_MUL    = 18.asUInt(aluFunc_w.W)
+  val ALU_MULH   = 19.asUInt(aluFunc_w.W)
+  val ALU_MULHSU = 20.asUInt(aluFunc_w.W)
+  val ALU_MULHU  = 21.asUInt(aluFunc_w.W)
+  val ALU_DIV    = 22.asUInt(aluFunc_w.W)
+  val ALU_DIVU   = 23.asUInt(aluFunc_w.W)
+  val ALU_REM    = 24.asUInt(aluFunc_w.W)
+  val ALU_REMU   = 25.asUInt(aluFunc_w.W)
+  val ALU_MULW   = 26.asUInt(aluFunc_w.W)
+  val ALU_DIVW   = 27.asUInt(aluFunc_w.W)
+  val ALU_DIVUW  = 28.asUInt(aluFunc_w.W)
+  val ALU_REMW   = 29.asUInt(aluFunc_w.W)
+  val ALU_REMUW  = 30.asUInt(aluFunc_w.W)
+
   val ALU_X = 0.asUInt(aluFunc_w.W)
 }
 
