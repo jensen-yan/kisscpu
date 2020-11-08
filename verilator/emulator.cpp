@@ -103,7 +103,8 @@ void CEmulator::reset_ncycles(int m_cycles)
 
 void CEmulator::single_cycle()
 {
-    printf("cycle = %d \n", m_cycles);
+    // if(m_cycles % 1000000 == 0)
+        printf("cycle = %d \n", m_cycles);
     m_simtop->clock = 0;
     m_simtop->eval();
 

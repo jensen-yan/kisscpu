@@ -50,7 +50,7 @@ class alu extends Module{
     (op === ALU_COPY_2)-> src2,
     (isMulDiv)         -> multiplier.io.mult_out
   ))
-
-  printf("ALU: func = %d, src1=[%x] src2=[%x] result=[%x] ismul = %d stall = %d\n", op, src1, src2, io.result, isMulDiv, io.stall);
-
+  if(DEBUG_PRINT) {
+    printf("ALU: func = %d, src1=[%x] src2=[%x] result=[%x] ismul = %d stall = %d\n", op, src1, src2, io.result, isMulDiv, io.stall);
+  }
 }

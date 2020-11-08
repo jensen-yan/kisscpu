@@ -12,12 +12,12 @@
 #define __COMMON_H__
 
 #include "constants.h"
-// #define DEBUG
+#define DEBUG_PRINT    // 决定是否输出nemu调试信息
 // TODO:
 #define __RV64__
 // #define __RV32__
 
-#define vcdTrace true
+#define vcdTrace false    // 是否输出波形, 关闭快一点
 
 typedef unsigned char uint8_t;
 typedef unsigned int uint32_t;

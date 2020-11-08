@@ -25,7 +25,9 @@ trait commonConstants
 }
 
 trait RISCVConstants {
-  // TODO: 修改
+  // val DEBUG_PRINT = false    // 是否输出调试信息
+ val DEBUG_PRINT = true
+
   val XLEN = 64
   val NUM_REG = 32
   val ADDR_W = log2Ceil(NUM_REG) // 地址宽度 = 5

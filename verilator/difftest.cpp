@@ -84,8 +84,10 @@ int difftest_step(CEmulator* emu)
     emu->read_emu_regs(reg_dut);
     // ref_difftest_exec(1);       
     ref_difftest_getregs(&reg_ref);
+#ifdef DEBUG_PRINT
     ref_isa_reg_display();
-    
+#endif
+
     // 先只比较pc就好
     if(reg_dut[32] != reg_ref[32]){
         printf("right pc = [0x%16x], wrong pc = [0x%16x] \n", reg_ref[32], reg_dut[32]);

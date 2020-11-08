@@ -17,7 +17,7 @@ teat_allName = $(shell find testDir/ -name "*.bin")
 # testName ?= add-riscv64-nutshell.bin				#done
 # testName ?= bit-riscv64-nutshell.bin				#done
 # testName ?= bubble-sort-riscv64-nutshell.bin		#done
-# testName ?= dummy-riscv64-nutshell.bin			#done
+testName ?= dummy-riscv64-nutshell.bin			#done
 # testName ?= fib-riscv64-nutshell.bin				#done
 # testName ?= if-else-riscv64-nutshell.bin			#done
 # testName ?= load-store-riscv64-nutshell.bin		#done
@@ -39,14 +39,14 @@ teat_allName = $(shell find testDir/ -name "*.bin")
 # 乘除法相关
 # testName ?= div-riscv64-nutshell.bin				#done 	14154 / 874
 # testName ?= fact-riscv64-nutshell.bin				#done
-testName ?= goldbach-riscv64-nutshell.bin
-# testName ?= hello-str-riscv64-nutshell.bin
+# testName ?= goldbach-riscv64-nutshell.bin			#done 	12841 / 1568
+# testName ?= hello-str-riscv64-nutshell.bin		#done  	4623 / 2636
 # testName ?= leap-year-riscv64-nutshell.bin		#done 	10718 / 1825
-# testName ?= matrix-mul-riscv64-nutshell.bin		# 超时
+# testName ?= matrix-mul-riscv64-nutshell.bin		#done	77507 / 8966
 # testName ?= mul-longlong-riscv64-nutshell.bin		#done 	974 / 239
-# testName ?= prime-riscv64-nutshell.bin
-# testName ?= recursion-riscv64-nutshell.bin
-# testName ?= shuixianhua-riscv64-nutshell.bin
+# testName ?= prime-riscv64-nutshell.bin			#done 	88172 / 5215
+# testName ?= recursion-riscv64-nutshell.bin		#done
+# testName ?= shuixianhua-riscv64-nutshell.bin		#done	266251 / 6740
 # testName ?= wanshu-riscv64-nutshell.bin			#done	29867 / 2685 ?? 差这么多?
 
 # 3个apps

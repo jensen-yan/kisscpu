@@ -13,7 +13,7 @@ class CtlToDatIo extends Bundle()
   val op2_sel    = Output(UInt(op2Sel_w.W))
   val alu_fun    = Output(UInt(aluFunc_w.W))
   val wb_sel     = Output(UInt(wbSel_w.W))
-  val rf_wen     = Output(Bool())
+  val rf_wen     = Output(Bool())   // 要写回regfile
   val mem_ren    = Output(Bool())
   val mem_wen    = Output(Bool())
   val mem_mask   = Output(UInt(memMask_w.W))

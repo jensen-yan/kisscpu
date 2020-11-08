@@ -108,7 +108,7 @@ class dpath extends Module {
   if_pc_next := Mux(io.ctl.dec_pc_sel === PC_4, if_pc_plus4,
     Mux(io.ctl.dec_pc_sel === PC_BRJMP, dec_brjmp_target,
       Mux(io.ctl.dec_pc_sel === PC_JALR, dec_jump_reg_target,
-        /*Mux(io.ctl.exe_pc_sel === PC_EXC*/ BUBBLE))) // TODO:
+        /*Mux(io.ctl.exe_pc_sel === PC_EXC*/ BUBBLE)))
 
 
 
@@ -166,11 +166,9 @@ class dpath extends Module {
 //    if_inst := if_reg_inst
   if_inst := Mux(dec_reflush, BUBBLE, if_reg_inst) // 如果是跳转指令, 强行改成nop
 
-
-  //DEBUG:
-//  printf("Inst: addr=[%x], en=%d, data=[%x] \n", io.instReadIO.addr, io.instReadIO.en, if_reg_inst);
-  printf("IF : valid = %d pc=[%x] inst=[%x] if_pc_next=[%x] pc_sel=[%d] e_bj_pc=[%x]\n", fs_valid, if_reg_pc, if_inst, if_pc_next, io.ctl.dec_pc_sel, dec_brjmp_target)
-
+  if(DEBUG_PRINT) {
+    printf("IF : valid = %d pc=[%x] inst=[%x] if_pc_next=[%x] pc_sel=[%d] e_bj_pc=[%x]\n", fs_valid, if_reg_pc, if_inst, if_pc_next, io.ctl.dec_pc_sel, dec_brjmp_target)
+  }
 
   //******************************************************************************************************
   // Decode Stage
@@ -179,8 +177,8 @@ class dpath extends Module {
   val ds_to_es_valid = ds_valid && ds_ready_go
 
   // TODO: 之后可能还要改这里!
-  when(dec_reflush && ds_ready_go){
-    ds_valid := false.B   // 如果exe有load指令, 还要等下一拍才刷新
+  when(dec_reflush && ds_to_es_valid && ds_allowin){
+    ds_valid := false.B   // 如果当前拍是转移指令, 且成功流水到下一级, 才把后面那条指令刷新成nop!
   }.elsewhen(ds_allowin) {
     ds_valid := fs_to_ds_valid
   }
@@ -272,9 +270,9 @@ class dpath extends Module {
   dec_brjmp_target := dec_reg_pc + brjmp_offset
   dec_jump_reg_target := (dec_op1_data + dec_op2_data) (XLEN - 1, 0)
 
-
-  printf("DEC: valid = %d pc=[%x] inst=[%x] alu1=[%x] op1=[%x] alu2=[%x] op2=[%x] bj_target = [%x]\n", ds_valid, dec_reg_pc, dec_reg_inst, dec_alu_op1, dec_op1_data, dec_alu_op2, dec_op2_data, dec_brjmp_target)
-
+  if(DEBUG_PRINT) {
+    printf("DEC: valid = %d pc=[%x] inst=[%x] alu1=[%x] op1=[%x] alu2=[%x] op2=[%x] bj_target = [%x]\n", ds_valid, dec_reg_pc, dec_reg_inst, dec_alu_op1, dec_op1_data, dec_alu_op2, dec_op2_data, dec_brjmp_target)
+  }
   //******************************************************************************************************
   // Execute Stage
   // ALU
@@ -298,7 +296,6 @@ class dpath extends Module {
     exe_reg_inst := dec_reg_inst
     exe_reg_wbaddr := dec_wbaddr
 
-    // TODO: ctrl 传过来的信号等价于dec传过来的吧
     exe_reg_ctrl_op2_sel := io.ctl.op2_sel
     exe_reg_ctrl_alu_fun := io.ctl.alu_fun
     exe_reg_ctrl_wb_sel := io.ctl.wb_sel
@@ -330,9 +327,9 @@ class dpath extends Module {
 
 
 
-
-  printf("EXE: valid = %d pc=[%x] inst=[%x] \n", es_valid, exe_reg_pc, exe_reg_inst)
-
+  if(DEBUG_PRINT) {
+    printf("EXE: valid = %d pc=[%x] inst=[%x] \n", es_valid, exe_reg_pc, exe_reg_inst)
+  }
   //******************************************************************************************************
   // Memory Stage
   val ms_ready_go = true.B
@@ -375,9 +372,9 @@ class dpath extends Module {
 //    (mem_reg_ctrl_wb_sel === WB_PC4) -> mem_reg_alu_out,
     (mem_reg_ctrl_wb_sel === WB_MEM) -> maskedReadData
   ))
-
-  printf("MEM: valid = %d pc=[%x] inst=[%x] wb_sel=[%d] wbdata=[%x]\n", ms_valid, mem_reg_pc, mem_reg_inst, mem_reg_ctrl_wb_sel, mem_wbdata)
-
+  if(DEBUG_PRINT) {
+    printf("MEM: valid = %d pc=[%x] inst=[%x] wb_sel=[%d] wbdata=[%x]\n", ms_valid, mem_reg_pc, mem_reg_inst, mem_reg_ctrl_wb_sel, mem_wbdata)
+  }
   //******************************************************************************************************
   // Writeback Stage
   val ws_ready_go = true.B
@@ -392,9 +389,9 @@ class dpath extends Module {
     wb_reg_ctrl_rf_wen := mem_reg_ctrl_rf_wen
   }
 
-
-  printf("WB : valid = %d pc=[%x] inst=[%x]\n", ws_valid, wb_reg_pc, RegNext(mem_reg_inst))
-
+  if(DEBUG_PRINT) {
+    printf("WB : valid = %d pc=[%x] inst=[%x]\n", ws_valid, wb_reg_pc, RegNext(mem_reg_inst))
+  }
   //******************************************************************************************************
   // External Signals
 
@@ -419,15 +416,18 @@ class dpath extends Module {
   io.dataWriteIO.addr := exe_alu_out.asUInt()   // 写地址为执行级alu结果
   io.dataWriteIO.data := memWriteData       // 写值为rs2的值(包括前递信号), 例如sw, 不是写入op2!
   io.dataWriteIO.mask := memWriteMask    // TODO: 删除多余的信号
-  printf("dataStore:addr = [%x] en=%d data = [%x] mask = %b\n ", io.dataWriteIO.addr, io.dataWriteIO.en, io.dataWriteIO.data, io.dataWriteIO.mask)
-
+  if(DEBUG_PRINT) {
+    printf("dataStore:addr = [%x] en=%d data = [%x] mask = %b\n ", io.dataWriteIO.addr, io.dataWriteIO.en, io.dataWriteIO.data, io.dataWriteIO.mask)
+  }
 
   // TODO: dataRead, dataWrite 的en, addr 应该是同一个值! 要简化一下
   io.dataReadIO.en    := es_valid && exe_reg_ctrl_mem_ren  // 或者为1也行
   io.dataReadIO.addr  := exe_alu_out.asUInt()
   mem_reg_dram_data := io.dataReadIO.data
-  printf("dataRead: addr = [%x] en = %d data = [%x] mask_data = [%x]\n", io.dataReadIO.addr, io.dataReadIO.en, io.dataReadIO.data, maskedReadData);
-/*
+  if(DEBUG_PRINT) {
+    printf("dataRead: addr = [%x] en = %d data = [%x] mask_data = [%x]\n", io.dataReadIO.addr, io.dataReadIO.en, io.dataReadIO.data, maskedReadData);
+  }
+  /*
   // DataRam 接口
   val data_fetching = RegInit(false.B)
   when(io.DataRamIO.req && io.DataRamIO.addr_ok){
@@ -452,17 +452,18 @@ class dpath extends Module {
   // Printout
   val wb_reg_inst = RegNext(mem_reg_inst)
 
-  printf("pc=[%x] W[r%d=%x][%d] Op1=[r%d][%x] Op2=[r%d][%x] inst=[%x]\n\n",
-    wb_reg_pc,
-    wb_reg_wbaddr,
-    wb_reg_wbdata,
-    wb_reg_ctrl_rf_wen,
-    RegNext(mem_reg_rs1_addr),
-    RegNext(mem_reg_op1_data),
-    RegNext(mem_reg_rs2_addr),
-    RegNext(mem_reg_op2_data),
-    wb_reg_inst)
-
+  if(DEBUG_PRINT) {
+    printf("pc=[%x] W[r%d=%x][%d] Op1=[r%d][%x] Op2=[r%d][%x] inst=[%x]\n\n",
+      wb_reg_pc,
+      wb_reg_wbaddr,
+      wb_reg_wbdata,
+      wb_reg_ctrl_rf_wen,
+      RegNext(mem_reg_rs1_addr),
+      RegNext(mem_reg_op1_data),
+      RegNext(mem_reg_rs2_addr),
+      RegNext(mem_reg_op2_data),
+      wb_reg_inst)
+  }
 
   BoringUtils.addSource(wb_reg_pc, "diffTestPC")
   BoringUtils.addSource(ws_valid, "diffTestPC_valid")   // 表示这是一条有效的PC, 参加比对
