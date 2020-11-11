@@ -1,5 +1,4 @@
 #include "emulator.h"
-#include "VsimTop.h"
 #include "verilated_vcd_c.h"
 #include <iostream>
 using namespace std;
@@ -10,7 +9,8 @@ CEmulator::CEmulator(CRam* input_ram, long* input_time)
     m_ram = input_ram;
     m_sc_time = input_time;
     // Verilated::commandArgs(argc, argv);
-    m_simtop = new VsimTop("m_simtop");
+    // m_simtop = new VsimTop("m_simtop");
+    m_simtop = new VsimSoc("m_simsoc");
 
     if(vcdTrace){   // 波形
         Verilated::traceEverOn(true);	// Verilator must compute traced signals
@@ -31,46 +31,6 @@ CEmulator::~CEmulator()
     delete m_tfp;
 }
 
-/*
-void CEmulator::step(int i)
-{
-    for(; i > 0; i--){
-        int max_step = 10;      // 最多走10次无效指令
-      while(!m_simtop->io_diffTestIO_PC_valid && max_step-- > 0){      // 在PC_valid==0情况下, 不断走直到指令有效
-        cout << "clock = " << m_cycles << endl;
-        m_cycles++;
-        m_simtop->clock = 1;
-        evalRam();      // 模拟下一拍才能拿到指令
-        m_simtop->eval();
-        (*m_sc_time)++;
-        if(vcdTrace) {m_tfp->dump((double)*m_sc_time);}
-
-        m_simtop->clock = 0;
-        m_simtop->eval();
-        (*m_sc_time)++;
-        if(vcdTrace) {m_tfp->dump((double)*m_sc_time);}
-        
-        cout << endl;
-      }
-
-        // 真正走一步
-        cout << "clock = " << m_cycles << endl;
-        m_cycles++;
-        m_simtop->clock = 1;
-        evalRam();      // 模拟下一拍才能拿到指令
-        m_simtop->eval();
-        (*m_sc_time)++;
-        if(vcdTrace) {m_tfp->dump((double)*m_sc_time);}
-
-        m_simtop->clock = 0;
-        m_simtop->eval();
-        (*m_sc_time)++;
-        if(vcdTrace) {m_tfp->dump((double)*m_sc_time);}
-
-        cout << endl;
-    }
-}*/
-
 void CEmulator::execute_cycles(int n)
 {
     while (n-- >0)
@@ -82,7 +42,10 @@ void CEmulator::execute_cycles(int n)
             extern int difftest_step(CEmulator* emu);
             int ret = difftest_step(this);
             assert(ret>=0);
-
+            if(m_simtop->io_diffTestIO_nemu_halt){
+                printf("Test Pased!\n");
+                return;
+            }
         }
     }
     
@@ -108,7 +71,7 @@ void CEmulator::single_cycle()
     m_simtop->clock = 0;
     m_simtop->eval();
 
-    evalRam();      // 访问内存
+    // evalRam();      // 访问内存
 
     m_simtop->clock = 1;
     m_simtop->eval();
@@ -132,7 +95,7 @@ double CEmulator::sc_time_stamp () {       // Called by $time in Verilog
     return m_cycles;           // converts to double, to match
     // what SystemC does
 }
-
+/*
 void CEmulator::evalRam(){
     m_simtop->io_topIO_instReadIO_data = 
             m_ram->InstRead(m_simtop->io_topIO_instReadIO_addr, m_simtop->io_topIO_instReadIO_en);
@@ -145,3 +108,4 @@ void CEmulator::evalRam(){
                     m_simtop->io_topIO_dataWriteIO_en,
                     m_simtop->io_topIO_dataWriteIO_mask);
 }
+*/

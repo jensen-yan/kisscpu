@@ -2,7 +2,8 @@
 #define __EMULATOR_H__
 
 #include "ram.h"
-#include "VsimTop.h"
+// #include "VsimTop.h"
+#include "VsimSoc.h"
 #include "difftestIO.h"
 
 /**
@@ -27,7 +28,8 @@ private:
      * @brief verilator生成的顶层指针
      * 
      */
-    VsimTop* m_simtop;
+    // VsimTop* m_simtop;
+    VsimSoc* m_simtop;
     /**
      * @brief 波形指针
      * 

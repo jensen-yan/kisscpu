@@ -34,11 +34,42 @@ trait RISCVConstants {
 
   val START_ADDR = "h80000000".U
 
+//  val START_ADDR = "h40000000".U
+
 
   // TODO: 改成64位了
   val BUBBLE = 0x4033.U(64.W)
 }
 
+
+// This is copied from NutShellChipLink
+object AXIConstants {
+
+  val A_ID_W    = 4
+  val A_ADDR_W  = 32
+  val A_DATA_W  = 64
+  val A_STRB_W  = A_DATA_W/8
+  val A_SIZE_W  = 3
+  val A_BURST_W = 2
+  val A_LEN_W   = 8
+  val A_RESP_W  = 2
+  val A_QOS_W   = 4
+  val A_CACHE_W = 4
+  val A_LOCK_W  = 1
+  val A_PROT_W  = 3
+  val A_USER_W  = 1
+  val A_LAST_W  = 1
+
+  val AXI_ID = 0
+  val AXI_LEN_1 = 0
+  val AXI_SIZE_64bit = 3
+  val AXI_BURST_FIXED = 0
+  val AXI_LOCK_NORMAL = 0
+  val AXI_CACHE_DeviceNonBuffer = 0  //TODO: check
+  val AXI_PROT = 1  //TODO: check
+  val AXI_QOS_NON = 0
+  val AXI_USER = 0
+}
 
 trait PCConstants {
   val PCSel_w = 2

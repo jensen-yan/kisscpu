@@ -17,7 +17,7 @@ class regfile extends Module{
     val waddr  = Input (UInt(ADDR_W.W))
     val wdata  = Input (UInt(XLEN.W))
   })
-  val rf = Mem(NUM_REG, UInt(XLEN.W))    // 32个32位宽的regfile
+  val rf = Mem(NUM_REG, UInt(XLEN.W))    // 32个64位宽的regfile
   
   // 读
   io.rdata1 := Mux(io.raddr1 === 0.U, 0.U(XLEN.W), rf(io.raddr1))
@@ -28,7 +28,7 @@ class regfile extends Module{
   }
   BoringUtils.addSource(VecInit((0 to NUM_REG-1).map(i => rf(i.U))), "diffTestRegfile") // VecInit把32个rf输出包装成一个Vec输出!
   if(DEBUG_PRINT) {
-    printf("RF: rdata1(%d)=[%x] rdata2(%d)=[%x] wdata(%d)=[%x] we=%d\n", io.raddr1, io.rdata1, io.raddr2, io.rdata2, io.waddr, io.wdata, io.we)
+    printf("RF: sp = [%x] rdata1(%d)=[%x] rdata2(%d)=[%x] wdata(%d)=[%x] we=%d\n", rf(2), io.raddr1, io.rdata1, io.raddr2, io.rdata2, io.waddr, io.wdata, io.we)
   }
 
 }

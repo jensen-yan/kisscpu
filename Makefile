@@ -6,7 +6,8 @@ VerilatorCppFile = $(shell find $(PWD)/verilator -name '*.cpp')
 verilatorDir = $(PWD)/build/generated-cpp
 
 # 可执行文件
-exe = $(PWD)/obj_dir/VsimTop
+# exe = $(PWD)/obj_dir/VsimTop
+exe = $(PWD)/obj_dir/VsimSoc
 
 # 测试文件
 testDir = $(PWD)/nexus-am/tests/cputest/build
@@ -14,10 +15,10 @@ test_dummy = $(testDir)/dummy-riscv64-nutshell.bin
 teat_allName = $(shell find testDir/ -name "*.bin")
 
 # testName ?= add-longlong-riscv64-nutshell.bin		#done
-# testName ?= add-riscv64-nutshell.bin				#done
+testName ?= add-riscv64-nutshell.bin				#done
 # testName ?= bit-riscv64-nutshell.bin				#done
 # testName ?= bubble-sort-riscv64-nutshell.bin		#done
-testName ?= dummy-riscv64-nutshell.bin			#done
+# testName ?= dummy-riscv64-nutshell.bin			#done
 # testName ?= fib-riscv64-nutshell.bin				#done
 # testName ?= if-else-riscv64-nutshell.bin			#done
 # testName ?= load-store-riscv64-nutshell.bin		#done
@@ -72,6 +73,9 @@ verilog:
 	sbt "runMain sim.elaborate"
 # -td  输出到build/ 文件中
 
+verilog2:
+	sbt "runMain sim.elaborate_simCore"
+
 
 run-verilator: $(VerilatorCppFile) 
 	verilator simTop.v \
@@ -81,6 +85,17 @@ run-verilator: $(VerilatorCppFile)
 	-CFLAGS "-g"
 	make -C obj_dir -f VsimTop.mk
 
+# -Wno-WIDTH -Wno-CASEINCOMPLETE \
+
+run-verilator2: $(VerilatorCppFile) 
+	verilator simSoc.v AXIRAM.v AXI_Bridge.v \
+	--trace \
+	-Wno-WIDTH -Wno-CASEINCOMPLETE \
+	$(VerilatorCppFile) \
+	--cc --exe -LDFLAGS "-ldl" \
+	-CFLAGS "-g" --build
+	# make -C obj_dir -f VsimSoc.mk
+
 build:
 	make run-verilator
 
@@ -88,6 +103,13 @@ all:
 	make verilog
 	make clean
 	make run-verilator
+	make test
+
+# 测试axi总线
+all2:
+	make verilog2
+	make clean
+	make run-verilator2
 	make test
 
 dummy:

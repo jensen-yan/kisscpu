@@ -3,7 +3,7 @@ package AXI
 import chisel3._
 import chisel3.util.HasBlackBoxInline
 import common.RamIO
-
+import common.AXIConstants
 
 // 整体对外接口
 class AXI_BridgeIO extends Bundle{
@@ -23,23 +23,23 @@ class AXI_Bridge(width: Int) extends BlackBox with HasBlackBoxInline {
         // CPU side
 
         // inst sram-like
-        val inst_req = Output(UInt(1.W))
-        val inst_wr = Output(UInt(1.W))
-        val inst_size = Output(UInt(2.W))
-        val inst_addr = Output(UInt(width.W))
-        val inst_wdata = Output(UInt(width.W))
-        val inst_rdata = Input(UInt(width.W))
-        val inst_addr_ok = Input(UInt(1.W))
-        val inst_data_ok = Input(UInt(1.W))
+        val inst_req    = Output(UInt(1.W))
+        val inst_wr     = Output(UInt(1.W))
+        val inst_size   = Output(UInt(3.W))
+        val inst_addr   = Output(UInt(width.W))
+        val inst_wdata  = Output(UInt(width.W))
+        val inst_rdata  = Input(UInt(width.W))
+        val inst_addr_ok= Input(UInt(1.W))
+        val inst_data_ok= Input(UInt(1.W))
         // data sram-like
-        val data_req = Output(UInt(1.W))
-        val data_wr = Output(UInt(1.W))
-        val data_size = Output(UInt(2.W))
-        val data_addr = Output(UInt(width.W))
-        val data_wdata = Output(UInt(width.W))
-        val data_rdata = Input(UInt(width.W))
-        val data_addr_ok = Input(UInt(1.W))
-        val data_data_ok = Input(UInt(1.W))
+        val data_req    = Output(UInt(1.W))
+        val data_wr     = Output(UInt(1.W))
+        val data_size   = Output(UInt(3.W))
+        val data_addr   = Output(UInt(width.W))
+        val data_wdata  = Output(UInt(width.W))
+        val data_rdata  = Input(UInt(width.W))
+        val data_addr_ok= Input(UInt(1.W))
+        val data_data_ok= Input(UInt(1.W))
 
         // AXI side is automatically included in AXI_interface
     }))
@@ -53,7 +53,7 @@ class AXI_Bridge(width: Int) extends BlackBox with HasBlackBoxInline {
                //inst sram-like
                input         inst_req     ,
                input         inst_wr      ,
-               input  [1 :0] inst_size    ,
+               input  [2 :0] inst_size    ,
                input  [63:0] inst_addr    ,
                input  [63:0] inst_wdata   ,
                output [63:0] inst_rdata   ,
@@ -63,7 +63,7 @@ class AXI_Bridge(width: Int) extends BlackBox with HasBlackBoxInline {
                //data sram-like
                input         data_req     ,
                input         data_wr      ,
-               input  [1 :0] data_size    ,
+               input  [2 :0] data_size    ,
                input  [63:0] data_addr    ,
                input  [63:0] data_wdata   ,
                output [63:0] data_rdata   ,
@@ -77,7 +77,7 @@ class AXI_Bridge(width: Int) extends BlackBox with HasBlackBoxInline {
                output [7 :0] arlen        ,
                output [2 :0] arsize       ,
                output [1 :0] arburst      ,
-               output [1 :0] arlock        ,
+               output        arlock        ,
                output [3 :0] arcache      ,
                output [2 :0] arprot       ,
                output        arvalid      ,
@@ -95,7 +95,7 @@ class AXI_Bridge(width: Int) extends BlackBox with HasBlackBoxInline {
                output [7 :0] awlen        ,
                output [2 :0] awsize       ,
                output [1 :0] awburst      ,
-               output [1 :0] awlock       ,
+               output        awlock       ,
                output [3 :0] awcache      ,
                output [2 :0] awprot       ,
                output        awvalid      ,
@@ -118,7 +118,7 @@ wire resetn = !reset;
 reg do_req;
 reg do_req_or; //req is inst or data;1:data,0:inst
 reg        do_wr_r;
-reg [1 :0] do_size_r;
+reg [2 :0] do_size_r;
 reg [63:0] do_addr_r;
 reg [63:0] do_wdata_r;
 wire data_back;
@@ -170,7 +170,7 @@ assign araddr  = do_addr_r;
 assign arlen   = 8'd0;
 assign arsize  = do_size_r;
 assign arburst = 2'd0;
-assign arlock  = 2'd0;
+assign arlock  = 1'd0;
 assign arcache = 4'd0;
 assign arprot  = 3'd0;
 assign arvalid = do_req&&!do_wr_r&&!addr_rcv;
@@ -183,16 +183,16 @@ assign awaddr  = do_addr_r;
 assign awlen   = 8'd0;
 assign awsize  = do_size_r;
 assign awburst = 2'd0;
-assign awlock  = 2'd0;
+assign awlock  = 1'd0;
 assign awcache = 4'd0;
 assign awprot  = 3'd0;
 assign awvalid = do_req&&do_wr_r&&!addr_rcv;
 //w
 assign wid    = 4'd0;
 assign wdata  = do_wdata_r;
-assign wstrb  = do_size_r==2'd0 ? 8'b00000001<<do_addr_r[2:0] :
-                do_size_r==2'd1 ? 8'b00000011<<do_addr_r[2:0] :
-                do_size_r==2'd2 ? 8'b00001111<<do_addr_r[2:0] : 8'b11111111;
+assign wstrb  = do_size_r==3'd0 ? 8'b00000001<<do_addr_r[2:0] :
+                do_size_r==3'd1 ? 8'b00000011<<do_addr_r[2:0] :
+                do_size_r==3'd2 ? 8'b00001111<<do_addr_r[2:0] : 8'b11111111;
 assign wlast  = 1'd1;
 assign wvalid = do_req&&do_wr_r&&!wdata_rcv;
 //b

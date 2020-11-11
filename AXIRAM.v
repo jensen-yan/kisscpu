@@ -1,127 +1,4 @@
-package AXI
 
-import chisel3._
-import chisel3.util.HasBlackBoxInline
-
-class AXI_interface extends Bundle {
-    private val data_width = 64
-    private val addr_width = 64 // 1 Megabyte should be enough for us
-    private val wstrb_width = data_width / 8
-    private val id_width = 4
-
-    val awid    = Input(UInt(id_width.W))
-    val awaddr  = Input(UInt(addr_width.W))
-    val awlen   = Input(UInt(8.W))
-    val awsize  = Input(UInt(3.W))
-    val awburst = Input(UInt(2.W))
-    val awlock  = Input(UInt(1.W))
-    val awcache = Input(UInt(4.W))
-    val awprot  = Input(UInt(3.W))
-    val awvalid = Input(UInt(1.W))
-    val awready = Output(UInt(1.W))
-
-    val wid     = Input(UInt(id_width.W))
-    val wdata   = Input(UInt(data_width.W))
-    val wstrb   = Input(UInt(wstrb_width.W))
-    val wlast   = Input(UInt(1.W))
-    val wvalid  = Input(UInt(1.W))
-    val wready  = Output(UInt(1.W))
-
-    val bid     = Output(UInt(id_width.W))
-    val bresp   = Output(UInt(2.W))
-    val bvalid  = Output(UInt(1.W))
-    val bready  = Input(UInt(1.W))
-
-    val arid    = Input(UInt(id_width.W))
-    val araddr  = Input(UInt(addr_width.W))
-    val arlen   = Input(UInt(8.W))
-    val arsize  = Input(UInt(3.W))
-    val arburst = Input(UInt(2.W))
-    val arlock  = Input(UInt(1.W))
-    val arcache = Input(UInt(4.W))
-    val arprot  = Input(UInt(3.W))
-    val arvalid = Input(UInt(1.W))
-    val arready = Output(UInt(1.W))
-
-    val rid     = Output(UInt(id_width.W))
-    val rdata   = Output(UInt(data_width.W))
-    val rresp   = Output(UInt(2.W))
-    val rlast   = Output(UInt(1.W))
-    val rvalid  = Output(UInt(1.W))
-    val rready  = Input(UInt(1.W))
-
-    override def toPrintable: Printable = {
-        p"AXI_IO:" +
-          p"  arvalid: ${arvalid}" +
-          p"  arready: ${arready}" +
-          p"  rvalid: ${rvalid}" +
-          p"  rready: ${rready}" +
-          p"  araddr: 0x${Hexadecimal(araddr)}" +
-          p"  rdata  : 0x${Hexadecimal(rdata)}\n"
-    }
-}
-
-class AXI_lite_interface extends Bundle {
-    private val data_width = 64
-    private val addr_width = 64 // 1 Megabyte should be enough for us
-    private val wstrb_width = data_width / 8
-    private val id_width = 4
-
-    val awaddr = Input(UInt(addr_width.W))
-    val awprot = Input(UInt(3.W))
-    val awvalid = Input(UInt(1.W))
-    val awready = Output(UInt(1.W))
-    val wdata = Input(UInt(data_width.W))
-    val wstrb = Input(UInt(wstrb_width.W))
-    val wvalid = Input(UInt(1.W))
-    val wready = Output(UInt(1.W))
-    val bresp = Output(UInt(2.W))
-    val bvalid = Output(UInt(1.W))
-    val bready = Input(UInt(1.W))
-    val araddr = Input(UInt(addr_width.W))
-    val arprot = Input(UInt(3.W))
-    val arvalid = Input(UInt(1.W))
-    val arready = Output(UInt(1.W))
-    val rdata = Output(UInt(data_width.W))
-    val rresp = Output(UInt(2.W))
-    val rvalid = Output(UInt(1.W))
-    val rready = Input(UInt(1.W))
-}
-
-class AXI_fake_serial extends Module {
-    private val data_width = 64
-    private val addr_width = 20 // 1 Megabyte should be enough for us
-    private val wstrb_width = data_width / 8
-    private val id_width = 8
-    val io = IO( new Bundle() {
-        // we only listen to the write channel
-        val awaddr = Input(UInt(addr_width.W))
-        val awvalid = Input(UInt(1.W))
-        val wvalid = Input(UInt(1.W))
-        val wdata = Input(UInt(data_width.W))
-    })
-    val serial_valid = RegInit(0.U(1.W))
-    
-    when (io.awaddr === 0x80000.U && io.awvalid === 1.U) {
-        serial_valid := 1.U
-    } .elsewhen (io.wvalid === 1.U) {
-        // after finishing the transaction
-        serial_valid := 0.U
-    }
-    
-    when (serial_valid === 1.U && io.wvalid === 1.U) {
-        printf("%c", io.wdata(7, 0))
-    }
-}
-
-class AXI_ram extends BlackBox with HasBlackBoxInline {
-    val io = IO(new AXI_interface {
-        val clock = Input(Clock())
-        val reset = Input(Reset())
-    })
-    
-    setInline("AXIRAM.v",
-        s"""
 
 module Endian
 (
@@ -290,9 +167,9 @@ initial begin
     end
 //     mem[0x80000000] = 32'h863; mem[1] = 32'h06400093; mem[2] = 32'h00000013; mem[3] = 32'h00000013; mem[4] = 32'h00102023; mem[5] = 32'h00002103;
     // mem[6] = 32'h00f00093; mem[7] = 32'h34101073; mem[8] = 32'h34109073; mem[9] = 32'h34186073; mem[10] = 32'h341020f3;
-//    mem_file = $$fopen("/Users/cgk/ownCloud/课程/一生一芯/ict/test.bin", "r");
-    mem_file = $$fopen("/home/yanyue/nutshell_v2/kisscpu/nexus-am/tests/cputest/build/dummy-riscv64-nutshell.bin", "r");
-    $$fread(mem, mem_file);
+//    mem_file = $fopen("/Users/cgk/ownCloud/课程/一生一芯/ict/test.bin", "r");
+    mem_file = $fopen("/home/yanyue/nutshell_v2/kisscpu/nexus-am/tests/cputest/build/dummy-riscv64-nutshell.bin", "r");
+    $fread(mem, mem_file);
 end
 
 always @* begin
@@ -491,30 +368,4 @@ always @(posedge clock) begin
 end
 
 endmodule
-    """.stripMargin
-    )
-}
-
-/*
-Origin copyright of this AXI RAM file:
-
-Copyright (c) 2018 Alex Forencich
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
+    

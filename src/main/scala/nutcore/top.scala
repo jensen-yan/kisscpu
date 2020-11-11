@@ -17,9 +17,9 @@ class top extends Module{
   val dpath = Module(new dpath)
 
   // 和外部连接
-  io.instReadIO <> dpath.io.instReadIO
-  io.dataReadIO <> dpath.io.dataReadIO
-  io.dataWriteIO <> dpath.io.dataWriteIO
+//  io.instReadIO <> dpath.io.instReadIO
+//  io.dataReadIO <> dpath.io.dataReadIO
+//  io.dataWriteIO <> dpath.io.dataWriteIO
   //  io.dataRamIO  <> dpath.io.dataRamIO
 
   // 两个模块连接

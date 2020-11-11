@@ -17,7 +17,7 @@ int main(int argc, char** argv){
     CEmulator* emulator = new CEmulator(ram, &sc_time);
     // difftest_step(emulator, 20);
     // emulator->step(40);
-    emulator->execute_cycles(50000000);
+    emulator->execute_cycles(1000);
 
     return 0;
 }

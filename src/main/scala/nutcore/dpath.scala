@@ -17,11 +17,11 @@ class DatToCtlIo extends Bundle() {
 class DpathIo extends Bundle() {
   val ctl = Flipped(new CtlToDatIo())
   val dat = new DatToCtlIo()
-  val instReadIO = new InstReadIO()
-  val dataReadIO = new DataReadIO()
-  val dataWriteIO = new DataWriteIO()
+//  val instReadIO = new InstReadIO()
+//  val dataReadIO = new DataReadIO()
+//  val dataWriteIO = new DataWriteIO()
 
-//  val InstRamIO = new RamIO
+  val InstRamIO = new RamIO()
 //  val DataRamIO = new RamIO
 
 }
@@ -102,7 +102,11 @@ class dpath extends Module {
   val to_fs_valid = Wire(Bool())
 
   // pre-IF
-  to_fs_valid := true.B
+//  to_fs_valid := true.B
+  val pre_fs_valid  = true.B    // 这一级valid始终为1
+  val pre_fs_ready_go = io.InstRamIO.addr_ok   // 要addr_ok才能进入fs!
+  to_fs_valid := pre_fs_valid && pre_fs_ready_go
+
   val if_pc_plus4 = if_reg_pc + 4.asUInt(XLEN.W) // 还是改成了pc+4 == seq_pc
   // 预取值pc由当前dec指令的类型来选择
   if_pc_next := Mux(io.ctl.dec_pc_sel === PC_4, if_pc_plus4,
@@ -111,7 +115,7 @@ class dpath extends Module {
         /*Mux(io.ctl.exe_pc_sel === PC_EXC*/ BUBBLE)))
 
 
-
+/*
   // 获取此时的inst指令, 本质在预取阶段做的!
   io.instReadIO.addr := if_pc_next
   io.instReadIO.en := to_fs_valid && fs_allowin   // 握手成功且可以流水才读指令
@@ -120,7 +124,9 @@ class dpath extends Module {
   when(io.instReadIO.en){
     if_reg_inst := io.instReadIO.data   // 只有需要更新才更新!
   }
-  /*
+
+ */
+
   // instRam 接口
   val inst_fetching = RegInit(false.B)  // 表示正在取指令
   when(io.InstRamIO.req && io.InstRamIO.addr_ok){
@@ -133,23 +139,12 @@ class dpath extends Module {
   io.InstRamIO.size := 2.U
   io.InstRamIO.addr := if_pc_next
   io.InstRamIO.wdata:= 0.U
-  val inst_valid = RegInit(false.B)       // 表示buf是否为空
-  val inst_buffer = RegInit(0.U(XLEN.W))  // 暂存获取的指令
-  when(inst_fetching && io.InstRamIO.data_ok && !inst_valid){
-    // 正在取指令, 数据握手成功, 指令buf空的, 存入
-    inst_valid  := true.B
-    inst_buffer := io.InstRamIO.rdata
-  }.elsewhen(to_fs_valid && ds_allowin){
-    inst_valid  := false.B    // 流水成功, buf清空
-  }
-  val if_inst = Wire(UInt(XLEN.W))    // 缓存后的指令
-  val if_reg_inst    = inst_buffer
-*/
 
 
 
   // IF stage
-  fs_ready_go := true.B
+//  fs_ready_go := true.B
+  fs_ready_go := io.InstRamIO.data_ok   // 感觉, 收到data之后, fs才能进入下一级
   fs_allowin := !fs_valid || fs_ready_go && ds_allowin
   val fs_to_ds_valid = fs_valid && fs_ready_go
 
@@ -163,8 +158,26 @@ class dpath extends Module {
     if_reg_pc := if_pc_next
   }
 
-//    if_inst := if_reg_inst
-  if_inst := Mux(dec_reflush, BUBBLE, if_reg_inst) // 如果是跳转指令, 强行改成nop
+  // 取出的指令
+  val inst_valid = RegInit(false.B)       // 表示buf是否为空
+  val inst_buffer = RegInit(0.U(XLEN.W))  // 暂存获取的指令
+  val inst_tmp  = Mux(if_reg_pc(2), io.InstRamIO.rdata(63,32), io.InstRamIO.rdata(31,0)) // TODO: 暂时根据倒数第三位来取对应指令
+  // TODO: 在data_ok的当拍, 就要存下这条指令!
+
+  when(inst_fetching && io.InstRamIO.data_ok && !inst_valid){
+    // 正在取指令, 数据握手成功, 指令buf空的, 存入
+    inst_valid  := true.B
+    inst_buffer := inst_tmp
+  }.elsewhen(to_fs_valid && ds_allowin){
+    inst_valid  := false.B    // 流水成功, buf清空
+  }
+  val if_inst = Wire(UInt(XLEN.W))    // 缓存后的指令
+  val if_reg_inst    = Mux(io.InstRamIO.data_ok, inst_tmp, 0.U)       // TODO: 暂时不存reg
+
+
+
+  if_inst := if_reg_inst    // TODO: 在AXI时序下不需要刷新了
+//  if_inst := Mux(dec_reflush, BUBBLE, if_reg_inst) // 如果是跳转指令, 强行改成nop
 
   if(DEBUG_PRINT) {
     printf("IF : valid = %d pc=[%x] inst=[%x] if_pc_next=[%x] pc_sel=[%d] e_bj_pc=[%x]\n", fs_valid, if_reg_pc, if_inst, if_pc_next, io.ctl.dec_pc_sel, dec_brjmp_target)
@@ -411,7 +424,7 @@ class dpath extends Module {
   val memWriteMask = Wire(UInt(8.W))
   memWriteMask := (exe_reg_ctrl_mem_mask << exe_alu_out(2,0))(7,0)      // 类似strb信号, 根据地址后3位来确定写入位置
 
-
+/*
   io.dataWriteIO.en := es_valid && exe_reg_ctrl_mem_wen   // 当前es有效且为 store指令
   io.dataWriteIO.addr := exe_alu_out.asUInt()   // 写地址为执行级alu结果
   io.dataWriteIO.data := memWriteData       // 写值为rs2的值(包括前递信号), 例如sw, 不是写入op2!
@@ -427,6 +440,8 @@ class dpath extends Module {
   if(DEBUG_PRINT) {
     printf("dataRead: addr = [%x] en = %d data = [%x] mask_data = [%x]\n", io.dataReadIO.addr, io.dataReadIO.en, io.dataReadIO.data, maskedReadData);
   }
+
+ */
   /*
   // DataRam 接口
   val data_fetching = RegInit(false.B)

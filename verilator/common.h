@@ -17,7 +17,7 @@
 #define __RV64__
 // #define __RV32__
 
-#define vcdTrace false    // 是否输出波形, 关闭快一点
+#define vcdTrace true    // 是否输出波形, 关闭快一点
 
 typedef unsigned char uint8_t;
 typedef unsigned int uint32_t;
