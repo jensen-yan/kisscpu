@@ -215,7 +215,7 @@ class dpath extends Module {
   val rf_rs2_data = regfile.io.rdata2
   regfile.io.waddr := wb_reg_wbaddr // 三个写回级的信号
   regfile.io.wdata := wb_reg_wbdata
-  regfile.io.we := wb_reg_ctrl_rf_wen
+  regfile.io.we := wb_reg_ctrl_rf_wen && ws_valid     // TODO: 可能还要加不发生例外
 
 
   // immediates
@@ -340,11 +340,6 @@ class dpath extends Module {
   ))
 
 
-
-  if(DEBUG_PRINT) {
-    printf("EXE: valid = %d pc=[%x] inst=[%x] \n", es_valid, exe_reg_pc, exe_reg_inst)
-  }
-
   // datapath to data memory outputs 在执行级!
   val memWriteData = MuxCase(exe_reg_rs2_data, Array(
     (exe_reg_ctrl_mem_mask === MSK_B)  -> Fill(8, exe_reg_rs2_data( 7,0)),
@@ -374,8 +369,13 @@ class dpath extends Module {
   io.DataRamIO.addr := exe_alu_out.asUInt()
   io.DataRamIO.wdata:= memWriteData     // TODO: 写入1byte, 如何确定写入到哪一位? 通过转接桥的wstrb!
   // 其实在exe这一拍阻塞, 直到读出数据
-  mem_reg_dram_data   := io.DataRamIO.rdata
+  val offset = exe_alu_out(2,0) << 3    // 根据地址后3位, 乘上8, eg: addr=4, offset = 12
+  mem_reg_dram_data   := (io.DataRamIO.rdata >> offset.asUInt()).asUInt()   // TODO: 需要根据当前地址移位获得真正数据!
 
+
+  if(DEBUG_PRINT) {
+    printf("EXE: valid = %d pc=[%x] inst=[%x] rdata = [%x]\n", es_valid, exe_reg_pc, exe_reg_inst, mem_reg_dram_data)
+  }
   //******************************************************************************************************
   // Memory Stage
   val ms_ready_go = true.B

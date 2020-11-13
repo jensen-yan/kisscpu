@@ -104,8 +104,10 @@ class simSoc extends Module{
       p"  rready:  ${bridge.io.rready}" +
       p"  bvalid:  ${bridge.io.bvalid}" +
       p"  bready:  ${bridge.io.bready}" +
+      p"  wstrb :  ${bridge.io.wstrb}" +
       p"  araddr: 0x${Hexadecimal(bridge.io.araddr)}" +
-      p"  rdata : 0x${Hexadecimal(bridge.io.rdata)}\n"
+      p"  wdata : 0x${Hexadecimal(bridge.io.wdata)}" +
+      p"  rdata : 0x${Hexadecimal(bridge.io.rdata)} \n"
   )
 }
 
