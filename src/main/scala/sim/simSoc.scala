@@ -29,7 +29,7 @@ class simSoc extends Module{
   val bridge = Module(new AXI_Bridge(64))
   bridge.io.clock       := clock
   bridge.io.reset       := reset
-
+  // inst 接口
   bridge.io.inst_req    := dpath.io.InstRamIO.req
   bridge.io.inst_wr     := dpath.io.InstRamIO.wr
   bridge.io.inst_size   := dpath.io.InstRamIO.size
@@ -42,7 +42,19 @@ class simSoc extends Module{
   if(DEBUG_PRINT){
     printf(p"Inst ${dpath.io.InstRamIO}")
   }
+  // data 接口
+  bridge.io.data_req    := dpath.io.DataRamIO.req
+  bridge.io.data_wr     := dpath.io.DataRamIO.wr
+  bridge.io.data_size   := dpath.io.DataRamIO.size
+  bridge.io.data_addr   := dpath.io.DataRamIO.addr
+  bridge.io.data_wdata  := dpath.io.DataRamIO.wdata
 
+  dpath.io.DataRamIO.rdata  := bridge.io.data_rdata
+  dpath.io.DataRamIO.addr_ok:= bridge.io.data_addr_ok
+  dpath.io.DataRamIO.data_ok:= bridge.io.data_data_ok
+  if(DEBUG_PRINT){
+    printf(p"Data ${dpath.io.DataRamIO}")
+  }
   // axi桥 和 axi_mem 连接
   val ram = Module(new AXI_ram())
   ram.io.clock    := clock
@@ -90,6 +102,8 @@ class simSoc extends Module{
       p"  arready: ${bridge.io.arready}" +
       p"  rvalid:  ${bridge.io.rvalid}" +
       p"  rready:  ${bridge.io.rready}" +
+      p"  bvalid:  ${bridge.io.bvalid}" +
+      p"  bready:  ${bridge.io.bready}" +
       p"  araddr: 0x${Hexadecimal(bridge.io.araddr)}" +
       p"  rdata : 0x${Hexadecimal(bridge.io.rdata)}\n"
   )

@@ -15,7 +15,7 @@ test_dummy = $(testDir)/dummy-riscv64-nutshell.bin
 teat_allName = $(shell find testDir/ -name "*.bin")
 
 # testName ?= add-longlong-riscv64-nutshell.bin		#done
-testName ?= add-riscv64-nutshell.bin				#done
+# testName ?= add-riscv64-nutshell.bin				#done
 # testName ?= bit-riscv64-nutshell.bin				#done
 # testName ?= bubble-sort-riscv64-nutshell.bin		#done
 # testName ?= dummy-riscv64-nutshell.bin			#done
@@ -32,7 +32,7 @@ testName ?= add-riscv64-nutshell.bin				#done
 # testName ?= shift-riscv64-nutshell.bin			#done 462  / 329 
 # testName ?= string-riscv64-nutshell.bin			#done
 # testName ?= sub-longlong-riscv64-nutshell.bin		#done 1140 / 795
-# testName ?= sum-riscv64-nutshell.bin				#done
+testName ?= sum-riscv64-nutshell.bin				#done
 # testName ?= switch-riscv64-nutshell.bin			#done
 # testName ?= to-lower-case-riscv64-nutshell.bin	#done
 # testName ?= unalign-riscv64-nutshell.bin			#done

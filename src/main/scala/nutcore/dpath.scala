@@ -22,7 +22,7 @@ class DpathIo extends Bundle() {
 //  val dataWriteIO = new DataWriteIO()
 
   val InstRamIO = new RamIO()
-//  val DataRamIO = new RamIO
+  val DataRamIO = new RamIO()
 
 }
 
@@ -290,7 +290,8 @@ class dpath extends Module {
   // Execute Stage
   // ALU
   val alu = Module(new alu)
-  val es_stall = alu.io.stall   // 暂时只有alu乘除法产生阻塞
+  val exe_load_store  = exe_reg_ctrl_mem_ren || exe_reg_ctrl_mem_wen    // 表示load, store指令
+  val es_stall = alu.io.stall || (!io.DataRamIO.data_ok && exe_load_store)    // TODO: 对loadstore, 直接等到数据握手才进入下一拍
 
   val es_ready_go = !es_stall
   es_allowin := !es_valid || es_ready_go && ms_allowin
@@ -343,6 +344,38 @@ class dpath extends Module {
   if(DEBUG_PRINT) {
     printf("EXE: valid = %d pc=[%x] inst=[%x] \n", es_valid, exe_reg_pc, exe_reg_inst)
   }
+
+  // datapath to data memory outputs 在执行级!
+  val memWriteData = MuxCase(exe_reg_rs2_data, Array(
+    (exe_reg_ctrl_mem_mask === MSK_B)  -> Fill(8, exe_reg_rs2_data( 7,0)),
+    (exe_reg_ctrl_mem_mask === MSK_H)  -> Fill(4, exe_reg_rs2_data(15,0)),
+    (exe_reg_ctrl_mem_mask === MSK_W)  -> Fill(2, exe_reg_rs2_data(31,0)),
+    (exe_reg_ctrl_mem_mask === MSK_D)  ->         exe_reg_rs2_data,
+  ))    // 对于lb, 扩展8次来写入
+  val memWriteMask = Wire(UInt(8.W))
+  memWriteMask := (exe_reg_ctrl_mem_mask << exe_alu_out(2,0))(7,0)      // 类似strb信号, 根据地址后3位来确定写入位置
+
+
+  // DataRam 接口
+  val data_fetching = RegInit(false.B)
+  when(io.DataRamIO.req && io.DataRamIO.addr_ok){
+    data_fetching := true.B
+  }.elsewhen(io.DataRamIO.data_ok){
+    data_fetching := false.B
+  }
+  io.DataRamIO.req  := !data_fetching && ms_allowin && es_valid && (exe_reg_ctrl_mem_ren || exe_reg_ctrl_mem_wen)
+  io.DataRamIO.wr   := exe_reg_ctrl_mem_wen     // 只有写才是1!!!
+  io.DataRamIO.size := MuxCase(3.U, Array(
+    (exe_reg_ctrl_mem_mask === MSK_B)  -> 0.U,
+    (exe_reg_ctrl_mem_mask === MSK_H)  -> 1.U,
+    (exe_reg_ctrl_mem_mask === MSK_W)  -> 2.U,
+    (exe_reg_ctrl_mem_mask === MSK_D)  -> 3.U,
+  ))
+  io.DataRamIO.addr := exe_alu_out.asUInt()
+  io.DataRamIO.wdata:= memWriteData     // TODO: 写入1byte, 如何确定写入到哪一位? 通过转接桥的wstrb!
+  // 其实在exe这一拍阻塞, 直到读出数据
+  mem_reg_dram_data   := io.DataRamIO.rdata
+
   //******************************************************************************************************
   // Memory Stage
   val ms_ready_go = true.B
@@ -414,15 +447,7 @@ class dpath extends Module {
   io.dat.dec_br_lt := (dec_op1_data.asSInt() < dec_rs2_data.asSInt())
   io.dat.dec_br_ltu := (dec_op1_data.asUInt() < dec_rs2_data.asUInt())
 
-  // datapath to data memory outputs 在执行级!
-  val memWriteData = MuxCase(exe_reg_rs2_data, Array(
-    (exe_reg_ctrl_mem_mask === MSK_B)  -> Fill(8, exe_reg_rs2_data( 7,0)),
-    (exe_reg_ctrl_mem_mask === MSK_H)  -> Fill(4, exe_reg_rs2_data(15,0)),
-    (exe_reg_ctrl_mem_mask === MSK_W)  -> Fill(2, exe_reg_rs2_data(31,0)),
-    (exe_reg_ctrl_mem_mask === MSK_D)  ->         exe_reg_rs2_data,
-  ))    // 对于lb, 扩展8次来写入
-  val memWriteMask = Wire(UInt(8.W))
-  memWriteMask := (exe_reg_ctrl_mem_mask << exe_alu_out(2,0))(7,0)      // 类似strb信号, 根据地址后3位来确定写入位置
+
 
 /*
   io.dataWriteIO.en := es_valid && exe_reg_ctrl_mem_wen   // 当前es有效且为 store指令
