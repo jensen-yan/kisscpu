@@ -139,18 +139,19 @@ class cpath extends Module{
   io.ctl.mem_wen    := cs_mem_wen
   io.ctl.mem_mask   := cs_mem_mask
   io.ctl.mem_ext    := cs_mem_ext
-/*
-  printf("inst=[%x] br_d=[%d] pc_sel=[%d] op1=[%d] op2=[%d] alu_f=[%d] wb_sel=[%d] rf_wen=[%d] mem_ren=%d\n",
-    io.dat.dec_inst,
-    cs_br_type,
-    ctrl_dec_pc_sel,
-    cs_op1_sel,
-    cs_op2_sel,
-    cs_alu_fun,
-    cs_wb_sel,
-    cs_rf_wen,
-    cs_mem_ren)*/
 
+  if(DEBUG_PRINT) {
+    printf("ctl: inst=[%x] br_d=[%d] pc_sel=[%d] op1=[%d] op2=[%d] alu_f=[%d] wb_sel=[%d] rf_wen=[%d] mem_ren=%d\n",
+      io.dat.dec_inst,
+      cs_br_type,
+      ctrl_dec_pc_sel,
+      cs_op1_sel,
+      cs_op2_sel,
+      cs_alu_fun,
+      cs_wb_sel,
+      cs_rf_wen,
+      cs_mem_ren)
+  }
   val nemu_halt = io.dat.dec_inst === NEMUHALT
   BoringUtils.addSource(nemu_halt, "diffTestHalt")
 }

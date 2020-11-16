@@ -14,24 +14,24 @@ testDir = $(PWD)/nexus-am/tests/cputest/build
 test_dummy = $(testDir)/dummy-riscv64-nutshell.bin
 teat_allName = $(shell find testDir/ -name "*.bin")
 
-# testName ?= add-longlong-riscv64-nutshell.bin		#done
-# testName ?= add-riscv64-nutshell.bin				#done
-# testName ?= bit-riscv64-nutshell.bin				#done
-# testName ?= bubble-sort-riscv64-nutshell.bin		#done
-# testName ?= dummy-riscv64-nutshell.bin			#done
-# testName ?= fib-riscv64-nutshell.bin				#done
-# testName ?= if-else-riscv64-nutshell.bin			#done
-# testName ?= load-store-riscv64-nutshell.bin		#done
-# testName ?= max-riscv64-nutshell.bin				#done
-# testName ?= min3-riscv64-nutshell.bin				#done 
-testName ?= mov-c-riscv64-nutshell.bin			#done
-# testName ?= movsx-riscv64-nutshell.bin			#done 1481 / 1037
-# testName ?= pascal-riscv64-nutshell.bin			#done
-# testName ?= quick-sort-riscv64-nutshell.bin		#done 4176 / 3183
-# testName ?= select-sort-riscv64-nutshell.bin		#done 4174 / 2860
-# testName ?= shift-riscv64-nutshell.bin			#done 462  / 329 
-# testName ?= string-riscv64-nutshell.bin			#done
-# testName ?= sub-longlong-riscv64-nutshell.bin		#done 1140 / 795
+# testName ?= add-longlong-riscv64-nutshell.bin		#done axi
+# testName ?= add-riscv64-nutshell.bin				#done axi
+# testName ?= bit-riscv64-nutshell.bin				#done axi
+# testName ?= bubble-sort-riscv64-nutshell.bin		#done axi
+# testName ?= dummy-riscv64-nutshell.bin			#done axi
+# testName ?= fib-riscv64-nutshell.bin				#done axi
+# testName ?= if-else-riscv64-nutshell.bin			#done axi
+# testName ?= load-store-riscv64-nutshell.bin		#done axi
+# testName ?= max-riscv64-nutshell.bin				#done axi
+# testName ?= min3-riscv64-nutshell.bin				#done axi
+# testName ?= mov-c-riscv64-nutshell.bin			#done axi: 94 / 474
+# testName ?= movsx-riscv64-nutshell.bin			#done axi 1481 / 1037
+# testName ?= pascal-riscv64-nutshell.bin			#done axi
+# testName ?= quick-sort-riscv64-nutshell.bin		#done 4176 / 3183 axi
+testName ?= select-sort-riscv64-nutshell.bin		#done 4174 / 2860 axi
+# testName ?= shift-riscv64-nutshell.bin			#done 462  / 329 axi
+# testName ?= string-riscv64-nutshell.bin			#done axi
+# testName ?= sub-longlong-riscv64-nutshell.bin		#done 1140 / 795 axi
 # testName ?= sum-riscv64-nutshell.bin				#done axi: 535 / 2966
 # testName ?= switch-riscv64-nutshell.bin			#done
 # testName ?= to-lower-case-riscv64-nutshell.bin	#done
@@ -94,7 +94,7 @@ run-verilator2: $(VerilatorCppFile)
 	$(VerilatorCppFile) \
 	--cc --exe -LDFLAGS "-ldl" \
 	-CFLAGS "-g" --build
-	# make -C obj_dir -f VsimSoc.mk
+	make test
 
 build:
 	make run-verilator

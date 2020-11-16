@@ -100,11 +100,12 @@ class dpath extends Module {
   val fs_ready_go = Wire(Bool())
   val fs_allowin = Wire(Bool())
   val to_fs_valid = Wire(Bool())
-
+  //******************************************************************************************************
   // pre-IF
 //  to_fs_valid := true.B
   val pre_fs_valid  = true.B    // 这一级valid始终为1
   val pre_fs_ready_go = io.InstRamIO.addr_ok   // 要addr_ok才能进入fs!
+//  val pre_fs_ready_go = io.InstRamIO.data_ok
   to_fs_valid := pre_fs_valid && pre_fs_ready_go
 
   val if_pc_plus4 = if_reg_pc + 4.asUInt(XLEN.W) // 还是改成了pc+4 == seq_pc
@@ -114,6 +115,9 @@ class dpath extends Module {
       Mux(io.ctl.dec_pc_sel === PC_JALR, dec_jump_reg_target,
         /*Mux(io.ctl.exe_pc_sel === PC_EXC*/ BUBBLE)))
 
+  if(DEBUG_PRINT){
+    printf("PF: pc_sel = %d, pc_next = [%x]\n", io.ctl.dec_pc_sel, if_pc_next)
+  }
 
 /*
   // 获取此时的inst指令, 本质在预取阶段做的!
@@ -126,7 +130,13 @@ class dpath extends Module {
   }
 
  */
-
+  val data_ok_reg = RegInit(false.B)
+  when(io.InstRamIO.data_ok){   // 把data_ok存一下, 防止由于ds阻塞, data_ok消失, fs不能向下流水
+    data_ok_reg := true.B
+  }.elsewhen(ds_allowin){
+    data_ok_reg := false.B
+  }
+  val data_ok_true = io.InstRamIO.data_ok || data_ok_reg
   // instRam 接口
   val inst_fetching = RegInit(false.B)  // 表示正在取指令
   when(io.InstRamIO.req && io.InstRamIO.addr_ok){
@@ -134,17 +144,21 @@ class dpath extends Module {
   }.elsewhen(io.InstRamIO.data_ok){
     inst_fetching := false.B  // 数据握手成功, 结束取指令
   }
-  io.InstRamIO.req  := !inst_fetching  // 不在取指时候发请求
+  io.InstRamIO.req  := !inst_fetching && fs_allowin  // 不在取指时候发请求
   io.InstRamIO.wr   := false.B
   io.InstRamIO.size := 2.U
   io.InstRamIO.addr := if_pc_next
   io.InstRamIO.wdata:= 0.U
 
 
-
+  //******************************************************************************************************
   // IF stage
-//  fs_ready_go := true.B
-  fs_ready_go := io.InstRamIO.data_ok   // 感觉, 收到data之后, fs才能进入下一级
+
+
+
+//  fs_ready_go := io.InstRamIO.addr_ok     // 根据下一个指令的addr_ok来确定
+//  fs_ready_go := io.InstRamIO.data_ok   // 感觉, 收到data之后, fs才能进入下一级  // TODO: 可以修改
+  fs_ready_go := data_ok_true
   fs_allowin := !fs_valid || fs_ready_go && ds_allowin
   val fs_to_ds_valid = fs_valid && fs_ready_go
 
@@ -161,26 +175,28 @@ class dpath extends Module {
   // 取出的指令
   val inst_valid = RegInit(false.B)       // 表示buf是否为空
   val inst_buffer = RegInit(0.U(XLEN.W))  // 暂存获取的指令
-  val inst_tmp  = Mux(if_reg_pc(2), io.InstRamIO.rdata(63,32), io.InstRamIO.rdata(31,0)) // TODO: 暂时根据倒数第三位来取对应指令
-  // TODO: 在data_ok的当拍, 就要存下这条指令!
+  val inst_tmp  = Mux(if_reg_pc(2), io.InstRamIO.rdata(63,32), io.InstRamIO.rdata(31,0))
 
-  when(inst_fetching && io.InstRamIO.data_ok && !inst_valid){
+  when(inst_fetching && io.InstRamIO.data_ok){
     // 正在取指令, 数据握手成功, 指令buf空的, 存入
     inst_valid  := true.B
     inst_buffer := inst_tmp
-  }.elsewhen(to_fs_valid && ds_allowin){
-    inst_valid  := false.B    // 流水成功, buf清空
+  }.elsewhen(to_fs_valid && ds_allowin){    // TODO: 流水写错了吧
+    inst_valid  := false.B    // fs_to_ds流水成功, buf清空
   }
-  val if_inst = Wire(UInt(XLEN.W))    // 缓存后的指令
-  val if_reg_inst    = Mux(io.InstRamIO.data_ok, inst_tmp, 0.U)       // TODO: 暂时不存reg
+
+  val if_reg_inst   = Mux(inst_valid, inst_buffer, inst_tmp)    // TODO: 还是先存下来了
+  if(DEBUG_PRINT) {
+    printf("IF : inst_valid=[%d] inst_tmp=[%x] inst_buffer=[%x] data_ok_true=%d inst_fetching=%d\n",
+      inst_valid, inst_tmp, inst_buffer, data_ok_true, inst_fetching)
+  }
 
 
-
-  if_inst := if_reg_inst    // TODO: 在AXI时序下不需要刷新了
+  val if_inst = if_reg_inst    // TODO: 在AXI时序下不需要刷新了
 //  if_inst := Mux(dec_reflush, BUBBLE, if_reg_inst) // 如果是跳转指令, 强行改成nop
 
   if(DEBUG_PRINT) {
-    printf("IF : valid = %d pc=[%x] inst=[%x] if_pc_next=[%x] pc_sel=[%d] e_bj_pc=[%x]\n", fs_valid, if_reg_pc, if_inst, if_pc_next, io.ctl.dec_pc_sel, dec_brjmp_target)
+    printf("IF : valid = %d pc=[%x] inst=[%x] fs_allowin=%d\n", fs_valid, if_reg_pc, if_inst, fs_allowin)
   }
 
   //******************************************************************************************************
@@ -371,6 +387,7 @@ class dpath extends Module {
   // 其实在exe这一拍阻塞, 直到读出数据
   val offset = exe_alu_out(2,0) << 3    // 根据地址后3位, 乘上8, eg: addr=4, offset = 12
   mem_reg_dram_data   := (io.DataRamIO.rdata >> offset.asUInt()).asUInt()   // TODO: 需要根据当前地址移位获得真正数据!
+  // TODO: 需要存下来吗?
 
 
   if(DEBUG_PRINT) {

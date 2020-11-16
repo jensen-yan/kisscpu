@@ -361,3 +361,6 @@ ysys_yanyue.fir
 CPU_Core.fir
 CPU_Core.v
 CPU_Core.anno.json
+simSoc.v
+simSoc.fir
+simSoc.anno.json
