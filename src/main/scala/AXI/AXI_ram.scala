@@ -71,17 +71,21 @@ class AXI_lite_interface extends Bundle {
     val awprot = Input(UInt(3.W))
     val awvalid = Input(UInt(1.W))
     val awready = Output(UInt(1.W))
+
     val wdata = Input(UInt(data_width.W))
     val wstrb = Input(UInt(wstrb_width.W))
     val wvalid = Input(UInt(1.W))
     val wready = Output(UInt(1.W))
+
     val bresp = Output(UInt(2.W))
     val bvalid = Output(UInt(1.W))
     val bready = Input(UInt(1.W))
+
     val araddr = Input(UInt(addr_width.W))
     val arprot = Input(UInt(3.W))
     val arvalid = Input(UInt(1.W))
     val arready = Output(UInt(1.W))
+
     val rdata = Output(UInt(data_width.W))
     val rresp = Output(UInt(2.W))
     val rvalid = Output(UInt(1.W))

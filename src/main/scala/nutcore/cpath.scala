@@ -153,5 +153,7 @@ class cpath extends Module{
       cs_mem_ren)
   }
   val nemu_halt = io.dat.dec_inst === NEMUHALT
-  BoringUtils.addSource(nemu_halt, "diffTestHalt")
+  if(ADD_SOURCE) {
+    BoringUtils.addSource(nemu_halt, "diffTestHalt")
+  }
 }

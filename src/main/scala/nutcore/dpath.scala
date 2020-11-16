@@ -307,7 +307,8 @@ class dpath extends Module {
   // ALU
   val alu = Module(new alu)
   val exe_load_store  = exe_reg_ctrl_mem_ren || exe_reg_ctrl_mem_wen    // 表示load, store指令
-  val es_stall = alu.io.stall || (!io.DataRamIO.data_ok && exe_load_store)    // TODO: 对loadstore, 直接等到数据握手才进入下一拍
+//  val es_stall = alu.io.stall || (!io.DataRamIO.data_ok && exe_load_store)    // TODO: 对loadstore, 直接等到数据握手才进入下一拍
+  val es_stall = !io.DataRamIO.data_ok && exe_load_store
 
   val es_ready_go = !es_stall
   es_allowin := !es_valid || es_ready_go && ms_allowin
@@ -521,7 +522,8 @@ class dpath extends Module {
       RegNext(mem_reg_op2_data),
       wb_reg_inst)
   }
-
-  BoringUtils.addSource(wb_reg_pc, "diffTestPC")
-  BoringUtils.addSource(ws_valid, "diffTestPC_valid")   // 表示这是一条有效的PC, 参加比对
+  if(ADD_SOURCE) {
+    BoringUtils.addSource(wb_reg_pc, "diffTestPC")
+    BoringUtils.addSource(ws_valid, "diffTestPC_valid") // 表示这是一条有效的PC, 参加比对
+  }
 }

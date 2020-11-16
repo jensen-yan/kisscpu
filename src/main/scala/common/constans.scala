@@ -25,16 +25,17 @@ trait commonConstants
 }
 
 trait RISCVConstants {
-  // val DEBUG_PRINT = false    // 是否输出调试信息
- val DEBUG_PRINT = true
+   val DEBUG_PRINT = false    // 是否输出调试信息
+// val DEBUG_PRINT = true
+  val ADD_SOURCE = false   // 是否添加add_source
 
   val XLEN = 64
   val NUM_REG = 32
   val ADDR_W = log2Ceil(NUM_REG) // 地址宽度 = 5
 
-  val START_ADDR = "h80000000".U
+//  val START_ADDR = "h80000000".U
 
-//  val START_ADDR = "h40000000".U
+  val START_ADDR = "h40000000".U
 
 
   // TODO: 改成64位了

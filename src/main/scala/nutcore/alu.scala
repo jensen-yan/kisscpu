@@ -11,9 +11,10 @@ class alu extends Module{
     val src2    = Input(UInt(XLEN.W))
     val result  = Output(UInt(XLEN.W))
 
-    val stall   = Output(Bool())
+//    val stall   = Output(Bool())
   })
 
+  /*
   // Multiplier
   val isMulDiv = io.alu_op === ALU_MUL || io.alu_op === ALU_MULH || io.alu_op === ALU_MULHSU ||
     io.alu_op === ALU_MULHU || io.alu_op === ALU_DIV || io.alu_op === ALU_DIVU ||
@@ -26,7 +27,7 @@ class alu extends Module{
   multiplier.io.b     := io.src2
   multiplier.io.op    := io.alu_op
   io.stall            := isMulDiv && multiplier.io.stall_req
-
+*/
   val op = io.alu_op
   var src1 = io.src1
   val src2 = io.src2
@@ -47,10 +48,10 @@ class alu extends Module{
     (op === ALU_SRAW)-> Cat(Fill(32, src1(31)), (src1(31,0).asSInt() >> shamt).asUInt()),
     (op === ALU_SRL) -> (src1 >> shamt).asUInt(),
     (op === ALU_COPY_1)-> src1,
-    (op === ALU_COPY_2)-> src2,
-    (isMulDiv)         -> multiplier.io.mult_out
+    (op === ALU_COPY_2)-> src2
+//    (isMulDiv)         -> multiplier.io.mult_out
   ))
   if(DEBUG_PRINT) {
-    printf("ALU: func = %d, src1=[%x] src2=[%x] result=[%x] ismul = %d stall = %d\n", op, src1, src2, io.result, isMulDiv, io.stall);
+    printf("ALU: func = %d, src1=[%x] src2=[%x] result=[%x]\n", op, src1, src2, io.result);
   }
 }

@@ -26,7 +26,9 @@ class regfile extends Module{
   when(io.we && (io.waddr =/= 0.U)){
     rf(io.waddr) := io.wdata
   }
-  BoringUtils.addSource(VecInit((0 to NUM_REG-1).map(i => rf(i.U))), "diffTestRegfile") // VecInit把32个rf输出包装成一个Vec输出!
+  if(ADD_SOURCE) {
+    BoringUtils.addSource(VecInit((0 to NUM_REG - 1).map(i => rf(i.U))), "diffTestRegfile") // VecInit把32个rf输出包装成一个Vec输出!
+  }
   if(DEBUG_PRINT) {
     printf("RF: s0 = [%x] rdata1(%d)=[%x] rdata2(%d)=[%x] wdata(%d)=[%x] we=%d\n", rf(8), io.raddr1, io.rdata1, io.raddr2, io.rdata2, io.waddr, io.wdata, io.we)
   }
