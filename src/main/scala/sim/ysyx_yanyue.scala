@@ -11,6 +11,8 @@ class ysyx_yanyue extends Module{
   val io = IO(new Bundle() {
     val mem       = Flipped(new AXI_interface)
     val mmio      = Flipped(new AXI_lite_interface)
+    val mtip      = Input(Bool())
+    val meip      = Input(Bool())
   })
   io  := DontCare
 
@@ -19,6 +21,8 @@ class ysyx_yanyue extends Module{
 
   cpath.io.ctl <> dpath.io.ctl
   cpath.io.dat <> dpath.io.dat
+  dpath.io.mtip   := io.mtip
+  dpath.io.meip   := io.meip
 
   // 把inst和axi桥连接
   val bridge = Module(new AXI_Bridge(64))
@@ -69,6 +73,8 @@ class ysyx_yanyue extends Module{
   io.mem.awlock  := bridge.io.awlock
   io.mem.awcache := bridge.io.awcache
   io.mem.awprot  := bridge.io.awprot
+  io.mem.awqos   := bridge.io.awqos
+  io.mem.awuser  := bridge.io.awuser
   io.mem.awvalid := Mux(is_mem_waddr,  bridge.io.awvalid, false.B)
 
   io.mmio.awaddr := bridge.io.awaddr
@@ -97,6 +103,7 @@ class ysyx_yanyue extends Module{
   bridge.io.bid     := io.mem.bid
   bridge.io.bresp   := io.mem.bresp   | io.mmio.bresp
   bridge.io.bvalid  := io.mem.bvalid  | io.mmio.bvalid
+  bridge.io.buser   := io.mem.buser
 
   // ar
   io.mem.arid    := bridge.io.arid
@@ -107,6 +114,8 @@ class ysyx_yanyue extends Module{
   io.mem.arlock  := bridge.io.arlock
   io.mem.arcache := bridge.io.arcache
   io.mem.arprot  := bridge.io.arprot
+  io.mem.arqos   := bridge.io.arqos
+  io.mem.aruser  := bridge.io.aruser
   io.mem.arvalid := Mux(is_mem_raddr,  bridge.io.arvalid, false.B)
 
   io.mmio.araddr := bridge.io.araddr
@@ -125,6 +134,7 @@ class ysyx_yanyue extends Module{
   bridge.io.rresp   := io.mem.rresp   | io.mmio.rresp
   bridge.io.rlast   := io.mem.rlast
   bridge.io.rvalid  := io.mem.rvalid  | io.mmio.rvalid
+  bridge.io.ruser   := io.mem.ruser
 
 
 

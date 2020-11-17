@@ -1,50 +1,4 @@
-package AXI
 
-import chisel3._
-import chisel3.util.HasBlackBoxInline
-import common.RamIO
-import common.AXIConstants
-
-// 整体对外接口
-class AXI_BridgeIO extends Bundle{
-    val AXI_IO = Flipped(new AXI_interface)
-    val InstRamIO = Flipped(new RamIO)  // 两个ram接口
-    val DataRamIO = Flipped(new RamIO)
-    val clock = Input(Clock())
-    val reset = Input(Reset())
-
-}
-
-class AXI_Bridge(width: Int) extends BlackBox with HasBlackBoxInline {
-//    val io = IO(new AXI_BridgeIO())
-    val io = IO(Flipped(new AXI_interface {
-        val clock = Output(Clock())
-        val reset = Output(Reset())
-        // CPU side
-
-        // inst sram-like
-        val inst_req    = Output(UInt(1.W))
-        val inst_wr     = Output(UInt(1.W))
-        val inst_size   = Output(UInt(3.W))
-        val inst_addr   = Output(UInt(width.W))
-        val inst_wdata  = Output(UInt(width.W))
-        val inst_rdata  = Input(UInt(width.W))
-        val inst_addr_ok= Input(UInt(1.W))
-        val inst_data_ok= Input(UInt(1.W))
-        // data sram-like
-        val data_req    = Output(UInt(1.W))
-        val data_wr     = Output(UInt(1.W))
-        val data_size   = Output(UInt(3.W))
-        val data_addr   = Output(UInt(width.W))
-        val data_wdata  = Output(UInt(width.W))
-        val data_rdata  = Input(UInt(width.W))
-        val data_addr_ok= Input(UInt(1.W))
-        val data_data_ok= Input(UInt(1.W))
-
-        // AXI side is automatically included in AXI_interface
-    }))
-    setInline("yanyue_AXI_Bridge.v",
-        s"""
            module AXI_Bridge
            (
                input         clock,
@@ -212,41 +166,4 @@ endmodule
 
 
            
-    """.stripMargin
-    )
-    /*
-The above verilog copyright info:
-------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-Copyright (c) 2016, Loongson Technology Corporation Limited.
-
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation and/or
-other materials provided with the distribution.
-
-3. Neither the name of Loongson Technology Corporation Limited nor the names of
-its contributors may be used to endorse or promote products derived from this
-software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL LOONGSON TECHNOLOGY CORPORATION LIMITED BE LIABLE
-TO ANY PARTY FOR DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
-THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
---------------------------------------------------------------------------------
-------------------------------------------------------------------------------
-     */
-}
+    

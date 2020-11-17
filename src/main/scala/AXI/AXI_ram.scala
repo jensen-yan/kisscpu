@@ -8,6 +8,7 @@ class AXI_interface extends Bundle {
     private val addr_width = 64 // 1 Megabyte should be enough for us
     private val wstrb_width = data_width / 8
     private val id_width = 4
+    private val qos_width = 4
 
     val awid    = Input(UInt(id_width.W))
     val awaddr  = Input(UInt(addr_width.W))
@@ -17,6 +18,8 @@ class AXI_interface extends Bundle {
     val awlock  = Input(UInt(1.W))
     val awcache = Input(UInt(4.W))
     val awprot  = Input(UInt(3.W))
+    val awqos   = Input(UInt(qos_width.W))
+    val awuser  = Input(UInt(1.W))
     val awvalid = Input(UInt(1.W))
     val awready = Output(UInt(1.W))
 
@@ -29,6 +32,7 @@ class AXI_interface extends Bundle {
 
     val bid     = Output(UInt(id_width.W))
     val bresp   = Output(UInt(2.W))
+    val buser   = Output(UInt(1.W))
     val bvalid  = Output(UInt(1.W))
     val bready  = Input(UInt(1.W))
 
@@ -40,6 +44,8 @@ class AXI_interface extends Bundle {
     val arlock  = Input(UInt(1.W))
     val arcache = Input(UInt(4.W))
     val arprot  = Input(UInt(3.W))
+    val arqos   = Input(UInt(qos_width.W))
+    val aruser  = Input(UInt(1.W))
     val arvalid = Input(UInt(1.W))
     val arready = Output(UInt(1.W))
 
@@ -47,6 +53,7 @@ class AXI_interface extends Bundle {
     val rdata   = Output(UInt(data_width.W))
     val rresp   = Output(UInt(2.W))
     val rlast   = Output(UInt(1.W))
+    val ruser   = Output(UInt(1.W))
     val rvalid  = Output(UInt(1.W))
     val rready  = Input(UInt(1.W))
 

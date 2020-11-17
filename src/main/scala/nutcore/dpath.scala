@@ -24,6 +24,8 @@ class DpathIo extends Bundle() {
   val InstRamIO = new RamIO()
   val DataRamIO = new RamIO()
 
+  val mtip  = Input(Bool())
+  val meip  = Input(Bool())
 }
 
 class dpath extends Module {
