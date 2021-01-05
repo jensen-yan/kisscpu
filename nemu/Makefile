@@ -1,4 +1,5 @@
 NAME = nemu
+NEMU_HOME = $(shell pwd)
 
 ifneq ($(MAKECMDGOALS),clean) # ignore check for make clean
 ISA ?= riscv64
@@ -101,6 +102,8 @@ $(BINARY): $(OBJS)
 	@$(LD) -O2 -rdynamic $(SO_LDLAGS) -o $@ $^ $(LD_LIBS)
 
 run-env: $(BINARY) $(DIFF_REF_SO)
+
+all: run
 
 run: run-env
 	$(NEMU_EXEC)

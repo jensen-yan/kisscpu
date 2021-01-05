@@ -73,7 +73,7 @@ class AXI_Bridge(width: Int) extends BlackBox with HasBlackBoxInline {
                //axi
                //ar
                output [3 :0] arid         ,
-               output [63:0] araddr       ,
+               output [31:0] araddr       ,
                output [7 :0] arlen        ,
                output [2 :0] arsize       ,
                output [1 :0] arburst      ,
@@ -94,7 +94,7 @@ class AXI_Bridge(width: Int) extends BlackBox with HasBlackBoxInline {
                output        rready       ,
                //aw
                output [3 :0] awid         ,
-               output [63:0] awaddr       ,
+               output [31:0] awaddr       ,
                output [7 :0] awlen        ,
                output [2 :0] awsize       ,
                output [1 :0] awburst      ,
@@ -172,7 +172,7 @@ begin
 end
 //ar
 assign arid    = 4'd0;
-assign araddr  = do_addr_r;
+assign araddr  = do_addr_r[31:0];   // 输出只要低32位
 assign arlen   = 8'd0;
 assign arsize  = do_size_r;
 assign arburst = 2'd0;
@@ -187,7 +187,7 @@ assign rready  = 1'b1;
 
 //aw
 assign awid    = 4'd0;
-assign awaddr  = do_addr_r;
+assign awaddr  = do_addr_r[31:0];
 assign awlen   = 8'd0;
 assign awsize  = do_size_r;
 assign awburst = 2'd0;

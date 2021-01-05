@@ -5,7 +5,7 @@ import chisel3.util.HasBlackBoxInline
 
 class AXI_interface extends Bundle {
     private val data_width = 64
-    private val addr_width = 64 // 1 Megabyte should be enough for us
+    private val addr_width = 32 // 1 Megabyte should be enough for us
     private val wstrb_width = data_width / 8
     private val id_width = 4
     private val qos_width = 4
@@ -70,7 +70,7 @@ class AXI_interface extends Bundle {
 
 class AXI_lite_interface extends Bundle {
     private val data_width = 64
-    private val addr_width = 64 // 1 Megabyte should be enough for us
+    private val addr_width = 32 // 1 Megabyte should be enough for us
     private val wstrb_width = data_width / 8
     private val id_width = 4
 

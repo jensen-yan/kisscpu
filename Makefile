@@ -67,7 +67,8 @@ run:
 	obj_dir/VsimTop
 
 clean:
-	rm -r obj_dir
+	rm -f -r obj_dir
+	rm -f *.json *.fir *.v *.vcd
 
 verilog:
 	sbt "runMain sim.elaborate"
