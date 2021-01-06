@@ -24,8 +24,6 @@ class MemLoad extends Module{
   val mem_reg_inst = Reg(UInt(XLEN.W))
   val mem_reg_alu_out = Reg(UInt(XLEN.W))
   val mem_reg_wbaddr = Reg(UInt())
-  val mem_reg_rs1_addr = Reg(UInt())
-  val mem_reg_rs2_addr = Reg(UInt())
   val mem_reg_op1_data = Reg(UInt(XLEN.W))
   val mem_reg_op2_data = Reg(UInt(XLEN.W))
   val mem_reg_rs2_data = Reg(UInt(XLEN.W))
@@ -51,11 +49,10 @@ class MemLoad extends Module{
     mem_reg_inst          := io.es_to_ms.exe_reg_inst
     mem_reg_alu_out       := io.es_to_ms.exe_alu_out
     mem_reg_wbaddr        := io.es_to_ms.exe_reg_wbaddr
-    mem_reg_rs1_addr      := io.es_to_ms.exe_reg_rs1_addr
-    mem_reg_rs2_addr      := io.es_to_ms.exe_reg_rs2_addr
     mem_reg_op1_data      := io.es_to_ms.exe_reg_op1_data
     mem_reg_op2_data      := io.es_to_ms.exe_reg_op2_data
     mem_reg_rs2_data      := io.es_to_ms.exe_reg_rs2_data
+
     mem_reg_ctrl_rf_wen   := io.es_to_ms.exe_reg_ctrl_rf_wen
     mem_reg_ctrl_mem_mask := io.es_to_ms.exe_reg_ctrl_mem_mask
     mem_reg_ctrl_mem_ext  := io.es_to_ms.exe_reg_ctrl_mem_ext
@@ -83,7 +80,9 @@ class MemLoad extends Module{
     (mem_reg_ctrl_wb_sel === WB_MEM) -> maskedReadData
   ))
 
-  printf("MEM: valid = %d pc=[%x] inst=[%x] wb_sel=[%d] wbdata=[%x]\n", ms_valid, mem_reg_pc, mem_reg_inst, mem_reg_ctrl_wb_sel, mem_wbdata)
+  if(DEBUG_PRINT){
+    printf("MEM: valid = %d pc=[%x] inst=[%x] wb_sel=[%d] wbdata=[%x]\n", ms_valid, mem_reg_pc, mem_reg_inst, mem_reg_ctrl_wb_sel, mem_wbdata)
+  }
 
 
   // 前递

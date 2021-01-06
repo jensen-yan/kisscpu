@@ -58,6 +58,7 @@ run:
 
 clean:
 	rm -f -r obj_dir
+	rm -f *.json *.fir *.v *.vcd
 
 verilog:
 	sbt "runMain sim.elaborate"
@@ -76,8 +77,8 @@ build:
 	make run-verilator
 
 all:
-	make verilog
 	make clean
+	make verilog
 	make run-verilator
 	make test
 

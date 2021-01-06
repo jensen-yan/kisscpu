@@ -1,11 +1,8 @@
-package nutcore
+package nutcore.decode
 
 import chisel3._
-import chisel3.util._
 import chisel3.util.experimental.BoringUtils
-
 import common.constans._
-
 
 class regfile extends Module{
   val io = IO(new Bundle() {
@@ -28,5 +25,8 @@ class regfile extends Module{
   }
   BoringUtils.addSource(VecInit((0 to NUM_REG-1).map(i => rf(i.U))), "diffTestRegfile") // VecInit把32个rf输出包装成一个Vec输出!
 
-  printf("RF: rdata1(%d)=[%x] rdata2(%d)=[%x] wdata(%d)=[%x] we=%d\n", io.raddr1, io.rdata1, io.raddr2, io.rdata2, io.waddr, io.wdata, io.we)
+  if(DEBUG_PRINT){
+    printf("RF: rdata1(%d)=[%x] rdata2(%d)=[%x] wdata(%d)=[%x] we=%d\n", io.raddr1, io.rdata1, io.raddr2, io.rdata2, io.waddr, io.wdata, io.we)
+  }
+
 }

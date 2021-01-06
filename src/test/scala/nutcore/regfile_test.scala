@@ -1,6 +1,7 @@
 package nutcore
 
 import chisel3.iotesters.PeekPokeTester
+import nutcore.decode.regfile
 
 import scala.util.Random
 

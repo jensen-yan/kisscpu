@@ -2,6 +2,7 @@ package nutcore
 
 import chisel3._
 import chisel3.util._
+import chisel3.util.experimental.BoringUtils
 import common.CSR
 import common.constans._
 import common.instructions._
@@ -134,5 +135,8 @@ class cpath extends Module{
     cs_wb_sel,
     cs_rf_wen,
     cs_mem_ren)*/
+
+  val GoodTrap = io.dat.dec_inst === NEMUHALT
+  BoringUtils.addSource(GoodTrap, "diffTestGoodTrap")
 
 }

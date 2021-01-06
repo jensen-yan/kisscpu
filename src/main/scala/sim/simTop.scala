@@ -16,6 +16,7 @@ class simTop extends Module{
   BoringUtils.addSink(io.diffTestIO.regfile, "diffTestRegfile")
   BoringUtils.addSink(io.diffTestIO.PC, "diffTestPC")
   BoringUtils.addSink(io.diffTestIO.PC_valid, "diffTestPC_valid")
+  BoringUtils.addSink(io.diffTestIO.GoodTrap, "diffTestGoodTrap")
   io.topIO <> mycoretop.io
 
 }

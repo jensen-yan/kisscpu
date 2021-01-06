@@ -2,6 +2,7 @@ package nutcore
 
 import chisel3.iotesters.PeekPokeTester
 import common.constans._
+import nutcore.exe.alu
 
 class alu_test(c: alu) extends PeekPokeTester(c){
   // 对10个操作验证一下

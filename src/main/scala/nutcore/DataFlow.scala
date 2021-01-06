@@ -7,7 +7,7 @@ import common.constans.{PCSel_w, XLEN, memExt_w, memMask_w, wbSel_w}
 class Fs_to_ds extends Bundle{
   val if_inst         = Output(UInt(XLEN.W))
   val if_reg_pc       = Output(UInt(XLEN.W))
-  val dec_reflush     = Output(Bool())
+  val fs_kill     = Output(Bool())
   val fs_to_ds_valid  = Output(Bool())
 }
 
@@ -15,8 +15,6 @@ class Ds_to_es extends Bundle{
   val ds_to_es_valid  = Output(Bool())
   val dec_reg_pc      = Output(UInt(XLEN.W))
   val dec_reg_inst    = Output(UInt(XLEN.W))
-  val dec_rs1_addr    = Output(UInt(5.W))
-  val dec_rs2_addr    = Output(UInt(5.W))
   val dec_wbaddr      = Output(UInt(5.W))
   val dec_op1_data    = Output(UInt(XLEN.W))
   val dec_op2_data    = Output(UInt(XLEN.W))
@@ -29,8 +27,6 @@ class Es_to_ms extends Bundle{
   val exe_reg_inst          = Output(UInt(XLEN.W))
   val exe_alu_out           = Output(UInt(XLEN.W))
   val exe_reg_wbaddr        = Output(UInt(5.W))
-  val exe_reg_rs1_addr      = Output(UInt(5.W))
-  val exe_reg_rs2_addr      = Output(UInt(5.W))
   val exe_reg_op1_data      = Output(UInt(XLEN.W))
   val exe_reg_op2_data      = Output(UInt(XLEN.W))
   val exe_reg_rs2_data      = Output(UInt(XLEN.W))
@@ -53,7 +49,7 @@ class Ms_to_ws extends Bundle{
 class Ds_to_fs extends Bundle{
   val dec_pc_sel          = Output(UInt(PCSel_w.W))
   val dec_brjmp_target    = Output(UInt(XLEN.W))
-  val dec_jump_reg_target = Output(UInt(XLEN.W))
+  val dec_jump_target = Output(UInt(XLEN.W))
 }
 
 class Es_to_ds extends Bundle{

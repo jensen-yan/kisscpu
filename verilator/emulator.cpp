@@ -71,17 +71,29 @@ void CEmulator::step(int i)
     }
 }*/
 
-void CEmulator::execute_cycles(int n)
+int CEmulator::execute_cycles(int n)
 {
+    int success = 0;
     while (n-- >0)
     {
         single_cycle();
 
         // difftest
+        if(m_simtop->io_diffTestIO_GoodTrap)
+            success = 1;
+
         if(m_simtop->io_diffTestIO_PC_valid){
             extern int difftest_step(CEmulator* emu);
             int ret = difftest_step(this);
-            assert(ret>=0);
+            if(ret < 0) {
+               // 似乎要多执行几拍, verilator 波形才能看到
+                for (size_t i = 0; i < 10; i++)
+                {
+                    single_cycle();
+                }
+                return success;
+            }
+            // assert(ret>=0);
 
         }
     }

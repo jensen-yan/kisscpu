@@ -2,7 +2,7 @@ package nutcore.write
 
 import chisel3._
 import chisel3.util.experimental.BoringUtils
-import common.constans.XLEN
+import common.constans.{XLEN, DEBUG_PRINT}
 import nutcore.{Ms_to_ws, Ws_to_ds}
 
 class WriteIO extends Bundle{
@@ -37,11 +37,12 @@ class Write extends Module{
     wb_reg_ctrl_rf_wen := io.ms_to_ws.mem_reg_ctrl_rf_wen
   }
 
-
-  printf("WB : valid = %d pc=[%x]\n", ws_valid, wb_reg_pc)
+  if(DEBUG_PRINT){
+    printf("WB : valid = %d pc=[%x]\n", ws_valid, wb_reg_pc)
+  }
 
   // 前递
-  io.ws_to_ds.ws_valid    := ws_valid
+  io.ws_to_ds.ws_valid            := ws_valid
   io.ws_to_ds.wb_reg_wbaddr       := wb_reg_wbaddr
   io.ws_to_ds.wb_reg_wbdata       := wb_reg_wbdata
   io.ws_to_ds.wb_reg_ctrl_rf_wen  := wb_reg_ctrl_rf_wen
