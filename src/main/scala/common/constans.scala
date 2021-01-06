@@ -26,11 +26,13 @@ trait commonConstants
 trait RISCVConstants {
   // TODO: 修改
   val XLEN = 64
+  val Inst_len = 32
   val NUM_REG = 32
   val ADDR_W = log2Ceil(NUM_REG) // 地址宽度 = 5
 
   val START_ADDR = "h80000000".U
 
+  val DEBUG_PRINT = true
 
   // TODO: 改成64位了
   val BUBBLE = 0x4033.U(64.W)

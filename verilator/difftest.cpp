@@ -5,8 +5,8 @@
 using namespace std;
 #include "difftest.h"
 
-const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/nemu/build/riscv64-nemu-interpreter-so";
-// const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/verilator/nemu_so/riscv64-nemu-interpreter-so";
+// const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/nemu/build/riscv64-nemu-interpreter-so";
+const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/verilator/nemu_so/riscv64-nemu-interpreter-so";
 // 等待获取的6个函数指针
 void (*ref_difftest_memcpy_from_dut)(paddr_t dest, void *src, size_t n);
 void (*ref_difftest_getregs)(void *c);

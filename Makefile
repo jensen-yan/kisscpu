@@ -27,7 +27,7 @@ teat_allName = $(shell find testDir/ -name "*.bin")
 # testName ?= movsx-riscv64-nutshell.bin			#done 1481 / 1037
 # testName ?= pascal-riscv64-nutshell.bin			#done
 # testName ?= quick-sort-riscv64-nutshell.bin		#done 4176 / 3183
-# testName ?= select-sort-riscv64-nutshell.bin		#done 4174 / 2860
+ testName ?= select-sort-riscv64-nutshell.bin		#done 4174 / 2860
 # testName ?= shift-riscv64-nutshell.bin			#done 462  / 329 
 # testName ?= string-riscv64-nutshell.bin			#done
 # testName ?= sub-longlong-riscv64-nutshell.bin		#done 1140 / 795
@@ -57,7 +57,7 @@ run:
 	obj_dir/VsimTop
 
 clean:
-	rm -r obj_dir
+	rm -f -r obj_dir
 
 verilog:
 	sbt "runMain sim.elaborate"
