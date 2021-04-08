@@ -61,7 +61,7 @@ iaddr_t CRam::InstRead(paddr_t addr, bool en){
 }
 
 paddr_t CRam::DataRead(paddr_t addr, bool en){
-    printf("data read addr = 0x%016lx en = %d\n", addr, en);
+    // printf("data read addr = 0x%016lx en = %d\n", addr, en);
     // paddr_t addr_debug = 0x0000000080000030;
     // printf("data[] = 0x%016lx\n", m_ram[(addr_debug - ADDRSTART) / sizeof(paddr_t)]);
     if(!en) return 0;
@@ -92,6 +92,6 @@ void    CRam::DataWrite(paddr_t addr, paddr_t data, bool en, mask_t mask){
         data_mask = (fullMask & data) | (~fullMask & m_ram[(addr - ADDRSTART) / sizeof(paddr_t)]);
         // 如果lb写入8byte, 其他要保持不变
         m_ram[(addr - ADDRSTART) / sizeof(paddr_t)] = data_mask;
-        printf("mask = %x, fullMask= 0x%016lx, data = 0x%016lx, data_mask = 0x%016lx\n", mask, fullMask, data, data_mask);
+        // printf("mask = %x, fullMask= 0x%016lx, data = 0x%016lx, data_mask = 0x%016lx\n", mask, fullMask, data, data_mask);
   }
 }

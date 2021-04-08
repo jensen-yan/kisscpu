@@ -14,7 +14,7 @@ CEmulator::CEmulator(CRam* input_ram, long* input_time)
 
     if(vcdTrace){   // 波形
         Verilated::traceEverOn(true);	// Verilator must compute traced signals
-        VL_PRINTF("Enabling waves...\n");
+        // VL_PRINTF("Enabling waves...\n");
         m_tfp = new VerilatedVcdC;
         m_simtop->trace(m_tfp, 99);	// Trace 99 levels of hierarchy
         m_tfp->open("vlt_dump.vcd");	// Open the dump file
@@ -97,7 +97,7 @@ int CEmulator::execute_cycles(int n)
 
         }
     }
-    
+    return success;
 }
 
 void CEmulator::reset_ncycles(int m_cycles)
@@ -115,7 +115,9 @@ void CEmulator::reset_ncycles(int m_cycles)
 
 void CEmulator::single_cycle()
 {
+    #ifdef DEBUG
     printf("cycle = %d \n", m_cycles);
+    #endif
     m_simtop->clock = 0;
     m_simtop->eval();
 

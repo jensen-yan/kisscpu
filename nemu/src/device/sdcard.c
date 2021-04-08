@@ -118,5 +118,5 @@ void init_sdcard() {
 
   const char *sdimg = "debian.img";
   fp = fopen(sdimg, "r");
-  if (fp == NULL) Log("Can not find sdcard image: %s", sdimg);
+  // if (fp == NULL) Log("Can not find sdcard image: %s", sdimg);
 }

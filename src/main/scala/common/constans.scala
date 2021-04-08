@@ -32,7 +32,7 @@ trait RISCVConstants {
 
   val START_ADDR = "h80000000".U
 
-  val DEBUG_PRINT = true
+  val DEBUG_PRINT = false
 
   // TODO: 改成64位了
   val BUBBLE = 0x4033.U(64.W)

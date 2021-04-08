@@ -6,7 +6,8 @@ using namespace std;
 #include "difftest.h"
 
 // const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/nemu/build/riscv64-nemu-interpreter-so";
-const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/verilator/nemu_so/riscv64-nemu-interpreter-so";
+// const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/verilator/nemu_so/riscv64-nemu-interpreter-so";
+const char* dllPath = "/home/yanyue/nutshell_v2/kisscpu/nemu/build/riscv64-nemu-interpreter-so";
 // 等待获取的6个函数指针
 void (*ref_difftest_memcpy_from_dut)(paddr_t dest, void *src, size_t n);
 void (*ref_difftest_getregs)(void *c);
@@ -42,11 +43,11 @@ void init_difftest(reg_t *reg, char* imgPath, CRam* ram){
     assert(ref_difftest_init);
 
     ref_difftest_init();
-    ref_isa_reg_display();
+    // ref_isa_reg_display();
 
     // 添加img
     ref_difftest_memcpy_from_dut(ADDRSTART, ram->getImgStart(), ram->getImgSize());
-    printf("img size = %d\n",ram->getImgSize());
+    // printf("img size = %d\n",ram->getImgSize());
     
 
 
@@ -84,8 +85,9 @@ int difftest_step(CEmulator* emu)
     emu->read_emu_regs(reg_dut);
     // ref_difftest_exec(1);       
     ref_difftest_getregs(&reg_ref);
+    #ifdef DEBUG
     ref_isa_reg_display();
-    
+    #endif
     // 先只比较pc就好
     if(reg_dut[32] != reg_ref[32]){
         printf("right pc = [0x%16x], wrong pc = [0x%16x] \n", reg_ref[32], reg_dut[32]);

@@ -17,7 +17,7 @@ int main(int argc, char** argv){
     CEmulator* emulator = new CEmulator(ram, &sc_time);
     // difftest_step(emulator, 20);
     // emulator->step(40);
-    int success = emulator->execute_cycles(300);
+    int success = emulator->execute_cycles(30000);
     if(success){
         printf("\033[1;32m Test Pass!!! Congratulation!!!\033[0m \n");
     }

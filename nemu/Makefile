@@ -2,7 +2,7 @@ NAME = nemu
 
 ifneq ($(MAKECMDGOALS),clean) # ignore check for make clean
 ISA ?= riscv64
-ISAS = $(shell ls src/isa/)
+ISAS = $(shell ls src/isa/)  # 默认riscv64
 ifeq ($(filter $(ISAS), $(ISA)), ) # ISA must be valid
 $(error Invalid ISA. Supported: $(ISAS))
 endif
@@ -51,7 +51,8 @@ DIFF_REF_SO = $(DIFF_REF_PATH)/build/$(ISA)-nemu-interpreter-so
 CFLAGS += -D__DIFF_REF_NEMU__
 MKFLAGS = ISA=$(ISA) SHARE=1 ENGINE=interpreter
 else
-$(error invalid DIFF. Supported: qemu kvm nemu)
+$(error invalid DIFF. Supported: qemu kvm nemu)  
+# diff支持 qemu, kvm(只用于x86), nemu
 endif
 endif
 
@@ -69,12 +70,13 @@ CFLAGS   += -O2 -MMD -Wall -Werror -ggdb3 $(INCLUDES) \
             -D__ISA__=$(ISA) -D__ISA_$(ISA)__ -D_ISA_H_=\"isa/$(ISA).h\"
 
 # Files to be compiled
-SRCS = $(shell find src/ -name "*.c" | grep -v "isa\|engine")
+SRCS = $(shell find src/ -name "*.c" | grep -v "isa\|engine")  # 不包含isa, engine目录, 注意\| 对符号或 转义
 SRCS += $(shell find src/isa/$(ISA) -name "*.c")
-SRCS += $(shell find src/engine/$(ENGINE) -name "*.c")
-OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
+SRCS += $(shell find src/engine/$(ENGINE) -name "*.c")  # 又把这两个目录加上了, 获取对应isa的文件!(isa可能支持好几个)
+OBJS = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)  # 把所有src中后缀名替换成.o
 
 # Compilation patterns
+# mkdir -p 建立父目录
 $(OBJ_DIR)/%.o: src/%.c
 	@echo + CC $<
 	@mkdir -p $(dir $@)
@@ -113,6 +115,7 @@ $(DIFF_REF_SO):
 
 clean:
 	-rm -rf $(BUILD_DIR)
-	$(MAKE) -C tools/gen-expr clean
+	@# $(MAKE) -C tools/gen-expr clean
 	$(MAKE) -C tools/qemu-diff clean
-	$(MAKE) -C tools/kvm-diff clean
+	@# make -C 进入对应的makefile执行
+	@# $(MAKE) -C tools/kvm-diff clean

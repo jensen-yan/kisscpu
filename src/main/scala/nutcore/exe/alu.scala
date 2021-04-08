@@ -35,6 +35,8 @@ class alu extends Module{
     (op === ALU_COPY_2)-> src2,
   ))
 
-  printf("ALU: func = %d, src1=[%x] src2=[%x] result=[%x]\n", op, src1, src2, io.result);
+  if(DEBUG_PRINT){
+    printf("ALU: func = %d, src1=[%x] src2=[%x] result=[%x]\n", op, src1, src2, io.result);
+  }
 
 }
